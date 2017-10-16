@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/button.css">
+    <script src="./js/p5.min.js"></script>
+    <script src="./js/p5.sound.min.js"></script>
+    <script src="./js/p5.dom.min.js"></script>
+    <title>P5 JS</title>
+</head>
+
+<body>
+    <div id="media-holder" class="justify-horizontal container">
+        <div class="half-width">
+            <audio id="audio" controls="controls"></audio>
+        </div>
+        <div class="half-width">
+            <input type="file" id="media-input" class="input-file">
+            <button id="media-input-button" class="pulse">Select Media File</button>
+        </div>
+    </div>
+    <div id="canvas-holder" class="justify-horizontal"></div>
+
+    <script src="./lib/Starfield/star.js"></script>
+    <script src="./lib/Starfield/music-handler.js"></script>
+    <script src="./lib/Starfield/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+.pulse:hover,
+.pulse:focus {
+    -webkit-animation: pulse 1s;
+    animation: pulse 1s;
+    box-shadow: 0 0 0 2em rgba(255, 255, 255, 0);
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgb(0, 0, 255);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgb(0, 0, 255);
+    }
+}
+
+button {
+    color: red;
+    -webkit-transition: 0.25s;
+    transition: 0.25s;
+}
+
+button:hover,
+button:focus {
+    border-color: rgb(0, 0, 255);
+    color: rgb(0, 0, 255);
+}
+
+button {
+    background: none;
+    border: 2px solid;
+    font: inherit;
+    line-height: 1;
+    margin: 0.5em;
+    padding: 7px 2em;
+    transition-duration: 0.7s;
+    cursor: pointer;
+}
+
+
+/*
+  As a bonus, I will now begin including a shoddily written limerick or other high literary masterpiece in all my pens. Misspelled visual rhymes and two left feet are the spice of life. You're welcome.
+
+  [1/?] Glass cannon 
+  There was a young dev on the frontend
+  delighted to see folks affronted
+    They claimed satisfaction
+    provoking a reaction
+  but threw quite a fit when confronted
+*/
