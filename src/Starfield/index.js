@@ -3,12 +3,31 @@
 
 let stars = [];
 let starBurst = [];
+let musicHandler = new MusicHandler();
 let audio = document.getElementById('audio');
+
+let audioContext = new AudioContext();
+let analyzer = audioContext.createAnalyser();
+analyzer.fftSize = 1024;
+analyzer.connect(audioContext.destination);
+let bufferLength = analyzer.frequencyBinCount;
+let dataArray = new Uint8Array(bufferLength);
+let source = audioContext.createMediaElementSource(audio);
+source.connect(analyzer);
+
+let sensitivity = 1.3;
+let previousValue = 0;
+
 let inputFile = document.getElementById('media-input');
 let mediaInputButton = document.getElementById('media-input-button');
 let mediaHolder = document.getElementById('media-holder');
+
 mediaInputButton.addEventListener('click', () => {
     inputFile.click();
+});
+inputFile.addEventListener('change', (event) => {
+    musicHandler.handleFileChange(event);
+    buildAudioGraph();
 });
 
 let createStarBurst = () => {
@@ -22,6 +41,31 @@ let createStarBurst = () => {
             20
         ));
     }
+};
+
+let getSumSquaredValue = (dataArray) => {
+    let sum = 0;
+    for (let i = 0; i < dataArray.length; i++)
+        sum += Math.pow(dataArray[i], 2);
+    return sum;
+};
+
+let buildAudioGraph = () => {
+    if (audio.canPlayType(musicHandler.getFile().type)) {
+        audio.src = musicHandler.getFileBlob();
+        audio.play();
+    } else {
+        window.alert('Invalid File Type Selected');
+    }
+};
+
+let visualize = () => {
+    analyzer.getByteFrequencyData(dataArray);
+    let currentValue = getSumSquaredValue(dataArray);
+    if (currentValue > sensitivity * previousValue)
+        createStarBurst();
+
+    previousValue = currentValue;
 };
 
 function setup() {
@@ -53,4 +97,7 @@ function draw() {
             i -= 1;
         }
     }
+
+    if (source !== null)
+        visualize();
 }
