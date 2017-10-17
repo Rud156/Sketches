@@ -7,33 +7,22 @@ let musicHandler = new MusicHandler();
 let audio = document.getElementById('audio');
 
 let audioContext = new AudioContext();
-let leftAnalyzer = audioContext.createAnalyser();
-let rightAnalyzer = audioContext.createAnalyser();
-
-let leftBufferLength = leftAnalyzer.frequencyBinCount;
-let rightBufferLength = rightAnalyzer.frequencyBinCount;
-let leftDataArray = new Uint8Array(leftBufferLength);
-let rightDataArray = new Uint8Array(rightBufferLength);
-
+// let leftAnalyzer = audioContext.createAnalyser();
+// let rightAnalyzer = audioContext.createAnalyser();
+let analyzer = audioContext.createAnalyser();
+analyzer.smoothingTimeConstant = 0.3;
+analyzer.fftSize = 1024;
+// let leftBufferLength = leftAnalyzer.frequencyBinCount;
+// let rightBufferLength = rightAnalyzer.frequencyBinCount;
+let bufferLength = analyzer.frequencyBinCount;
+let dataArray = new Uint8Array(bufferLength);
 let source = audioContext.createMediaElementSource(audio);
-let splitter = audioContext.createChannelSplitter(2);
-
-source.connect(splitter);
-splitter.connect(leftAnalyzer, 0);
-splitter.connect(rightAnalyzer, 1);
-
-leftAnalyzer.fftSize = 1024;
-rightAnalyzer.fftSize = 1024;
-leftAnalyzer.connect(audioContext.destination);
-rightAnalyzer.connect(audioContext.destination);
-// leftAnalyzer.smoothingTimeConstant = 0.3;
-// rightAnalyzer.smoothingTimeConstant = 0.3;
-// source.connect(audioContext.destination);
+source.connect(analyzer);
+analyzer.connect(audioContext.destination);
 
 
-let sensitivity = (-0.0025714 * 1) + 1.5142857;
+let sensitivity = 1.1;
 let previousValue = 0;
-let historyBuffer = [];
 
 let inputFile = document.getElementById('media-input');
 let mediaInputButton = document.getElementById('media-input-button');
@@ -61,37 +50,14 @@ let createStarBurst = () => {
         angleChange += 3.6;
     }
 };
-
-let calcVariance = (valueArray, olderValue) => {
-    let sum = 0;
-    for (let i = 0; i < valueArray.length; i++)
-        sum += pow(valueArray[i] - olderValue, 2);
-    return sum / valueArray.length;
-};
-
 let calcSumSquaredValue = (valueArray) => {
     let sum = 0;
     for (let i = 0; i < valueArray.length; i++)
         sum += pow(valueArray[i], 2);
     return sum / valueArray.length;
 };
-
-let sumStereo = (channelLeft, channelRight) => {
-    let sum = 0;
-    for (let i = 0; i < channelLeft.length; i++)
-        sum += (pow(channelLeft[i], 2) + pow(channelRight[i], 2));
-
-    return sum;
-};
-
-let sumLocalEnergy = (valueArray) => {
-    let sum = 0;
-    for (let i = 0; i < valueArray.length; i++)
-        sum += pow(valueArray[i], 2);
-    return sum / valueArray.length;
-};
-
 let buildAudioGraph = () => {
+    console.log(musicHandler.getFile().type);
     if (audio.canPlayType(musicHandler.getFile().type)) {
         audio.src = musicHandler.getFileBlob();
         audio.play();
@@ -101,24 +67,12 @@ let buildAudioGraph = () => {
 };
 
 let visualize = () => {
-    /*
-        analyzer.getByteFrequencyData(dataArray);
-        let current = getSumSquaredValue(dataArray);
-        sensitivity = 1.3;
-    */
-    leftAnalyzer.getByteTimeDomainData(leftDataArray);
-    rightAnalyzer.getByteTimeDomainData(rightDataArray);
+    analyzer.getByteFrequencyData(dataArray);
+    let currentValue = calcSumSquaredValue(dataArray);
 
-    let energy = sumStereo(leftDataArray, rightDataArray);
-    let localEnergy = sumLocalEnergy(historyBuffer);
-    let variance = calcVariance(historyBuffer, localEnergy);
-
-    sensitivity = (-0.0025714 * variance) + 1.5142857;
-    historyBuffer.pop();
-    historyBuffer.unshift(energy);
-
-    if (energy > sensitivity * localEnergy)
+    if (currentValue > sensitivity * previousValue)
         createStarBurst();
+    previousValue = currentValue;
 };
 
 function setup() {
@@ -126,9 +80,6 @@ function setup() {
     canvas.parent('canvas-holder');
     for (let i = 0; i < 500; i++)
         stars.push(new Star(true, true));
-
-    for (let i = 0; i < 43; i++)
-        historyBuffer.push(0);
 }
 
 function draw() {
