@@ -27,6 +27,7 @@ gulp.task('starfield', ['serve', 'starFieldHelper'], () => {
 });
 gulp.task('starFieldHelper', () => {
     return gulp.src([
+            'src/Starfield/utility.js',
             'src/Starfield/star.js',
             'src/Starfield/music-handler.js',
             'src/Starfield/index.js'

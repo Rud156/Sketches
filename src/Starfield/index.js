@@ -1,23 +1,24 @@
 /// <reference path="./star.js" />
 /// <reference path="./music-handler.js" />
+/// <reference path="./utility.js" />
 
 let stars = [];
 let starBurst = [];
 let musicHandler = new MusicHandler();
+let utility = new Utility();
 let audio = document.getElementById('audio');
 
+const sampleSize = 1024;
 let audioContext = new AudioContext();
 let analyzer = audioContext.createAnalyser();
-analyzer.smoothingTimeConstant = 0.3;
-analyzer.fftSize = 1024;
+analyzer.fftSize = sampleSize;
 let bufferLength = analyzer.frequencyBinCount;
-let dataArray = new Uint8Array(bufferLength);
+let dataArray = new Float32Array(bufferLength);
 let source = audioContext.createMediaElementSource(audio);
 source.connect(analyzer);
 analyzer.connect(audioContext.destination);
 
-let sensitivity = 1.1; // TODO: Make some formula for the beats
-let previousValue = 0; // FixMe: Not exactly required
+let sensitivity = (-0.0025714 * 0) + 1.5142857; // TODO: Make some formula for the beats
 let historyBuffer = [];
 
 let inputFile = document.getElementById('media-input');
@@ -46,14 +47,9 @@ let createStarBurst = () => {
         angleChange += 3.6;
     }
 };
-let calcSumSquaredValue = (valueArray) => {
-    let sum = 0;
-    for (let i = 0; i < valueArray.length; i++)
-        sum += pow(valueArray[i], 2);
-    return sum / valueArray.length;
-};
+
+
 let buildAudioGraph = () => {
-    console.log(musicHandler.getFile().type);
     if (audio.canPlayType(musicHandler.getFile().type)) {
         audio.src = musicHandler.getFileBlob();
         audio.play();
@@ -63,12 +59,16 @@ let buildAudioGraph = () => {
 };
 
 let visualize = () => {
-    analyzer.getByteFrequencyData(dataArray);
-    let currentValue = calcSumSquaredValue(dataArray);
+    analyzer.getFloatTimeDomainData(dataArray);
+    let instantSpec = utility.calcSumSquareStereo(dataArray);
+    let averageSpec = (sampleSize / historyBuffer.length) * utility.calcSumSquareStereo(historyBuffer);
+    let variance = utility.calcVariance(historyBuffer, averageSpec);
 
-    if (currentValue > sensitivity * previousValue)
+    sensitivity = (-0.0025714 * variance) + 1.5142857;
+    historyBuffer = utility.shiftBuffer(historyBuffer, instantSpec);
+
+    if (instantSpec > sensitivity * averageSpec)
         createStarBurst();
-    previousValue = currentValue;
 };
 
 function setup() {
@@ -88,8 +88,6 @@ function draw() {
     stars.forEach(element => {
         element.update();
         element.show();
-        // if (mouseX >= 0 && mouseX <= width)
-        //     element.setSpeed();
     });
 
     starBurst.forEach(element => {
@@ -103,4 +101,6 @@ function draw() {
             i -= 1;
         }
     }
+
+    visualize();
 }
