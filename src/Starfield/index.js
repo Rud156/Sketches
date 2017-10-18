@@ -7,22 +7,18 @@ let musicHandler = new MusicHandler();
 let audio = document.getElementById('audio');
 
 let audioContext = new AudioContext();
-// let leftAnalyzer = audioContext.createAnalyser();
-// let rightAnalyzer = audioContext.createAnalyser();
 let analyzer = audioContext.createAnalyser();
 analyzer.smoothingTimeConstant = 0.3;
 analyzer.fftSize = 1024;
-// let leftBufferLength = leftAnalyzer.frequencyBinCount;
-// let rightBufferLength = rightAnalyzer.frequencyBinCount;
 let bufferLength = analyzer.frequencyBinCount;
 let dataArray = new Uint8Array(bufferLength);
 let source = audioContext.createMediaElementSource(audio);
 source.connect(analyzer);
 analyzer.connect(audioContext.destination);
 
-
-let sensitivity = 1.1;
-let previousValue = 0;
+let sensitivity = 1.1; // TODO: Make some formula for the beats
+let previousValue = 0; // FixMe: Not exactly required
+let historyBuffer = [];
 
 let inputFile = document.getElementById('media-input');
 let mediaInputButton = document.getElementById('media-input-button');
@@ -80,6 +76,9 @@ function setup() {
     canvas.parent('canvas-holder');
     for (let i = 0; i < 500; i++)
         stars.push(new Star(true, true));
+
+    for (let i = 0; i < 43; i++)
+        historyBuffer.push(0);
 }
 
 function draw() {
@@ -104,10 +103,4 @@ function draw() {
             i -= 1;
         }
     }
-
-    visualize();
 }
-
-// function mousePressed() {
-//     createStarBurst();
-// }
