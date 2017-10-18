@@ -9,6 +9,7 @@ let utility = new Utility();
 let audio = document.getElementById('audio');
 
 const sampleSize = 1024;
+let someConstantValue = 100; // TODO: Works for 'Haunted'
 let audioContext = new AudioContext();
 let analyzer = audioContext.createAnalyser();
 analyzer.fftSize = sampleSize;
@@ -18,7 +19,7 @@ let source = audioContext.createMediaElementSource(audio);
 source.connect(analyzer);
 analyzer.connect(audioContext.destination);
 
-let sensitivity = (-0.0025714 * 0) + 1.5142857; // TODO: Make some formula for the beats
+let sensitivity = (-0.0025714 * 0) + 1.5142857;
 let historyBuffer = [];
 
 let inputFile = document.getElementById('media-input');
@@ -61,13 +62,13 @@ let buildAudioGraph = () => {
 let visualize = () => {
     analyzer.getFloatTimeDomainData(dataArray);
     let instantSpec = utility.calcSumSquareStereo(dataArray);
-    let averageSpec = (sampleSize / historyBuffer.length) * utility.calcSumSquareStereo(historyBuffer);
-    let variance = utility.calcVariance(historyBuffer, averageSpec);
+    let mean = utility.calcMean(historyBuffer);
+    let variance = utility.calcVariance(historyBuffer, instantSpec);
 
     sensitivity = (-0.0025714 * variance) + 1.5142857;
     historyBuffer = utility.shiftBuffer(historyBuffer, instantSpec);
 
-    if (instantSpec > sensitivity * averageSpec)
+    if (instantSpec > abs(sensitivity) * mean * 5)
         createStarBurst();
 };
 
