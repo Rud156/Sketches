@@ -11,7 +11,8 @@
     "gulp-notify": "^3.0.0",
     "gulp-plumber": "^1.1.0",
     "gulp-sourcemaps": "^2.6.1",
-    "gulp-util": "^3.0.8"
+    "gulp-util": "^3.0.8",
+    "lazypipe": "^1.0.1"
   },
   "scripts": {
     "build": "babel src -d lib"

@@ -1,11 +1,33 @@
-let gulp = require('gulp');
-let babel = require('gulp-babel');
-let browserSync = require('browser-sync').create();
-let sourceMaps = require('gulp-sourcemaps');
-let concat = require('gulp-concat');
-let plumber = require('gulp-plumber');
-let notify = require('gulp-notify');
-let gutil = require('gulp-util');
+const gulp = require('gulp');
+const babel = require('gulp-babel');
+const browserSync = require('browser-sync').create();
+const sourceMaps = require('gulp-sourcemaps');
+const concat = require('gulp-concat');
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
+const gutil = require('gulp-util');
+const lazypipe = require('lazypipe');
+
+let processJS = lazypipe()
+    .pipe(plumber, {
+        errorHandler: (error) => {
+            notify.onError({
+                title: 'Gulp error in ' + error.plugin,
+                message: error.toString()
+            })(error);
+            gutil.beep();
+        }
+    })
+    .pipe(babel, {
+        presets: ['env']
+    })
+    .pipe(sourceMaps.init)
+    .pipe(concat, 'bundle.js')
+    .pipe(sourceMaps.write)
+    .pipe(gulp.dest, 'lib')
+    .pipe(browserSync.reload, {
+        stream: true
+    });
 
 gulp.task('serve', () => {
     browserSync.init({
@@ -32,25 +54,7 @@ gulp.task('starFieldHelper', () => {
             'src/Starfield/music-handler.js',
             'src/Starfield/index.js'
         ])
-        .pipe(plumber({
-            errorHandler: (error) => {
-                notify.onError({
-                    title: 'Gulp error in ' + error.plugin,
-                    message: error.toString()
-                })(error);
-                gutil.beep();
-            }
-        }))
-        .pipe(babel({
-            presets: ['env']
-        }))
-        .pipe(sourceMaps.init())
-        .pipe(concat('bundle.js'))
-        .pipe(sourceMaps.write())
-        .pipe(gulp.dest('lib'))
-        .pipe(browserSync.reload({
-            stream: true
-        }));
+        .pipe(processJS());
 });
 
 gulp.task('spaceInvaders', ['serve', 'spaceInvadersHelper'], () => {
@@ -65,23 +69,5 @@ gulp.task('spaceInvadersHelper', () => {
             'src/SpaceInvaders/enemy.js',
             'src/SpaceInvaders/index.js'
         ])
-        .pipe(plumber({
-            errorHandler: (error) => {
-                notify.onError({
-                    title: 'Gulp error in ' + error.plugin,
-                    message: error.toString()
-                })(error);
-                gutil.beep();
-            }
-        }))
-        .pipe(babel({
-            presets: ['env']
-        }))
-        .pipe(sourceMaps.init())
-        .pipe(concat('bundle.js'))
-        .pipe(sourceMaps.write())
-        .pipe(gulp.dest('lib'))
-        .pipe(browserSync.reload({
-            stream: true
-        }));
+        .pipe(processJS());
 });
