@@ -19,6 +19,6 @@ class Bullet {
     }
 
     update() {
-        this.y -= this.speed;
+        this.y -= this.speed * (60 / frameRate());
     }
 }

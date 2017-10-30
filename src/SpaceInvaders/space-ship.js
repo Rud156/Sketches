@@ -36,9 +36,9 @@ class SpaceShip {
         }
 
         if (direction === 'LEFT') {
-            this.x -= this.speed;
+            this.x -= this.speed * (60 / frameRate());
         } else {
-            this.x += this.speed;
+            this.x += this.speed * (60 / frameRate());
         }
     }
 }

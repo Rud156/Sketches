@@ -5,11 +5,11 @@
 let spaceShip;
 let bullets = [];
 let enemies = [];
-let waitFrameCount = 0;
 const minFrameWaitCount = 5;
+let waitFrameCount = minFrameWaitCount;
 
 function setup() {
-    let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 25);
+    let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 30);
     canvas.parent('canvas-holder');
 
     spaceShip = new SpaceShip(255);
@@ -18,7 +18,7 @@ function setup() {
 function draw() {
     background(0);
     if (!keyIsDown(32))
-        waitFrameCount = 0;
+        waitFrameCount = minFrameWaitCount;
 
     spaceShip.show();
     if (keyIsDown(LEFT_ARROW)) {
@@ -29,12 +29,12 @@ function draw() {
     }
 
     if (keyIsDown(32)) {
-        if (waitFrameCount === 0)
+        if (waitFrameCount === minFrameWaitCount)
             bullets.push(new Bullet(
                 spaceShip.prevX,
                 height - 2 * spaceShip.baseHeight - 15
             ));
-        waitFrameCount--;
+        waitFrameCount -= (1 * (60 / frameRate()));
     }
     if (waitFrameCount < 0)
         waitFrameCount = minFrameWaitCount;
