@@ -1,6 +1,6 @@
 class Bullet {
-    constructor(xPosition, yPosition) {
-        this.speed = 10;
+    constructor(xPosition, yPosition, goUp) {
+        this.speed = goUp ? 10 : -10;
         this.baseHeight = 20;
         this.baseWidth = 10;
 

@@ -16,10 +16,12 @@ let processJS = lazypipe()
                 message: error.toString()
             })(error);
             gutil.beep();
+            console.log(error);
         }
     })
     .pipe(babel, {
-        presets: ['env']
+        presets: ['env'],
+        highlightCode: true
     })
     .pipe(sourceMaps.init)
     .pipe(concat, 'bundle.js')

@@ -21,18 +21,20 @@ function draw() {
         waitFrameCount = minFrameWaitCount;
 
     spaceShip.show();
-    if (keyIsDown(LEFT_ARROW)) {
-        spaceShip.moveShip('LEFT');
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-        spaceShip.moveShip('RIGHT');
+    if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) { /* Do nothing*/ } else {
+        if (keyIsDown(LEFT_ARROW)) {
+            spaceShip.moveShip('LEFT');
+        } else if (keyIsDown(RIGHT_ARROW)) {
+            spaceShip.moveShip('RIGHT');
+        }
     }
 
     if (keyIsDown(32)) {
         if (waitFrameCount === minFrameWaitCount)
             bullets.push(new Bullet(
                 spaceShip.prevX,
-                height - 2 * spaceShip.baseHeight - 15
+                height - 2 * spaceShip.baseHeight - 15,
+                true
             ));
         waitFrameCount -= (1 * (60 / frameRate()));
     }
