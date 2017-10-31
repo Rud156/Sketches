@@ -5,7 +5,7 @@
 let spaceShip;
 let bullets = [];
 let enemies = [];
-const minFrameWaitCount = 5;
+const minFrameWaitCount = 7;
 let waitFrameCount = minFrameWaitCount;
 
 function setup() {
@@ -13,6 +13,15 @@ function setup() {
     canvas.parent('canvas-holder');
 
     spaceShip = new SpaceShip(255);
+    for (let i = 0; i < 20; i++) {
+        enemies.push(
+            new Enemy(
+                random(0, width),
+                random(0, width),
+                random(0, height / 2)
+            )
+        );
+    }
 }
 
 function draw() {
@@ -51,4 +60,10 @@ function draw() {
             i -= 1;
         }
     }
+
+    enemies.forEach(element => {
+        element.show();
+        element.checkArrival();
+        element.update();
+    });
 }

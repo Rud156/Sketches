@@ -43,10 +43,12 @@ gulp.task('serve', () => {
     });
 });
 
-
-gulp.task('starfield', ['serve', 'starFieldHelper'], () => {
+gulp.task('general', () => {
     gulp.watch(['index.html']).on('change', browserSync.reload);
     gulp.watch(['css/*.css']).on('change', browserSync.reload);
+});
+
+gulp.task('starfield', ['serve', 'general', 'starFieldHelper'], () => {
     gulp.watch(['src/Starfield/*.js'], ['starFieldHelper']);
 });
 gulp.task('starFieldHelper', () => {
@@ -59,9 +61,7 @@ gulp.task('starFieldHelper', () => {
         .pipe(processJS());
 });
 
-gulp.task('spaceInvaders', ['serve', 'spaceInvadersHelper'], () => {
-    gulp.watch(['index.html']).on('change', browserSync.reload);
-    gulp.watch(['css/*.css']).on('change', browserSync.reload);
+gulp.task('spaceInvaders', ['serve', 'general', 'spaceInvadersHelper'], () => {
     gulp.watch(['src/SpaceInvaders/*.js'], ['spaceInvadersHelper']);
 });
 gulp.task('spaceInvadersHelper', () => {
