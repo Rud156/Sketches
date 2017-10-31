@@ -66,8 +66,8 @@ gulp.task('spaceInvaders', ['serve', 'general', 'spaceInvadersHelper'], () => {
 });
 gulp.task('spaceInvadersHelper', () => {
     return gulp.src([
-            'src/SpaceInvaders/space-ship.js',
             'src/SpaceInvaders/bullet.js',
+            'src/SpaceInvaders/space-ship.js',
             'src/SpaceInvaders/enemy.js',
             'src/SpaceInvaders/index.js'
         ])

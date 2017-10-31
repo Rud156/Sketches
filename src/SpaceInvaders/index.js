@@ -8,6 +8,7 @@ let enemies = [];
 const minFrameWaitCount = 7;
 let waitFrameCount = minFrameWaitCount;
 
+
 function setup() {
     let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 30);
     canvas.parent('canvas-holder');
@@ -66,4 +67,10 @@ function draw() {
         element.checkArrival();
         element.update();
     });
+
+    for (let i = 0; i < bullets.length; i++) {
+        for (let j = 0; j < enemies.length; j++) {
+            // TODO: Check collision with ship
+        }
+    }
 }

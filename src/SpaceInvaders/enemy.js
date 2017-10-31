@@ -1,3 +1,5 @@
+// TODO: Make something like golem from clash of clans. Where the ship breaks into two more
+
 class Enemy {
     constructor(xPosition, positionToReachX, positionToReachY) {
         this.position = createVector(xPosition, -30);
@@ -11,7 +13,11 @@ class Enemy {
         this.maxForce = 5;
 
         this.color = 255;
-        this.side = 20;
+        this.mainBase = 70;
+        this.generalDimension = 20;
+        this.shooterWidth = 10;
+        this.shooterHeight = 15;
+        this.shapePoints = [];
 
         this.magnitudeLimit = 50;
     }
@@ -20,8 +26,31 @@ class Enemy {
         noStroke();
         fill(this.color);
 
-        // TODO: Think out and implement and enemy shape
-        rect(this.position.x, this.position.y, this.side, this.side);
+        let x = this.position.x;
+        let y = this.position.y;
+        this.shapePoints = [
+            [x - this.mainBase / 2, y - this.generalDimension * 1.5],
+            [x - this.mainBase / 2 + this.generalDimension, y - this.generalDimension * 1.5],
+            [x - this.mainBase / 2 + this.generalDimension, y - this.generalDimension / 2],
+            [x + this.mainBase / 2 - this.generalDimension, y - this.generalDimension / 2],
+            [x + this.mainBase / 2 - this.generalDimension, y - this.generalDimension * 1.5],
+            [x + this.mainBase / 2, y - this.generalDimension * 1.5],
+            [x + this.mainBase / 2, y + this.generalDimension / 2],
+            [x + this.mainBase / 2 - 10, y + this.generalDimension / 2],
+            [x + this.mainBase / 2 - 10, y + this.generalDimension * 1.5],
+            [x + this.mainBase / 2 - 10 - 20, y + this.generalDimension * 1.5],
+            [x + this.mainBase / 2 - 10 - 20, y + this.generalDimension * 1.5 + this.shooterHeight],
+            [x + this.mainBase / 2 - 10 - 20 - this.shooterWidth, y + this.generalDimension * 1.5 + this.shooterHeight],
+            [x - this.mainBase / 2 + 10 + 20, y + this.generalDimension * 1.5],
+            [x - this.mainBase / 2 + 10, y + this.generalDimension * 1.5],
+            [x - this.mainBase / 2 + 10, y + this.generalDimension / 2],
+            [x - this.mainBase / 2, y + this.generalDimension / 2]
+        ];
+
+        beginShape();
+        for (let i = 0; i < this.shapePoints.length; i++)
+            vertex(this.shapePoints[i][0], this.shapePoints[i][1]);
+        endShape(CLOSE);
     }
 
     checkArrival() {
@@ -48,8 +77,30 @@ class Enemy {
 
         if (this.velocity.mag() <= 1)
             this.positionToReach = createVector(
-                random(0 + this.side, width - this.side),
-                random(0 + this.side, height / 2)
+                random(0, width),
+                random(0, height / 2)
             );
     }
+
+    pointIsInside(point, vs) {
+        // ray-casting algorithm based on
+        // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+        let x = point[0],
+            y = point[1];
+
+        let inside = false;
+        for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+            let xi = vs[i][0],
+                yi = vs[i][1];
+            let xj = vs[j][0],
+                yj = vs[j][1];
+
+            let intersect = ((yi > y) != (yj > y)) &&
+                (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+
+        return inside;
+    };
 }

@@ -4,8 +4,9 @@ class SpaceShip {
         this.baseWidth = 100;
         this.baseHeight = 20;
         this.shooterWidth = 10;
+        this.shapePoints = [];
 
-        this.position = createVector(width / 2, this.baseHeight - 10);
+        this.position = createVector(width / 2, height - this.baseHeight - 10);
         this.velocity = createVector(0, 0);
 
         this.prevX = this.position.x;
@@ -16,13 +17,27 @@ class SpaceShip {
         noStroke();
         fill(this.color);
 
-        rectMode(CENTER);
+        let x = this.position.x;
+        let y = this.position.y;
+        this.shapePoints = [
+            [x - this.shooterWidth / 2, y - this.baseHeight * 2],
+            [x + this.shooterWidth / 2, y - this.baseHeight * 2],
+            [x + this.shooterWidth / 2, y - this.baseHeight * 1.5],
+            [x + this.baseWidth / 4, y - this.baseHeight * 1.5],
+            [x + this.baseWidth / 4, y - this.baseHeight / 2],
+            [x + this.baseWidth / 2, y - this.baseHeight / 2],
+            [x + this.baseWidth / 2, y + this.baseHeight / 2],
+            [x - this.baseWidth / 2, y + this.baseHeight / 2],
+            [x - this.baseWidth / 2, y - this.baseHeight / 2],
+            [x - this.baseWidth / 4, y - this.baseHeight / 2],
+            [x - this.baseWidth / 4, y - this.baseHeight * 1.5],
+            [x - this.shooterWidth / 2, y - this.baseHeight * 1.5]
+        ];
 
-        rect(this.position.x, height - this.baseHeight - 10, this.baseWidth, this.baseHeight);
-        rect(this.position.x, height - 2 * this.baseHeight - 10, this.baseWidth / 2, this.baseHeight);
-
-        rect(this.position.x, height - 2 * this.baseHeight - 15 - this.baseHeight / 2,
-            this.shooterWidth, this.baseHeight / 2);
+        beginShape();
+        for (let i = 0; i < this.shapePoints.length; i++)
+            vertex(this.shapePoints[i][0], this.shapePoints[i][1]);
+        endShape(CLOSE);
 
         this.prevX = this.position.x;
     }
@@ -37,7 +52,7 @@ class SpaceShip {
             this.position.x = width - this.baseWidth / 2 - 1;
         }
 
-        this.velocity = createVector(width, this.baseHeight - 10);
+        this.velocity = createVector(width, 0);
         if (direction === 'LEFT')
             this.velocity.setMag(-this.speed);
         else
