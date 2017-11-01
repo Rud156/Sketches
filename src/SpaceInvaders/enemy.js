@@ -2,7 +2,7 @@
 /// <reference path="./bullet.js" />
 
 class Enemy {
-    constructor(xPosition, positionToReachX, positionToReachY, spawnWidth) {
+    constructor(xPosition, positionToReachX, positionToReachY, enemyBaseWidth) {
         this.position = createVector(xPosition, -30);
         this.prevX = this.position.x;
 
@@ -15,7 +15,7 @@ class Enemy {
         this.maxForce = 5;
 
         this.color = 255;
-        this.mainBase = spawnWidth;
+        this.mainBase = enemyBaseWidth;
         this.generalDimension = this.mainBase / 5;
         this.shooterHeight = this.mainBase * 3 / 20;
         this.shapePoints = [];
@@ -24,11 +24,22 @@ class Enemy {
         this.bullets = [];
         this.constBulletTime = 14;
         this.currentBulletTime = this.constBulletTime;
+
+        this.health = 100;
+        this.fullHealthColor = color('hsl(120, 100%, 50%)');
+        this.halfHealthColor = color('hsl(60, 100%, 50%)');
+        this.zeroHealthColor = color('hsl(0, 100%, 50%)');
     }
 
     show() {
         noStroke();
-        fill(this.color);
+        let currentColor = null;
+        if (this.health < 50) {
+            currentColor = lerpColor(this.zeroHealthColor, this.halfHealthColor, this.health / 50);
+        } else {
+            currentColor = lerpColor(this.halfHealthColor, this.fullHealthColor, (this.health - 50) / 50);
+        }
+        fill(currentColor);
 
         let x = this.position.x;
         let y = this.position.y;
@@ -99,6 +110,14 @@ class Enemy {
         }
 
         this.currentBulletTime -= (1 * (60 / frameRate()));
+    }
+
+    takeDamageAndCheckDeath() {
+        this.health -= 20;
+        if (this.health < 0)
+            return true;
+        else
+            return false;
     }
 
     update() {

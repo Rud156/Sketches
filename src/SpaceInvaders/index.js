@@ -1,4 +1,5 @@
 /// <reference path="./bullet.js" />
+/// <reference path="./explosion.js" />
 /// <reference path="./space-ship.js" />
 /// <reference path="./enemy.js" />
 
@@ -14,13 +15,13 @@ function setup() {
     canvas.parent('canvas-holder');
 
     spaceShip = new SpaceShip(255);
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1; i++) {
         enemies.push(
             new Enemy(
                 random(0, width),
                 random(0, width),
                 random(0, height / 2),
-                20
+                45
             )
         );
     }
@@ -75,10 +76,12 @@ function draw() {
     for (let i = 0; i < bullets.length; i++) {
         for (let j = 0; j < enemies.length; j++) {
             if (enemies[j].pointIsInside([bullets[i].x, bullets[i].y])) {
-                enemies.splice(j, 1);
+                let enemyDead = enemies[j].takeDamageAndCheckDeath();
+                if (enemyDead) {
+                    enemies.splice(j, 1);
+                    j -= 1;
+                }
                 bullets.splice(i, 1);
-
-                j -= 1;
                 i = i === 0 ? 0 : i - 1;
             }
         }
