@@ -13,10 +13,11 @@ let processJS = lazypipe()
         errorHandler: (error) => {
             notify.onError({
                 title: 'Gulp error in ' + error.plugin,
-                message: error.toString()
+                message: error.message
             })(error);
             gutil.beep();
-            console.log(error);
+            console.log(gutil.colors.red(error.message));
+            console.log(error.codeFrame);
         }
     })
     .pipe(babel, {

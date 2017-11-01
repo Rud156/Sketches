@@ -1,8 +1,8 @@
 class Bullet {
-    constructor(xPosition, yPosition, goUp) {
+    constructor(xPosition, yPosition, size, goUp) {
         this.speed = goUp ? 10 : -10;
-        this.baseHeight = 20;
-        this.baseWidth = 10;
+        this.baseHeight = size * 2;
+        this.baseWidth = size;
 
         this.x = xPosition;
         this.y = yPosition;
@@ -14,7 +14,6 @@ class Bullet {
         noStroke();
         fill(this.color);
 
-        rectMode(CENTER);
         rect(this.x, this.y - this.baseHeight, this.baseWidth, this.baseHeight);
     }
 

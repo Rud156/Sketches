@@ -1,5 +1,5 @@
-/// <reference path="./space-ship.js" />
 /// <reference path="./bullet.js" />
+/// <reference path="./space-ship.js" />
 /// <reference path="./enemy.js" />
 
 let spaceShip;
@@ -14,12 +14,13 @@ function setup() {
     canvas.parent('canvas-holder');
 
     spaceShip = new SpaceShip(255);
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         enemies.push(
             new Enemy(
                 random(0, width),
                 random(0, width),
-                random(0, height / 2)
+                random(0, height / 2),
+                20
             )
         );
     }
@@ -27,11 +28,12 @@ function setup() {
 
 function draw() {
     background(0);
+    rectMode(CENTER);
     if (!keyIsDown(32))
         waitFrameCount = minFrameWaitCount;
 
     spaceShip.show();
-    if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) { /* Do nothing*/ } else {
+    if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) { /* Do nothing */ } else {
         if (keyIsDown(LEFT_ARROW)) {
             spaceShip.moveShip('LEFT');
         } else if (keyIsDown(RIGHT_ARROW)) {
@@ -44,6 +46,7 @@ function draw() {
             bullets.push(new Bullet(
                 spaceShip.prevX,
                 height - 2 * spaceShip.baseHeight - 15,
+                spaceShip.baseWidth / 10,
                 true
             ));
         waitFrameCount -= (1 * (60 / frameRate()));
@@ -66,11 +69,29 @@ function draw() {
         element.show();
         element.checkArrival();
         element.update();
+        element.checkPlayerDistance(spaceShip.position);
     });
 
     for (let i = 0; i < bullets.length; i++) {
         for (let j = 0; j < enemies.length; j++) {
-            // TODO: Check collision with ship
+            if (enemies[j].pointIsInside([bullets[i].x, bullets[i].y])) {
+                enemies.splice(j, 1);
+                bullets.splice(i, 1);
+
+                j -= 1;
+                i = i === 0 ? 0 : i - 1;
+            }
+        }
+    }
+
+    for (let i = 0; i < enemies.length; i++) {
+        for (let j = 0; j < enemies[i].bullets.length; j++) {
+            if (spaceShip.pointIsInside([enemies[i].bullets[j].x, enemies[i].bullets[j].y])) {
+                enemies[i].bullets.splice(j, 1);
+                spaceShip.decreaseHealth();
+
+                j -= 1;
+            }
         }
     }
 }
