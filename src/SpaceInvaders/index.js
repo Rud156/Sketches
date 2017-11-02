@@ -168,12 +168,14 @@ function draw() {
 
     for (let i = 0; i < enemies.length; i++) {
         for (let j = 0; j < enemies[i].bullets.length; j++) {
-            if (spaceShip.pointIsInside([enemies[i].bullets[j].x, enemies[i].bullets[j].y])) {
-                spaceShip.decreaseHealth(2 * enemies[i].bullets[j].baseWidth / 10);
-                enemies[i].bullets.splice(j, 1);
+            // FixMe: Check bullet undefined
+            if (enemies[i].bullets[j])
+                if (spaceShip.pointIsInside([enemies[i].bullets[j].x, enemies[i].bullets[j].y])) {
+                    spaceShip.decreaseHealth(2 * enemies[i].bullets[j].baseWidth / 10);
+                    enemies[i].bullets.splice(j, 1);
 
-                j -= 1;
-            }
+                    j -= 1;
+                }
         }
     }
 
