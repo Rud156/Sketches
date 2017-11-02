@@ -17,5 +17,6 @@
   "scripts": {
     "build": "babel src -d lib"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {}
 }
