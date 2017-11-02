@@ -310,4 +310,5 @@ function resetGame() {
 
     buttonDisplayed = false;
     button.elt.style.display = 'none';
+    spaceShip.GodMode = false;
 }
