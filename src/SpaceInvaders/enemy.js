@@ -1,12 +1,11 @@
-// TODO: Make something like golem from clash of clans. Where the ship breaks into two more
 /// <reference path="./bullet.js" />
 
 class Enemy {
-    constructor(xPosition, positionToReachX, positionToReachY, enemyBaseWidth) {
-        this.position = createVector(xPosition, -30);
+    constructor(xPosition, yPosition, enemyBaseWidth) {
+        this.position = createVector(xPosition, yPosition);
         this.prevX = this.position.x;
 
-        this.positionToReach = createVector(positionToReachX, positionToReachY);
+        this.positionToReach = createVector(random(0, width), random(0, height / 2));
         this.velocity = createVector(0, 0);
         this.acceleration = createVector(0, 0);
 
@@ -15,17 +14,18 @@ class Enemy {
         this.maxForce = 5;
 
         this.color = 255;
-        this.mainBase = enemyBaseWidth;
-        this.generalDimension = this.mainBase / 5;
-        this.shooterHeight = this.mainBase * 3 / 20;
+        this.baseWidth = enemyBaseWidth;
+        this.generalDimension = this.baseWidth / 5;
+        this.shooterHeight = this.baseWidth * 3 / 20;
         this.shapePoints = [];
 
         this.magnitudeLimit = 50;
         this.bullets = [];
-        this.constBulletTime = 14;
+        this.constBulletTime = 7;
         this.currentBulletTime = this.constBulletTime;
 
-        this.health = 100;
+        this.maxHealth = 100 * enemyBaseWidth / 45;
+        this.health = this.maxHealth;
         this.fullHealthColor = color('hsl(120, 100%, 50%)');
         this.halfHealthColor = color('hsl(60, 100%, 50%)');
         this.zeroHealthColor = color('hsl(0, 100%, 50%)');
@@ -34,32 +34,33 @@ class Enemy {
     show() {
         noStroke();
         let currentColor = null;
-        if (this.health < 50) {
-            currentColor = lerpColor(this.zeroHealthColor, this.halfHealthColor, this.health / 50);
+        let mappedHealth = map(this.health, 0, this.maxHealth, 0, 100);
+        if (mappedHealth < 50) {
+            currentColor = lerpColor(this.zeroHealthColor, this.halfHealthColor, mappedHealth / 50);
         } else {
-            currentColor = lerpColor(this.halfHealthColor, this.fullHealthColor, (this.health - 50) / 50);
+            currentColor = lerpColor(this.halfHealthColor, this.fullHealthColor, (mappedHealth - 50) / 50);
         }
         fill(currentColor);
 
         let x = this.position.x;
         let y = this.position.y;
         this.shapePoints = [
-            [x - this.mainBase / 2, y - this.generalDimension * 1.5],
-            [x - this.mainBase / 2 + this.generalDimension, y - this.generalDimension * 1.5],
-            [x - this.mainBase / 2 + this.generalDimension, y - this.generalDimension / 2],
-            [x + this.mainBase / 2 - this.generalDimension, y - this.generalDimension / 2],
-            [x + this.mainBase / 2 - this.generalDimension, y - this.generalDimension * 1.5],
-            [x + this.mainBase / 2, y - this.generalDimension * 1.5],
-            [x + this.mainBase / 2, y + this.generalDimension / 2],
-            [x + this.mainBase / 2 - this.mainBase / 5, y + this.generalDimension / 2],
-            [x + this.mainBase / 2 - this.mainBase / 5, y + this.generalDimension * 1.5],
-            [x + this.mainBase / 2 - this.mainBase / 5 - this.mainBase / 5, y + this.generalDimension * 1.5],
-            [x + this.mainBase / 2 - this.mainBase / 5 - this.mainBase / 5, y + this.generalDimension * 1.5 + this.shooterHeight],
-            [x - this.mainBase / 2 + this.mainBase / 5 + this.mainBase / 5, y + this.generalDimension * 1.5 + this.shooterHeight],
-            [x - this.mainBase / 2 + this.mainBase / 5 + this.mainBase / 5, y + this.generalDimension * 1.5],
-            [x - this.mainBase / 2 + this.mainBase / 5, y + this.generalDimension * 1.5],
-            [x - this.mainBase / 2 + this.mainBase / 5, y + this.generalDimension / 2],
-            [x - this.mainBase / 2, y + this.generalDimension / 2]
+            [x - this.baseWidth / 2, y - this.generalDimension * 1.5],
+            [x - this.baseWidth / 2 + this.generalDimension, y - this.generalDimension * 1.5],
+            [x - this.baseWidth / 2 + this.generalDimension, y - this.generalDimension / 2],
+            [x + this.baseWidth / 2 - this.generalDimension, y - this.generalDimension / 2],
+            [x + this.baseWidth / 2 - this.generalDimension, y - this.generalDimension * 1.5],
+            [x + this.baseWidth / 2, y - this.generalDimension * 1.5],
+            [x + this.baseWidth / 2, y + this.generalDimension / 2],
+            [x + this.baseWidth / 2 - this.baseWidth / 5, y + this.generalDimension / 2],
+            [x + this.baseWidth / 2 - this.baseWidth / 5, y + this.generalDimension * 1.5],
+            [x + this.baseWidth / 2 - this.baseWidth / 5 - this.baseWidth / 5, y + this.generalDimension * 1.5],
+            [x + this.baseWidth / 2 - this.baseWidth / 5 - this.baseWidth / 5, y + this.generalDimension * 1.5 + this.shooterHeight],
+            [x - this.baseWidth / 2 + this.baseWidth / 5 + this.baseWidth / 5, y + this.generalDimension * 1.5 + this.shooterHeight],
+            [x - this.baseWidth / 2 + this.baseWidth / 5 + this.baseWidth / 5, y + this.generalDimension * 1.5],
+            [x - this.baseWidth / 2 + this.baseWidth / 5, y + this.generalDimension * 1.5],
+            [x - this.baseWidth / 2 + this.baseWidth / 5, y + this.generalDimension / 2],
+            [x - this.baseWidth / 2, y + this.generalDimension / 2]
         ];
 
         beginShape();
@@ -91,7 +92,7 @@ class Enemy {
                     new Bullet(
                         this.prevX,
                         this.position.y + this.generalDimension * 5,
-                        this.mainBase / 5,
+                        this.baseWidth / 5,
                         false
                     )
                 );
@@ -127,7 +128,7 @@ class Enemy {
         this.velocity.limit(this.maxSpeed);
         this.position.add(this.velocity);
         // There is no continuous acceleration its only instantaneous
-        this.acceleration.set(0, 0);
+        this.acceleration.mult(0);
 
         if (this.velocity.mag() <= 1)
             this.positionToReach = createVector(
@@ -140,7 +141,7 @@ class Enemy {
             bullet.update();
         });
         for (let i = 0; i < this.bullets.length; i++) {
-            if (this.bullets[i].y < -this.bullets[i].baseHeight) {
+            if (this.bullets[i].y > this.bullets[i].baseHeight + height) {
                 this.bullets.splice(i, 1);
                 i -= 1;
             }

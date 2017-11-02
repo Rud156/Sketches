@@ -16,6 +16,8 @@ class SpaceShip {
         this.fullHealthColor = color('hsl(120, 100%, 50%)');
         this.halfHealthColor = color('hsl(60, 100%, 50%)');
         this.zeroHealthColor = color('hsl(0, 100%, 50%)');
+
+        this.GodMode = false;
     }
 
     show() {
@@ -76,11 +78,21 @@ class SpaceShip {
         this.position.add(this.velocity);
     }
 
-    decreaseHealth() {
-        this.health -= 2;
-        if (this.health === 0) {
-            window.alert('You Lost');
-            window.location = window.location.href;
+    decreaseHealth(amount) {
+        if (!this.GodMode)
+            this.health -= amount;
+    }
+
+    activateGodMode() {
+        this.GodMode = true;
+    }
+
+    isDestroyed() {
+        if (this.health <= 0) {
+            this.health = 0;
+            return true;
+        } else {
+            return false;
         }
     }
 

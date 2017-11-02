@@ -2,6 +2,8 @@
     "cSpell.words": [
         "Perceptron",
         "gutil",
-        "lazypipe"
-    ]
+        "lazypipe",
+        "mult"
+    ],
+    "eslint.enable": false
 }
