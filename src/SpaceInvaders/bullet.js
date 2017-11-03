@@ -1,5 +1,5 @@
 class Bullet {
-    constructor(xPosition, yPosition, size, goUp, colorValue) {
+    constructor(xPosition, yPosition, size, goUp, colorValue, rotation) {
         this.goUp = goUp;
         this.speed = goUp ? -10 : 10;
         this.baseWidth = size;
@@ -9,6 +9,7 @@ class Bullet {
         this.velocity = createVector(0, 0);
 
         this.color = colorValue !== undefined ? color(`hsl(${colorValue}, 100%, 50%)`) : 255;
+        this.rotation = rotation;
     }
 
     show() {
@@ -18,16 +19,27 @@ class Bullet {
         let x = this.position.x;
         let y = this.position.y;
 
-        rect(x, y - this.baseHeight, this.baseWidth, this.baseHeight);
+        push();
+        translate(x, y);
+        rotate(this.rotation);
+
+        rect(0, -this.baseHeight, this.baseWidth, this.baseHeight);
         if (this.goUp) {
-            triangle(x - this.baseWidth / 2, y - this.baseHeight,
-                x, y - this.baseHeight * 2,
-                x + this.baseWidth / 2, y - this.baseHeight);
+            triangle(-this.baseWidth / 2, -this.baseHeight,
+                0, -this.baseHeight * 2,
+                this.baseWidth / 2, -this.baseHeight
+            );
         }
+        pop();
     }
 
     update() {
-        this.velocity = createVector(0, height);
+        if (this.rotation === undefined)
+            this.velocity = createVector(0, 45);
+        else {
+            let rotation = 45 - this.rotation;
+            this.velocity = createVector(-45 + rotation, 45);
+        }
         this.velocity.setMag(this.speed);
         this.position.add(this.velocity);
     }

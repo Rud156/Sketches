@@ -3,6 +3,7 @@
         "Coord",
         "Perceptron",
         "gutil",
+        "hsla",
         "lazypipe",
         "mult"
     ],

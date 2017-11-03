@@ -4,15 +4,13 @@
 /// <reference path="./space-ship.js" />
 /// <reference path="./enemy.js" />
 
-const minFrameWaitCount = 7;
-const pickupColors = [0, 175, 120];
+const pickupColors = [0, 120, 175];
 
 let spaceShip;
 let spaceShipDestroyed = false;
 let pickups = [];
 let enemies = [];
 let explosions = [];
-let waitFrameCount = minFrameWaitCount;
 
 let currentLevelCount = 1;
 let maxLevelCount = 7;
@@ -30,7 +28,7 @@ function setup() {
     button.elt.style.display = 'none';
     button.mousePressed(resetGame);
 
-    spaceShip = new SpaceShip(255);
+    spaceShip = new SpaceShip();
 
     textAlign(CENTER);
     rectMode(CENTER);

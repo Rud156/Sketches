@@ -1,8 +1,7 @@
 /// <reference path="./bullet.js" />
 
 class SpaceShip {
-    constructor(bodyColor) {
-        this.color = bodyColor;
+    constructor() {
         this.baseWidth = 70;
         this.baseHeight = this.baseWidth / 5;
         this.shooterWidth = this.baseWidth / 10;
@@ -21,14 +20,16 @@ class SpaceShip {
         this.fullHealthColor = color('hsl(120, 100%, 50%)');
         this.halfHealthColor = color('hsl(60, 100%, 50%)');
         this.zeroHealthColor = color('hsl(0, 100%, 50%)');
+        this.spaceShipColor = color('hsl(175, 100%, 50%)');
 
-        this.GodMode = true;
+        this.GodMode = false;
         this.bulletColor = 0;
     }
 
     show() {
         noStroke();
-        fill(this.color);
+        let bodyColor = lerpColor(this.zeroHealthColor, this.spaceShipColor, this.health / 100);
+        fill(bodyColor);
 
         let x = this.position.x;
         let y = this.position.y;
@@ -74,7 +75,9 @@ class SpaceShip {
             bullet.update();
         });
         for (let i = 0; i < this.bullets.length; i++) {
-            if (this.bullets[i].position.y < -this.bullets[i].baseHeight) {
+            if (this.bullets[i].position.y < -this.bullets[i].baseHeight ||
+                this.bullets[i].position.x < -this.bullets[i].baseHeight ||
+                this.bullets[i].position.x > width + this.bullets[i].baseHeight) {
                 this.bullets.splice(i, 1);
                 i -= 1;
             }
@@ -104,15 +107,58 @@ class SpaceShip {
         this.bulletColor = colorValue;
     }
 
+    getBulletType() {
+        switch (this.bulletColor) {
+            case 0:
+                return [
+                    new Bullet(
+                        this.position.x,
+                        this.position.y - this.baseHeight * 1.5,
+                        this.baseWidth / 10,
+                        true,
+                        this.bulletColor
+                    )
+                ];
+                break;
+            case 120:
+                return [
+                    new Bullet(
+                        this.position.x - this.shooterWidth,
+                        this.position.y - this.baseHeight * 1.5,
+                        this.baseWidth / 10,
+                        true,
+                        this.bulletColor
+                    ),
+                    new Bullet(
+                        this.position.x + this.shooterWidth,
+                        this.position.y - this.baseHeight * 1.5,
+                        this.baseWidth / 10,
+                        true,
+                        this.bulletColor
+                    ),
+                ]
+                break;
+            default:
+                let array = [];
+                for (let i = 0; i < 80; i += 10) {
+                    array.push(
+                        new Bullet(
+                            this.position.x,
+                            this.position.y - this.baseHeight * 1.5,
+                            this.baseWidth / 10,
+                            true,
+                            this.bulletColor, -40 + i
+                        )
+                    );
+                }
+                return array;
+                break;
+        }
+    }
+
     shootBullets() {
         if (this.waitFrameCount === this.minFrameWaitCount)
-            this.bullets.push(new Bullet(
-                this.position.x,
-                this.position.y - this.baseHeight * 1.5,
-                this.baseWidth / 10,
-                true,
-                this.bulletColor
-            ));
+            this.bullets.push(...this.getBulletType());
         this.waitFrameCount -= (1 * (60 / frameRate()));
     }
 
