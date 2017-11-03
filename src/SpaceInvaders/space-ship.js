@@ -1,3 +1,5 @@
+/// <reference path="./bullet.js" />
+
 class SpaceShip {
     constructor(bodyColor) {
         this.color = bodyColor;
@@ -6,10 +8,13 @@ class SpaceShip {
         this.shooterWidth = this.baseWidth / 10;
         this.shapePoints = [];
 
+        this.bullets = [];
+        this.minFrameWaitCount = 7;
+        this.waitFrameCount = this.minFrameWaitCount
+
         this.position = createVector(width / 2, height - this.baseHeight - 10);
         this.velocity = createVector(0, 0);
 
-        this.prevX = this.position.x;
         this.speed = 15;
         this.health = 100;
 
@@ -17,7 +22,7 @@ class SpaceShip {
         this.halfHealthColor = color('hsl(60, 100%, 50%)');
         this.zeroHealthColor = color('hsl(0, 100%, 50%)');
 
-        this.GodMode = false;
+        this.GodMode = true;
     }
 
     show() {
@@ -54,12 +59,28 @@ class SpaceShip {
         }
         fill(currentColor);
         rect(width / 2, height - 7, width * this.health / 100, 10);
+    }
 
-        this.prevX = this.position.x;
+    update() {
+        if (!keyIsDown(32))
+            this.waitFrameCount = this.minFrameWaitCount;
+
+        if (this.waitFrameCount < 0)
+            this.waitFrameCount = this.minFrameWaitCount;
+
+        this.bullets.forEach(bullet => {
+            bullet.show();
+            bullet.update();
+        });
+        for (let i = 0; i < this.bullets.length; i++) {
+            if (this.bullets[i].position.y < -this.bullets[i].baseHeight) {
+                this.bullets.splice(i, 1);
+                i -= 1;
+            }
+        }
     }
 
     moveShip(direction) {
-        this.prevX = this.position.x;
 
         if (this.position.x < this.baseWidth / 2) {
             this.position.x = this.baseWidth / 2 + 1;
@@ -78,6 +99,17 @@ class SpaceShip {
         this.position.add(this.velocity);
     }
 
+    shootBullets() {
+        if (this.waitFrameCount === this.minFrameWaitCount)
+            this.bullets.push(new Bullet(
+                this.position.x,
+                this.position.y - this.baseHeight * 1.5,
+                this.baseWidth / 10,
+                true
+            ));
+        this.waitFrameCount -= (1 * (60 / frameRate()));
+    }
+
     decreaseHealth(amount) {
         if (!this.GodMode)
             this.health -= amount;
@@ -94,6 +126,11 @@ class SpaceShip {
         } else {
             return false;
         }
+    }
+
+    reset() {
+        this.bullets = [];
+        this.waitFrameCount = this.minFrameWaitCount;
     }
 
     pointIsInside(point) {

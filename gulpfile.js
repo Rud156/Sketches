@@ -70,6 +70,7 @@ gulp.task('spaceInvadersHelper', () => {
             'src/SpaceInvaders/particle.js',
             'src/SpaceInvaders/bullet.js',
             'src/SpaceInvaders/explosion.js',
+            'src/SpaceInvaders/pickups.js',
             'src/SpaceInvaders/space-ship.js',
             'src/SpaceInvaders/enemy.js',
             'src/SpaceInvaders/index.js'

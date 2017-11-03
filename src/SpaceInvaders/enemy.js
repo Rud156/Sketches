@@ -141,7 +141,7 @@ class Enemy {
             bullet.update();
         });
         for (let i = 0; i < this.bullets.length; i++) {
-            if (this.bullets[i].y > this.bullets[i].baseHeight + height) {
+            if (this.bullets[i].position.y > this.bullets[i].baseHeight + height) {
                 this.bullets.splice(i, 1);
                 i -= 1;
             }

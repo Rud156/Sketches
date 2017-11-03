@@ -1,12 +1,12 @@
 class Bullet {
     constructor(xPosition, yPosition, size, goUp) {
         this.goUp = goUp;
-        this.speed = goUp ? 10 : -10;
+        this.speed = goUp ? -10 : 10;
         this.baseWidth = size;
         this.baseHeight = size * 2;
 
-        this.x = xPosition;
-        this.y = yPosition;
+        this.position = createVector(xPosition, yPosition);
+        this.velocity = createVector(0, 0);
 
         this.color = 255;
     }
@@ -15,15 +15,20 @@ class Bullet {
         noStroke();
         fill(this.color);
 
-        rect(this.x, this.y - this.baseHeight, this.baseWidth, this.baseHeight);
+        let x = this.position.x;
+        let y = this.position.y;
+
+        rect(x, y - this.baseHeight, this.baseWidth, this.baseHeight);
         if (this.goUp) {
-            triangle(this.x - this.baseWidth / 2, this.y - this.baseHeight,
-                this.x, this.y - this.baseHeight * 2,
-                this.x + this.baseWidth / 2, this.y - this.baseHeight);
+            triangle(x - this.baseWidth / 2, y - this.baseHeight,
+                x, y - this.baseHeight * 2,
+                x + this.baseWidth / 2, y - this.baseHeight);
         }
     }
 
     update() {
-        this.y -= this.speed * (60 / frameRate());
+        this.velocity = createVector(0, height);
+        this.velocity.setMag(this.speed);
+        this.position.add(this.velocity);
     }
 }

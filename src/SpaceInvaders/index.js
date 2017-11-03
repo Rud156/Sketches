@@ -1,11 +1,12 @@
 /// <reference path="./bullet.js" />
 /// <reference path="./explosion.js" />
+/// <reference path="./pickups.js" />
 /// <reference path="./space-ship.js" />
 /// <reference path="./enemy.js" />
 
 let spaceShip;
 let spaceShipDestroyed = false;
-let bullets = [];
+let pickups = [];
 let enemies = [];
 let explosions = [];
 const minFrameWaitCount = 7;
@@ -31,12 +32,11 @@ function setup() {
 
     textAlign(CENTER);
     rectMode(CENTER);
+    angleMode(DEGREES);
 }
 
 function draw() {
     background(0);
-    if (!keyIsDown(32))
-        waitFrameCount = minFrameWaitCount;
 
     if (keyIsDown(71) && keyIsDown(79) && keyIsDown(68))
         spaceShip.activateGodMode();
@@ -76,6 +76,8 @@ function draw() {
 
     } else {
         spaceShip.show();
+        spaceShip.update();
+
         if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) { /* Do nothing */ } else {
             if (keyIsDown(LEFT_ARROW)) {
                 spaceShip.moveShip('LEFT');
@@ -85,27 +87,7 @@ function draw() {
         }
 
         if (keyIsDown(32)) {
-            if (waitFrameCount === minFrameWaitCount)
-                bullets.push(new Bullet(
-                    spaceShip.prevX,
-                    height - 2 * spaceShip.baseHeight - 15,
-                    spaceShip.baseWidth / 10,
-                    true
-                ));
-            waitFrameCount -= (1 * (60 / frameRate()));
-        }
-    }
-    if (waitFrameCount < 0)
-        waitFrameCount = minFrameWaitCount;
-
-    bullets.forEach(bullet => {
-        bullet.show();
-        bullet.update();
-    });
-    for (let i = 0; i < bullets.length; i++) {
-        if (bullets[i].y < -bullets[i].baseHeight) {
-            bullets.splice(i, 1);
-            i -= 1;
+            spaceShip.shootBullets();
         }
     }
 
@@ -126,43 +108,64 @@ function draw() {
         }
     }
 
-    for (let i = 0; i < bullets.length; i++) {
+    for (let i = 0; i < pickups.length; i++) {
+        pickups[i].show();
+        pickups[i].update();
+
+        if (pickups[i].isOutOfScreen()) {
+            pickups.splice(i, 1);
+            i -= 1;
+        }
+    }
+
+    for (let i = 0; i < spaceShip.bullets.length; i++) {
         for (let j = 0; j < enemies.length; j++) {
-            if (enemies[j].pointIsInside([bullets[i].x, bullets[i].y])) {
-                let enemyDead = enemies[j].takeDamageAndCheckDeath();
-                if (enemyDead) {
-                    explosions.push(
-                        new Explosion(
-                            enemies[j].position.x,
-                            enemies[j].position.y,
-                            (enemies[j].baseWidth * 7) / 45
-                        )
-                    );
-                    if (enemies[j].baseWidth > 100) {
-                        enemies.push(
-                            new Enemy(
+            // FixMe: Check bullet undefined
+            if (spaceShip.bullets[i])
+                if (enemies[j].pointIsInside([spaceShip.bullets[i].position.x, spaceShip.bullets[i].position.y])) {
+                    let enemyDead = enemies[j].takeDamageAndCheckDeath();
+                    if (enemyDead) {
+                        explosions.push(
+                            new Explosion(
                                 enemies[j].position.x,
                                 enemies[j].position.y,
-                                enemies[j].baseWidth / 2
+                                (enemies[j].baseWidth * 7) / 45
                             )
                         );
-                        enemies.push(
-                            new Enemy(
-                                enemies[j].position.x,
-                                enemies[j].position.y,
-                                enemies[j].baseWidth / 2
-                            )
-                        );
+                        if (enemies[j].baseWidth > 100) {
+                            enemies.push(
+                                new Enemy(
+                                    enemies[j].position.x,
+                                    enemies[j].position.y,
+                                    enemies[j].baseWidth / 2
+                                )
+                            );
+                            enemies.push(
+                                new Enemy(
+                                    enemies[j].position.x,
+                                    enemies[j].position.y,
+                                    enemies[j].baseWidth / 2
+                                )
+                            );
 
+                        }
+
+                        let randomValue = random();
+                        if (randomValue < 0.3)
+                            pickups.push(
+                                new Pickup(
+                                    enemies[j].position.x,
+                                    enemies[j].position.y,
+                                    int(random(0, 359))
+                                )
+                            );
+
+                        enemies.splice(j, 1);
+                        j -= 1;
                     }
-
-
-                    enemies.splice(j, 1);
-                    j -= 1;
+                    spaceShip.bullets.splice(i, 1);
+                    i = i === 0 ? 0 : i - 1;
                 }
-                bullets.splice(i, 1);
-                i = i === 0 ? 0 : i - 1;
-            }
         }
     }
 
@@ -170,7 +173,7 @@ function draw() {
         for (let j = 0; j < enemies[i].bullets.length; j++) {
             // FixMe: Check bullet undefined
             if (enemies[i].bullets[j])
-                if (spaceShip.pointIsInside([enemies[i].bullets[j].x, enemies[i].bullets[j].y])) {
+                if (spaceShip.pointIsInside([enemies[i].bullets[j].position.x, enemies[i].bullets[j].position.y])) {
                     spaceShip.decreaseHealth(2 * enemies[i].bullets[j].baseWidth / 10);
                     enemies[i].bullets.splice(j, 1);
 
@@ -299,10 +302,9 @@ function incrementLevel() {
 
 function resetGame() {
     spaceShipDestroyed = false;
-    bullets = [];
     enemies = [];
     explosions = [];
-    waitFrameCount = minFrameWaitCount;
+    spaceShip.reset();
 
     currentLevelCount = 1;
     maxLevelCount = 7;
