@@ -7,11 +7,13 @@ class Pickup {
         this.shapePoints = [0, 0, 0, 0];
         this.baseWidth = 15;
 
+        this.colorValue = colorValue;
         this.color = color(`hsl(${colorValue}, 100%, 50%)`);
         this.angle = 0;
     }
 
     show() {
+        noStroke();
         fill(this.color);
 
         let x = this.position.x;

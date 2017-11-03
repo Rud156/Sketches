@@ -23,6 +23,7 @@ class SpaceShip {
         this.zeroHealthColor = color('hsl(0, 100%, 50%)');
 
         this.GodMode = true;
+        this.bulletColor = 0;
     }
 
     show() {
@@ -99,13 +100,18 @@ class SpaceShip {
         this.position.add(this.velocity);
     }
 
+    setBulletType(colorValue) {
+        this.bulletColor = colorValue;
+    }
+
     shootBullets() {
         if (this.waitFrameCount === this.minFrameWaitCount)
             this.bullets.push(new Bullet(
                 this.position.x,
                 this.position.y - this.baseHeight * 1.5,
                 this.baseWidth / 10,
-                true
+                true,
+                this.bulletColor
             ));
         this.waitFrameCount -= (1 * (60 / frameRate()));
     }

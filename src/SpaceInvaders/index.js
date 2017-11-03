@@ -4,12 +4,14 @@
 /// <reference path="./space-ship.js" />
 /// <reference path="./enemy.js" />
 
+const minFrameWaitCount = 7;
+const pickupColors = [0, 175, 120];
+
 let spaceShip;
 let spaceShipDestroyed = false;
 let pickups = [];
 let enemies = [];
 let explosions = [];
-const minFrameWaitCount = 7;
 let waitFrameCount = minFrameWaitCount;
 
 let currentLevelCount = 1;
@@ -151,14 +153,16 @@ function draw() {
                         }
 
                         let randomValue = random();
-                        if (randomValue < 0.3)
+                        if (randomValue < 0.5) {
                             pickups.push(
                                 new Pickup(
                                     enemies[j].position.x,
                                     enemies[j].position.y,
-                                    int(random(0, 359))
+                                    pickupColors[floor(random() * pickupColors.length)]
                                 )
                             );
+
+                        }
 
                         enemies.splice(j, 1);
                         j -= 1;
@@ -166,6 +170,16 @@ function draw() {
                     spaceShip.bullets.splice(i, 1);
                     i = i === 0 ? 0 : i - 1;
                 }
+        }
+    }
+
+    for (let i = 0; i < pickups.length; i++) {
+        if (spaceShip.pointIsInside([pickups[i].position.x, pickups[i].position.y])) {
+            let colorValue = pickups[i].colorValue;
+            spaceShip.setBulletType(colorValue);
+
+            pickups.splice(i, 1);
+            i -= 1;
         }
     }
 

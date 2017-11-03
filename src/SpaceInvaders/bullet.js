@@ -1,5 +1,5 @@
 class Bullet {
-    constructor(xPosition, yPosition, size, goUp) {
+    constructor(xPosition, yPosition, size, goUp, colorValue) {
         this.goUp = goUp;
         this.speed = goUp ? -10 : 10;
         this.baseWidth = size;
@@ -8,7 +8,7 @@ class Bullet {
         this.position = createVector(xPosition, yPosition);
         this.velocity = createVector(0, 0);
 
-        this.color = 255;
+        this.color = colorValue !== undefined ? color(`hsl(${colorValue}, 100%, 50%)`) : 255;
     }
 
     show() {
