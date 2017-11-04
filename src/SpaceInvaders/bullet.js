@@ -22,7 +22,6 @@ class Bullet {
         push();
         translate(x, y);
         rotate(this.rotation);
-
         rect(0, -this.baseHeight, this.baseWidth, this.baseHeight);
         if (this.goUp) {
             triangle(-this.baseWidth / 2, -this.baseHeight,

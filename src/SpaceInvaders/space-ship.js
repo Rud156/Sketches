@@ -157,8 +157,9 @@ class SpaceShip {
     }
 
     shootBullets() {
-        if (this.waitFrameCount === this.minFrameWaitCount)
+        if (this.waitFrameCount === this.minFrameWaitCount) {
             this.bullets.push(...this.getBulletType());
+        }
         this.waitFrameCount -= (1 * (60 / frameRate()));
     }
 

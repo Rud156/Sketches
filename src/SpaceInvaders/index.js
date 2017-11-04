@@ -17,6 +17,27 @@ let maxLevelCount = 7;
 let timeoutCalled = false;
 let button;
 let buttonDisplayed = false;
+let normalGameMode = true;
+
+let explosionSound;
+let backgroundSound;
+
+function preload() {
+    explosionSound = new Howl({
+        src: ['https://freesound.org/data/previews/386/386862_6891102-lq.mp3'],
+        autoplay: false,
+        loop: false,
+        preload: true
+    });
+
+    backgroundSound = new Howl({
+        src: ['https://freesound.org/data/previews/321/321002_5123851-lq.mp3'],
+        autoplay: true,
+        loop: true,
+        preload: true,
+        volume: 0.05
+    });
+}
 
 
 function setup() {
@@ -50,6 +71,7 @@ function draw() {
                     spaceShip.baseWidth
                 )
             );
+            explosionSound.play();
             spaceShipDestroyed = true;
         }
 
@@ -61,6 +83,7 @@ function draw() {
                     (enemies[i].baseWidth * 7) / 45
                 )
             );
+            explosionSound.play();
             enemies.splice(i, 1);
             i -= 1;
         }
@@ -132,6 +155,7 @@ function draw() {
                                 (enemies[j].baseWidth * 7) / 45
                             )
                         );
+                        explosionSound.play();
                         if (enemies[j].baseWidth > 100) {
                             enemies.push(
                                 new Enemy(
@@ -217,7 +241,7 @@ function draw() {
             fill(0, 255, 0);
             text('Congratulations you won the game!!!', width / 2, height / 2);
             let randomValue = random();
-            if (randomValue < 0.1)
+            if (randomValue < 0.1) {
                 explosions.push(
                     new Explosion(
                         random(0, width),
@@ -225,6 +249,8 @@ function draw() {
                         random(0, 10)
                     )
                 );
+                explosionSound.play();
+            }
 
             if (!buttonDisplayed) {
                 button.elt.style.display = 'block';
