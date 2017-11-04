@@ -12,15 +12,17 @@ let pickups = [];
 let enemies = [];
 let explosions = [];
 
-let currentLevelCount = 1;
-let maxLevelCount = 7;
+let currentLevelCount = 9;
+const maxLevelCount = 9;
 let timeoutCalled = false;
 let button;
 let buttonDisplayed = false;
-let normalGameMode = true;
+
+let gameStarted = false;
 
 let explosionSound;
 let backgroundSound;
+let powerUpSound;
 
 function preload() {
     explosionSound = new Howl({
@@ -36,6 +38,13 @@ function preload() {
         loop: true,
         preload: true,
         volume: 0.05
+    });
+
+    powerUpSound = new Howl({
+        src: ['https://freesound.org/data/previews/344/344307_6199418-lq.mp3'],
+        autoplay: false,
+        loop: false,
+        preload: true
     });
 }
 
@@ -94,6 +103,7 @@ function draw() {
         text('You Are Dead', width / 2, height / 2);
         if (!buttonDisplayed) {
             button.elt.style.display = 'block';
+            button.elt.innerText = 'Replay';
             buttonDisplayed = true;
         }
 
@@ -199,6 +209,7 @@ function draw() {
         if (spaceShip.pointIsInside([pickups[i].position.x, pickups[i].position.y])) {
             let colorValue = pickups[i].colorValue;
             spaceShip.setBulletType(colorValue);
+            powerUpSound.play();
 
             pickups.splice(i, 1);
             i -= 1;
@@ -225,7 +236,7 @@ function draw() {
         text('God Mode', width - 80, height - 30);
     }
 
-    if (enemies.length === 0 && !spaceShipDestroyed) {
+    if (enemies.length === 0 && !spaceShipDestroyed && gameStarted) {
         textSize(27);
         noStroke();
         fill(255);
@@ -254,8 +265,23 @@ function draw() {
 
             if (!buttonDisplayed) {
                 button.elt.style.display = 'block';
+                button.elt.innerText = 'Replay';
                 buttonDisplayed = true;
             }
+        }
+    }
+    if (!gameStarted) {
+        textStyle(BOLD);
+        textSize(30);
+        noStroke();
+        fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
+        text('SPACE INVADERS', width / 2 + 10, height / 4);
+        fill(255);
+        text('ARROW KEYS to move and SPACE to fire', width / 2, height / 3);
+        if (!buttonDisplayed) {
+            button.elt.style.display = 'block';
+            button.elt.innerText = 'Play Game';
+            buttonDisplayed = true;
         }
     }
 }
@@ -330,6 +356,26 @@ function incrementLevel() {
                 );
             }
             break;
+        case 8:
+            for (i = 0; i < 20; i++) {
+                enemies.push(
+                    new Enemy(
+                        random(0, width), -30,
+                        random(20, 170)
+                    )
+                );
+            }
+            break;
+        case 9:
+            for (i = 0; i < 20; i++) {
+                enemies.push(
+                    new Enemy(
+                        random(0, width), -30,
+                        random(70, 120)
+                    )
+                );
+            }
+            break;
     }
 
     if (currentLevelCount <= maxLevelCount) {
@@ -345,10 +391,10 @@ function resetGame() {
     spaceShip.reset();
 
     currentLevelCount = 1;
-    maxLevelCount = 7;
     timeoutCalled = false;
 
     buttonDisplayed = false;
     button.elt.style.display = 'none';
-    spaceShip.GodMode = false;
+
+    gameStarted = true;
 }

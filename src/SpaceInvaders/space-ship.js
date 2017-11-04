@@ -184,6 +184,9 @@ class SpaceShip {
     reset() {
         this.bullets = [];
         this.waitFrameCount = this.minFrameWaitCount;
+        this.health = 100;
+        this.GodMode = false;
+        this.bulletColor = 0;
     }
 
     pointIsInside(point) {
