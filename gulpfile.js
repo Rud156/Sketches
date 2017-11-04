@@ -7,6 +7,7 @@ const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 const gutil = require('gulp-util');
 const lazypipe = require('lazypipe');
+const ts = require('gulp-typescript');
 
 let processJS = lazypipe()
     .pipe(plumber, {
@@ -26,6 +27,29 @@ let processJS = lazypipe()
     })
     .pipe(sourceMaps.init)
     .pipe(concat, 'bundle.js')
+    .pipe(sourceMaps.write)
+    .pipe(gulp.dest, 'lib')
+    .pipe(browserSync.reload, {
+        stream: true
+    });
+
+let processTS = lazypipe()
+    .pipe(plumber, {
+        errorHandler: (error) => {
+            notify.onError({
+                title: 'Gulp error in ' + error.plugin,
+                message: error.message
+            })(error);
+            gutil.beep();
+            console.log(gutil.colors.red(error.message));
+            console.log(error.codeFrame);
+        }
+    })
+    .pipe(sourceMaps.init)
+    .pipe(ts, {
+        noImplicitAny: true,
+        outFile: 'bundle.js'
+    })
     .pipe(sourceMaps.write)
     .pipe(gulp.dest, 'lib')
     .pipe(browserSync.reload, {
@@ -76,4 +100,14 @@ gulp.task('spaceInvadersHelper', () => {
             'src/SpaceInvaders/index.js'
         ])
         .pipe(processJS());
+});
+
+gulp.task('mario', ['serve', 'general', 'marioHelper'], () => {
+    gulp.watch(['src/Mario/*.ts'], ['marioHelper']);
+});
+gulp.task('marioHelper', () => {
+    return gulp.src([
+            'src/Mario/index.ts'
+        ])
+        .pipe(processTS());
 });
