@@ -5,11 +5,17 @@ class Bullet {
         this.baseWidth = size;
         this.baseHeight = size * 2;
 
-        this.position = createVector(xPosition, yPosition);
-        this.velocity = createVector(0, 0);
-
         this.color = colorValue !== undefined ? color(`hsl(${colorValue}, 100%, 50%)`) : 255;
         this.rotation = rotation;
+
+        this.position = createVector(xPosition, yPosition);
+        if (this.rotation === undefined)
+            this.velocity = createVector(0, 45);
+        else {
+            let rotation = 45 - this.rotation;
+            this.velocity = createVector(-45 + rotation, 45);
+        }
+        this.velocity.setMag(this.speed);
     }
 
     show() {
@@ -33,13 +39,6 @@ class Bullet {
     }
 
     update() {
-        if (this.rotation === undefined)
-            this.velocity = createVector(0, 45);
-        else {
-            let rotation = 45 - this.rotation;
-            this.velocity = createVector(-45 + rotation, 45);
-        }
-        this.velocity.setMag(this.speed);
         this.position.add(this.velocity);
     }
 }

@@ -1,9 +1,10 @@
 class Pickup {
     constructor(xPosition, yPosition, colorValue) {
         this.position = createVector(xPosition, yPosition);
-        this.velocity = createVector(0, 0);
+        this.velocity = createVector(0, height);
 
         this.speed = 2;
+        this.velocity.setMag(this.speed);
         this.shapePoints = [0, 0, 0, 0];
         this.baseWidth = 15;
 
@@ -31,8 +32,6 @@ class Pickup {
     }
 
     update() {
-        this.velocity = createVector(0, height);
-        this.velocity.setMag(this.speed);
         this.position.add(this.velocity);
     }
 

@@ -12,7 +12,7 @@ let pickups = [];
 let enemies = [];
 let explosions = [];
 
-let currentLevelCount = 9;
+let currentLevelCount = 1;
 const maxLevelCount = 9;
 let timeoutCalled = false;
 let button;
