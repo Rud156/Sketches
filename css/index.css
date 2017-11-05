@@ -29,6 +29,14 @@
     z-index: -1;
 }
 
+#fpsLabel {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: #999;
+    cursor: default;
+}
+
 @media only screen and (max-width: 500px) {
     .justify-horizontal {
         display: block;
