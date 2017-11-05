@@ -1,2 +1,12 @@
 # Sketches and Mini Games
 A collection of sketches and mini games inspired by [The Coding Train](https://www.youtube.com/user/shiffman)
+
+To run any project:
+```bash
+yarn run <project_name>
+```
+
+Project Names:
+* Space Inavders - `<project_name> = spaceInavders` https://codepen.io/Rud156/full/VreYvr
+* Starfield - `<project_name> = starField`https://codepen.io/Rud156/full/EbKrEQ
+* Simple Mario - (Incomplete)
