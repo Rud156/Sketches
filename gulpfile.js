@@ -47,7 +47,8 @@ let processTS = lazypipe()
     .pipe(sourceMaps.init)
     .pipe(ts, {
         outFile: 'bundle.js',
-        removeComments: true
+        removeComments: true,
+        experimentalDecorators: true
     })
     .pipe(sourceMaps.write)
     .pipe(gulp.dest, 'lib')
