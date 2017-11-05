@@ -3,7 +3,7 @@ A collection of sketches and mini games inspired by [The Coding Train](https://w
 
 To run any project:
 ```bash
-yarn run <project_name>
+gulp <project_name>
 ```
 
 Project Names:
