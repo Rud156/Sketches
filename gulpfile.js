@@ -83,6 +83,7 @@ gulp.task('pong', ['serve', 'general', 'pongHelper'], () => {
 });
 gulp.task('pongHelper', () => {
     return gulp.src([
+            'src/Pong/ball.js',
             'src/Pong/paddle.js',
             'src/Pong/index.js'
         ])
