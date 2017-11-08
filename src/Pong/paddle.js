@@ -1,7 +1,7 @@
 /// <reference path="./../../typings/babylon.d.ts" />
 
 class Paddle {
-    constructor(name, scene, spawnPosition, color) {
+    constructor(name, scene, spawnPosition, paddleId, isAI, color = 1) {
         this.paddle = BABYLON.MeshBuilder.CreateBox(`paddle${name}`, {
             width: 5,
             height: 1,
@@ -18,14 +18,13 @@ class Paddle {
             scene
         );
         this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
-        this.paddle.showBoundingBox = true;
+        this.paddle.physicsImpostor.uniqueId = paddleId;
 
         this.initialPosition = spawnPosition.clone();
         this.color = color;
         this.movementSpeed = 5;
 
-        this.leftLimit = -14;
-        this.rightLimit = 14;
+        this.isAI = isAI;
     }
 
     movePaddle(keyStates) {
@@ -37,12 +36,26 @@ class Paddle {
 
         if ((!keyStates[37] && !keyStates[39]) || (keyStates[37] && keyStates[39]))
             this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
-
-        this.paddle.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
-
     }
 
-    update(keyStates) {
-        this.movePaddle(keyStates);
+    movePaddleAI(ball) {
+        let desiredDirection = Math.sign(ball.position.x - this.paddle.position.x);
+
+        if (desiredDirection === -1) {
+            this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Left().scale(this.movementSpeed));
+        } else if (desiredDirection === 1) {
+            this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Right().scale(this.movementSpeed));
+        } else {
+            this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
+        }
+    }
+
+    update(keyStates, ball) {
+        if (!this.isAI)
+            this.movePaddle(keyStates);
+        else
+            this.movePaddleAI(ball);
+
+        this.paddle.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
     }
 }

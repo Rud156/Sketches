@@ -2,6 +2,8 @@
 /// <reference path="./paddle.js" />
 /// <reference path="./ball.js" />
 
+// ToDo: Remove `showBoundingBox` from all bodies
+
 const canvasHolder = document.getElementById('canvas-holder');
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth - 25;
@@ -9,12 +11,10 @@ canvas.height = window.innerHeight - 30;
 canvasHolder.appendChild(canvas);
 const engine = new BABYLON.Engine(canvas, true);
 
-const fpsHolder = document.getElementById('fps-label');
-
 const keyStates = {
     32: false, // SPACE
     37: false, // LEFT
-    38: false, // TOP
+    38: false, // UP
     39: false, // RIGHT
     40: false // DOWN
 };
@@ -63,9 +63,8 @@ const createScene = () => {
         BABYLON.PhysicsImpostor.BoxImpostor, {
             mass: 0,
             friction: 0,
-            restitution: 0
+            restitution: 1
         });
-    leftBar.showBoundingBox = true;
 
     const rightBar = BABYLON.MeshBuilder.CreateBox('rightBar', {
         width: 2,
@@ -78,33 +77,21 @@ const createScene = () => {
         BABYLON.PhysicsImpostor.BoxImpostor, {
             mass: 0,
             friction: 0,
-            restitution: 0
-        });
-    rightBar.showBoundingBox = true;
-
-    const testBlocker = BABYLON.MeshBuilder.CreateBox('testBlocker', {
-        width: 30,
-        height: 1,
-        depth: 1
-    }, scene);
-    testBlocker.position = new BABYLON.Vector3(0, 0.5, 0);
-    testBlocker.physicsImpostor = new BABYLON.PhysicsImpostor(
-        testBlocker,
-        BABYLON.PhysicsImpostor.BoxImpostor, {
-            mass: 0,
-            friction: 0,
             restitution: 1
         });
-    testBlocker.showBoundingBox = true;
 
     return scene;
 };
 const scene = createScene();
+// new BABYLON.Vector3(0, 0.5, -34)
 
-const testPaddle = new Paddle('test', scene, new BABYLON.Vector3(0, 0.5, -34), 5);
-const testBall = new Ball(scene, new BABYLON.Vector3(0, 5, 0), 4);
+const player_1 = new Paddle('player_1', scene, new BABYLON.Vector3(0, 0.5, -34), 2, false);
+const aiPlayer = new Paddle('aiPlayer', scene, new BABYLON.Vector3(0, 0.5, 34), 3, true);
+const playingBall = new Ball(scene, new BABYLON.Vector3(0, 0.5, -33), 1);
 
 engine.runRenderLoop(() => {
-    testPaddle.update(keyStates);
+    playingBall.update(player_1.paddle);
+    player_1.update(keyStates, playingBall.ball);
+    aiPlayer.update(keyStates, playingBall.ball);
     scene.render();
 });
