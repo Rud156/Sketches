@@ -38,8 +38,8 @@ class Paddle {
             this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
     }
 
-    movePaddleAI(ball) {
-        let desiredDirection = Math.sign(ball.position.x - this.paddle.position.x);
+    movePaddleAI(ballMesh) {
+        let desiredDirection = Math.sign(ballMesh.position.x - this.paddle.position.x);
 
         if (desiredDirection === -1) {
             this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Left().scale(this.movementSpeed));

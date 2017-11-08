@@ -26,20 +26,32 @@ class Ball {
         this.color = color;
     }
 
-    lockPositionToPlayerPaddle(playerPaddle, playerMovementSpeed) {
+    lockPositionToPlayerPaddle(playerPaddleVelocity) {
+        this.ball.physicsImpostor.setLinearVelocity(playerPaddleVelocity);
+    }
 
+    launchBall(keyStates, playerPaddleVelocity) {
+        if (keyStates[32]) {
+            this.isLaunched = true;
+
+            this.ball.physicsImpostor.setLinearVelocity(
+                playerPaddleVelocity.x,
+                0,
+                Math.random() * 10
+            );
+        }
     }
 
     setCollisionComponents(imposters) {
         this.ball.physicsImpostor.registerOnPhysicsCollide(imposters, this.onTriggerEnter);
     }
 
-    onTriggerEnter(ball, collidedAgainst) {
+    onTriggerEnter(ballPhysicsImposter, collidedAgainst) {
         let velocityX = collidedAgainst.getLinearVelocity().x;
-        let velocityXBall = ball.getLinearVelocity().x;
-        let velocityZ = -ball.getLinearVelocity().z;
+        let velocityXBall = ballPhysicsImposter.getLinearVelocity().x;
+        let velocityZ = -ballPhysicsImposter.getLinearVelocity().z;
 
-        ball.setLinearVelocity(new BABYLON.Vector3(
+        ballPhysicsImposter.setLinearVelocity(new BABYLON.Vector3(
             velocityX - velocityXBall,
             0,
             velocityZ
@@ -48,7 +60,7 @@ class Ball {
         collidedAgainst.setAngularVelocity(BABYLON.Vector3.Zero());
     }
 
-    update() {
+    limitBallVelocity() {
         let velocityZ = this.ball.physicsImpostor.getLinearVelocity().z;
         let velocityZAbs = Math.abs(velocityZ);
         let clampedVelocityZ = BABYLON.MathTools.Clamp(velocityZAbs, this.minBallSpeed, this.maxBallSpeed);
@@ -63,5 +75,17 @@ class Ball {
                 clampedVelocityZ * direction
             )
         );
+    }
+
+    update(keyStates, playerPaddleVelocity) {
+        if (this.isLaunched)
+            this.limitBallVelocity();
+        else {
+            this.lockPositionToPlayerPaddle(playerPaddleVelocity);
+        }
+
+        if (!this.isLaunched) {
+            this.launchBall(keyStates, playerPaddleVelocity);
+        }
     }
 }

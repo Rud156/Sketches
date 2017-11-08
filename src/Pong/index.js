@@ -90,7 +90,7 @@ const aiPlayer = new Paddle('aiPlayer', scene, new BABYLON.Vector3(0, 0.5, 34), 
 const playingBall = new Ball(scene, new BABYLON.Vector3(0, 0.5, -33), 1);
 
 engine.runRenderLoop(() => {
-    playingBall.update(player_1.paddle);
+    playingBall.update(keyStates, player_1.paddle.physicsImpostor.getLinearVelocity());
     player_1.update(keyStates, playingBall.ball);
     aiPlayer.update(keyStates, playingBall.ball);
     scene.render();
