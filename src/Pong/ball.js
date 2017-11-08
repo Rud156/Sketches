@@ -35,15 +35,17 @@ class Ball {
             this.isLaunched = true;
 
             this.ball.physicsImpostor.setLinearVelocity(
-                playerPaddleVelocity.x,
-                0,
-                Math.random() * 10
+                new BABYLON.Vector3(
+                    playerPaddleVelocity.x,
+                    0,
+                    Math.random() * 10
+                )
             );
         }
     }
 
-    setCollisionComponents(imposters) {
-        this.ball.physicsImpostor.registerOnPhysicsCollide(imposters, this.onTriggerEnter);
+    setCollisionComponents(impostersArray) {
+        this.ball.physicsImpostor.registerOnPhysicsCollide(impostersArray, this.onTriggerEnter);
     }
 
     onTriggerEnter(ballPhysicsImposter, collidedAgainst) {
@@ -51,41 +53,49 @@ class Ball {
         let velocityXBall = ballPhysicsImposter.getLinearVelocity().x;
         let velocityZ = -ballPhysicsImposter.getLinearVelocity().z;
 
-        ballPhysicsImposter.setLinearVelocity(new BABYLON.Vector3(
-            velocityX - velocityXBall,
-            0,
-            velocityZ
-        ));
+        ballPhysicsImposter.setLinearVelocity(
+            new BABYLON.Vector3(
+                velocityX - velocityXBall,
+                0,
+                velocityZ
+            ));
 
         collidedAgainst.setAngularVelocity(BABYLON.Vector3.Zero());
     }
 
     limitBallVelocity() {
-        let velocityZ = this.ball.physicsImpostor.getLinearVelocity().z;
+        let velocity = this.ball.physicsImpostor.getLinearVelocity();
+
+        let velocityZ = velocity.z;
         let velocityZAbs = Math.abs(velocityZ);
         let clampedVelocityZ = BABYLON.MathTools.Clamp(velocityZAbs, this.minBallSpeed, this.maxBallSpeed);
         let direction = Math.sign(velocityZ);
 
-        let velocityX = this.ball.physicsImpostor.getLinearVelocity().x;
+        let velocityX = velocity.x;
+        let velocityY = velocity.y;
 
         this.ball.physicsImpostor.setLinearVelocity(
             new BABYLON.Vector3(
                 velocityX,
-                0,
+                velocityY,
                 clampedVelocityZ * direction
             )
         );
     }
 
     update(keyStates, playerPaddleVelocity) {
-        if (this.isLaunched)
+        if (this.isLaunched) {
             this.limitBallVelocity();
-        else {
+        } else {
             this.lockPositionToPlayerPaddle(playerPaddleVelocity);
-        }
-
-        if (!this.isLaunched) {
             this.launchBall(keyStates, playerPaddleVelocity);
         }
+    }
+
+    resetBallStats() {
+        this.ball.position = this.initialPosition;
+        this.isLaunched = false;
+        this.ball.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
+        this.ball.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
     }
 }

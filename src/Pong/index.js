@@ -87,11 +87,44 @@ const scene = createScene();
 
 const player_1 = new Paddle('player_1', scene, new BABYLON.Vector3(0, 0.5, -34), 2, false);
 const aiPlayer = new Paddle('aiPlayer', scene, new BABYLON.Vector3(0, 0.5, 34), 3, true);
+
 const playingBall = new Ball(scene, new BABYLON.Vector3(0, 0.5, -33), 1);
+playingBall.setCollisionComponents([player_1.paddle.physicsImpostor, aiPlayer.paddle.physicsImpostor]);
+
+const scoreBoard = BABYLON.MeshBuilder.CreatePlane('scoreBoard', {
+    height: 16,
+    width: 32,
+    sideOrientation: BABYLON.Mesh.DOUBLESIDE
+}, scene);
+scoreBoard.position = new BABYLON.Vector3(0, 16, 36);
+
+const ballResetCollider = BABYLON.MeshBuilder.CreateGround('ballCollider', {
+    width: 64,
+    height: 140,
+    subdivisions: 2
+}, scene);
+ballResetCollider.position = new BABYLON.Vector3(0, -2, 0);
+ballResetCollider.physicsImpostor = new BABYLON.PhysicsImpostor(
+    ballResetCollider,
+    BABYLON.PhysicsImpostor.BoxImpostor, {
+        mass: 0,
+        friction: 0,
+        restitution: 0
+    }
+);
+ballResetCollider.physicsImpostor.registerOnPhysicsCollide(
+    playingBall.ball.physicsImpostor,
+    (thisColliderImposter, ballImposter) => {
+
+    });
 
 engine.runRenderLoop(() => {
     playingBall.update(keyStates, player_1.paddle.physicsImpostor.getLinearVelocity());
     player_1.update(keyStates, playingBall.ball);
     aiPlayer.update(keyStates, playingBall.ball);
+
+    ballResetCollider.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
+    ballResetCollider.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
+
     scene.render();
 });

@@ -2,7 +2,7 @@
 
 class Paddle {
     constructor(name, scene, spawnPosition, paddleId, isAI, color = 1) {
-        this.paddle = BABYLON.MeshBuilder.CreateBox(`paddle${name}`, {
+        this.paddle = BABYLON.MeshBuilder.CreateBox(`paddle_${name}`, {
             width: 5,
             height: 1,
             depth: 1
@@ -56,6 +56,12 @@ class Paddle {
         else
             this.movePaddleAI(ball);
 
+        this.paddle.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
+    }
+
+    resetPaddle() {
+        this.paddle.position = this.initialPosition;
+        this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
         this.paddle.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
     }
 }

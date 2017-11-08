@@ -24,7 +24,8 @@ let processJS = lazypipe()
     .pipe(sourceMaps.init)
     .pipe(babel, {
         presets: ['env', 'stage-2'],
-        highlightCode: true
+        highlightCode: true,
+        comments: false
     })
     .pipe(sourceMaps.write)
     .pipe(gulp.dest, 'lib')
