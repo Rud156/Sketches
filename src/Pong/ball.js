@@ -24,6 +24,8 @@ class Ball {
         this.initialPosition = spawnPosition.clone();
         this.isLaunched = false;
         this.color = color;
+
+        this.onTriggerEnter = this.onTriggerEnter.bind(this);
     }
 
     lockPositionToPlayerPaddle(playerPaddleVelocity) {
@@ -93,9 +95,10 @@ class Ball {
     }
 
     resetBallStats() {
-        this.ball.position = this.initialPosition;
-        this.isLaunched = false;
         this.ball.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
         this.ball.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
+        this.ball.position = this.initialPosition.clone();
+        
+        this.isLaunched = false;
     }
 }

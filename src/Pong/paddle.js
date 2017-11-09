@@ -60,8 +60,8 @@ class Paddle {
     }
 
     resetPaddle() {
-        this.paddle.position = this.initialPosition;
         this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
         this.paddle.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
+        this.paddle.position = this.initialPosition.clone();
     }
 }

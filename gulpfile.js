@@ -16,8 +16,8 @@ let processJS = lazypipe()
                 message: error.message
             })(error);
             gutil.beep();
-            console.log(gutil.colors.red(error.message));
-            console.log(error.codeFrame);
+            gutil.log(gutil.colors.red(error.message));
+            gutil.log(error.codeFrame);
         }
     })
     .pipe(concat, 'bundle.js')
@@ -55,9 +55,7 @@ gulp.task('starfield', ['serve', 'general', 'starFieldHelper'], () => {
 });
 gulp.task('starFieldHelper', () => {
     return gulp.src([
-            'src/Starfield/utility.js',
             'src/Starfield/star.js',
-            'src/Starfield/music-handler.js',
             'src/Starfield/index.js'
         ])
         .pipe(processJS());
@@ -84,6 +82,7 @@ gulp.task('pong', ['serve', 'general', 'pongHelper'], () => {
 });
 gulp.task('pongHelper', () => {
     return gulp.src([
+            'src/Pong/game-manager.js',
             'src/Pong/ball.js',
             'src/Pong/paddle.js',
             'src/Pong/index.js'
