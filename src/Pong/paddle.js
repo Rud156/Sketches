@@ -1,7 +1,7 @@
 /// <reference path="./../../typings/babylon.d.ts" />
 
 class Paddle {
-    constructor(name, scene, spawnPosition, paddleId, isAI, color = 1) {
+    constructor(name, scene, spawnPosition, paddleId, isAI, keys = [37, 39], color = 1) {
         this.paddle = BABYLON.MeshBuilder.CreateBox(`paddle_${name}`, {
             width: 5,
             height: 1,
@@ -23,38 +23,42 @@ class Paddle {
         this.initialPosition = spawnPosition.clone();
         this.color = color;
         this.movementSpeed = 5;
+        this.keys = keys;
 
         this.isAI = isAI;
     }
 
     movePaddle(keyStates) {
-        if (keyStates[37]) {
+        if (keyStates[this.keys[0]]) {
             this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Left().scale(this.movementSpeed));
-        } else if (keyStates[39]) {
+        } else if (keyStates[this.keys[1]]) {
             this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Right().scale(this.movementSpeed));
         }
 
-        if ((!keyStates[37] && !keyStates[39]) || (keyStates[37] && keyStates[39]))
+        if ((!keyStates[this.keys[0]] && !keyStates[this.keys[1]]) ||
+            (keyStates[this.keys[0]] && keyStates[this.keys[1]]))
             this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
     }
 
-    movePaddleAI(ballMesh) {
-        let desiredDirection = Math.sign(ballMesh.position.x - this.paddle.position.x);
+    movePaddleAI(ballClass) {
+        if (ballClass.isLaunched) {
+            let desiredDirection = Math.sign(ballClass.ball.position.x - this.paddle.position.x);
 
-        if (desiredDirection === -1) {
-            this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Left().scale(this.movementSpeed));
-        } else if (desiredDirection === 1) {
-            this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Right().scale(this.movementSpeed));
-        } else {
-            this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
+            if (desiredDirection === -1) {
+                this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Left().scale(this.movementSpeed));
+            } else if (desiredDirection === 1) {
+                this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Right().scale(this.movementSpeed));
+            } else {
+                this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
+            }
         }
     }
 
-    update(keyStates, ball) {
+    update(keyStates, ballClass) {
         if (!this.isAI)
             this.movePaddle(keyStates);
         else
-            this.movePaddleAI(ball);
+            this.movePaddleAI(ballClass);
 
         this.paddle.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
     }

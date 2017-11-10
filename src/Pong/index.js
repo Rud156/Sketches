@@ -17,7 +17,11 @@ const keyStates = {
     37: false, // LEFT
     38: false, // UP
     39: false, // RIGHT
-    40: false // DOWN
+    40: false, // DOWN
+    87: false, // W
+    65: false, // A
+    83: false, // S
+    68: false // D
 };
 window.addEventListener('keydown', (event) => {
     if (event.keyCode in keyStates)
@@ -33,9 +37,7 @@ const createScene = () => {
     scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.CannonJSPlugin());
     scene.collisionsEnabled = true;
     scene.workerCollisions = true;
-
-    const camera = new BABYLON.FreeCamera('mainCamera', new BABYLON.Vector3(0, 20, -60), scene);
-    camera.setTarget(BABYLON.Vector3.Zero());
+    scene.clearColor = BABYLON.Color3.Black();
 
     const light = new BABYLON.HemisphericLight('mainLight', new BABYLON.Vector3(0, 1, 0), scene);
 
@@ -83,7 +85,42 @@ const createScene = () => {
 
     return scene;
 };
+
+const createGameStartObjects = (sceneObject) => {
+
+};
+
+const createGameEndObjects = (sceneObject) => {
+
+};
+
 const scene = createScene();
+
+const camera = new BABYLON.FreeCamera('mainCamera', new BABYLON.Vector3(90, 20, -60), scene);
+const startToGame = new BABYLON.Animation('startToGame', 'position.x',
+    30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+const startToGameKeys = [{
+    frame: 0,
+    value: 90
+}, {
+    frame: 100,
+    value: 0
+}];
+startToGame.setKeys(startToGameKeys);
+const gameToEnd = new BABYLON.Animation('gameToEnd', 'position.x',
+    30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+const gameToEndKeys = [{
+    frame: 0,
+    value: 20
+}, {
+    frame: 100,
+    value: 140
+}];
+gameToEnd.setKeys(gameToEndKeys);
+camera.animations = [];
+camera.animations.push(startToGame);
+camera.animations.push(gameToEnd);
+// scene.beginDirectAnimation(camera, [startToGame], 0, 100, true);
 // new BABYLON.Vector3(0, 0.5, -34)
 
 const player_1 = new Paddle('player_1', scene, new BABYLON.Vector3(0, 0.5, -34), 2, false);
@@ -97,8 +134,8 @@ gameManager.setCollisionComponents(playingBall.ball.physicsImpostor);
 
 engine.runRenderLoop(() => {
     playingBall.update(keyStates, player_1.paddle.physicsImpostor.getLinearVelocity());
-    player_1.update(keyStates, playingBall.ball);
-    aiPlayer.update(keyStates, playingBall.ball);
+    player_1.update(keyStates, playingBall);
+    aiPlayer.update(keyStates, playingBall);
 
     gameManager.update();
     scene.render();
