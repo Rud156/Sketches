@@ -17,19 +17,19 @@
     }
 }
 
-button {
+.button {
     color: red;
     -webkit-transition: 0.25s;
     transition: 0.25s;
 }
 
-button:hover,
-button:focus {
+.button:hover,
+.button:focus {
     border-color: rgb(0, 0, 255);
     color: rgb(0, 0, 255);
 }
 
-button {
+.button {
     background: none;
     border: 2px solid;
     font: inherit;

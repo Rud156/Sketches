@@ -32,12 +32,51 @@ window.addEventListener('keyup', (event) => {
         keyStates[event.keyCode] = false;
 });
 
+const createDOMElementsStart = () => {
+    const homeOverlay = document.createElement('div');
+    homeOverlay.className = 'overlay';
+
+    const homeOverlayContent = document.createElement('div');
+    homeOverlayContent.className = 'overlay-content';
+    homeOverlay.appendChild(homeOverlayContent);
+
+    const headerContent = document.createElement('div');
+    headerContent.className = 'header';
+    headerContent.innerText = 'Pong';
+
+    const mainContentHolder = document.createElement('div');
+
+    const startButton = document.createElement('button');
+    startButton.className = 'start-button';
+    startButton.innerText = 'Start Game';
+    startButton.addEventListener('click', () => {
+        // Todo: Change Game State Here
+    });
+
+    const helpContent = document.createElement('div');
+    helpContent.className = 'help-content';
+    helpContent.innerText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dictum, erat vel porttitor egestas, lectus tellus blandit massa, vel convallis lacus leo ac ligula. In vitae sapien sagittis, pharetra mi nec, tristique mauris. In hac habitasse platea dictumst. Integer gravida purus sed rhoncus euismod.';
+
+    mainContentHolder.appendChild(startButton);
+    mainContentHolder.appendChild(helpContent);
+    homeOverlayContent.appendChild(headerContent);
+    homeOverlayContent.appendChild(mainContentHolder);
+    document.body.appendChild(homeOverlay);
+};
+
+const createDOMElementsEnd = () => {
+
+};
+
 const createScene = () => {
     const scene = new BABYLON.Scene(engine);
     scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), new BABYLON.CannonJSPlugin());
     scene.collisionsEnabled = true;
     scene.workerCollisions = true;
     scene.clearColor = BABYLON.Color3.Black();
+
+    const camera = new BABYLON.FreeCamera('mainCamera', new BABYLON.Vector3(0, 20, -60), scene);
+    camera.setTarget(BABYLON.Vector3.Zero());
 
     const light = new BABYLON.HemisphericLight('mainLight', new BABYLON.Vector3(0, 1, 0), scene);
 
@@ -85,42 +124,8 @@ const createScene = () => {
 
     return scene;
 };
-
-const createGameStartObjects = (sceneObject) => {
-
-};
-
-const createGameEndObjects = (sceneObject) => {
-
-};
-
 const scene = createScene();
-
-const camera = new BABYLON.FreeCamera('mainCamera', new BABYLON.Vector3(90, 20, -60), scene);
-const startToGame = new BABYLON.Animation('startToGame', 'position.x',
-    30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-const startToGameKeys = [{
-    frame: 0,
-    value: 90
-}, {
-    frame: 100,
-    value: 0
-}];
-startToGame.setKeys(startToGameKeys);
-const gameToEnd = new BABYLON.Animation('gameToEnd', 'position.x',
-    30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-const gameToEndKeys = [{
-    frame: 0,
-    value: 20
-}, {
-    frame: 100,
-    value: 140
-}];
-gameToEnd.setKeys(gameToEndKeys);
-camera.animations = [];
-camera.animations.push(startToGame);
-camera.animations.push(gameToEnd);
-// scene.beginDirectAnimation(camera, [startToGame], 0, 100, true);
+createDOMElementsStart();
 // new BABYLON.Vector3(0, 0.5, -34)
 
 const player_1 = new Paddle('player_1', scene, new BABYLON.Vector3(0, 0.5, -34), 2, false);
@@ -133,6 +138,12 @@ const gameManager = new GameManager(scene, playingBall, player_1, aiPlayer);
 gameManager.setCollisionComponents(playingBall.ball.physicsImpostor);
 
 engine.runRenderLoop(() => {
+    if (!gameManager.gameStarted) {
+        for (let key in keyStates) {
+            keyStates[key] = false;
+        }
+    }
+
     playingBall.update(keyStates, player_1.paddle.physicsImpostor.getLinearVelocity());
     player_1.update(keyStates, playingBall);
     aiPlayer.update(keyStates, playingBall);

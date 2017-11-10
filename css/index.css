@@ -5,6 +5,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: 'Quicksand', Arial, Helvetica, sans-serif;
 }
 
 .justify-horizontal {
@@ -40,6 +41,7 @@ canvas {
     top: 20px;
     color: #999;
     cursor: default;
+    z-index: 999;
 }
 
 @media only screen and (max-width: 500px) {

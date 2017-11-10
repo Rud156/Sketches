@@ -1,0 +1,67 @@
+.overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    background-color: black;
+    transition-duration: 0.5s;
+}
+
+.overlay-content {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-top: 35px;
+}
+
+.header {
+    font-weight: bolder;
+    color: red;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px red, 0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
+    font-size: 60px;
+    clear: both;
+    font-variant: small-caps;
+    margin-bottom: 14%;
+}
+
+.start-button {
+    border: none;
+    font-weight: bold;
+    color: #FFDD1B;
+    float: left;
+    font-size: 40px;
+    font-variant: small-caps;
+    background: black;
+    cursor: pointer;
+    width: 50%;
+    transition: 0.5s ease-out;
+}
+
+.start-button:hover {
+    color: #ffffff;
+    animation: yellowNeon 1.5s ease-in-out infinite alternate;
+}
+
+.help-content {
+    border: 3px solid #0cd808;
+    box-shadow: 0 0 1px #b3ff51, 0 0 2px #b3ff51, 0 0 6px #b3ff51, 0 0 12px #b3ff51, inset 0 0 1px #b3ff51, inset 0 0 2px #b3ff51, inset 0 0 6px #b3ff51, inset 0 0 12px #b3ff51;
+    border-radius: 20px;
+    float: left;
+    font-size: 20px;
+    color: white;
+    background: rgb(35, 35, 35);
+    width: 40%;
+    padding: 21px;
+}
+
+@keyframes yellowNeon {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FFDD1B, 0 0 70px #FFDD1B, 0 0 80px #FFDD1B, 0 0 100px #FFDD1B, 0 0 150px #FFDD1B;
+    }
+    to {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FFDD1B, 0 0 35px #FFDD1B, 0 0 40px #FFDD1B, 0 0 50px #FFDD1B, 0 0 75px #FFDD1B;
+    }
+}

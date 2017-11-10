@@ -6,6 +6,8 @@ class GameManager {
         this.playerTwoScore = 0;
         this.maxScorePossible = 5;
 
+        this.gameStarted = false;
+
         this.scoreBoard = BABYLON.MeshBuilder.CreatePlane('scoreBoard', {
             height: 16,
             width: 32,
@@ -85,12 +87,13 @@ class GameManager {
     }
 
     resetGame() {
-        // TODO: Complete This Function
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
         this.playingBall.resetBallStats();
         this.paddleOne.resetPaddle();
         this.paddleTwo.resetPaddle();
+
+        this.gameStarted =  false;
     }
 
     update() {

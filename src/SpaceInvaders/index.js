@@ -54,7 +54,7 @@ function setup() {
     canvas.parent('canvas-holder');
     button = createButton('Replay!');
     button.position(width / 2 - 62, height / 2 + 30);
-    button.elt.className = 'pulse';
+    button.elt.className = 'button pulse';
     button.elt.style.display = 'none';
     button.mousePressed(resetGame);
 
