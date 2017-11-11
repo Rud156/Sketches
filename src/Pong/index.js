@@ -45,17 +45,20 @@ const createDOMElementsStart = () => {
     headerContent.innerText = 'Pong';
 
     const mainContentHolder = document.createElement('div');
+    mainContentHolder.className = 'main-content-holder';
 
-    const startButton = document.createElement('button');
+    const startButton = document.createElement('span');
     startButton.className = 'start-button';
     startButton.innerText = 'Start Game';
     startButton.addEventListener('click', () => {
         // Todo: Change Game State Here
+        homeOverlay.style.width = '0';
+        gameManager.gameStarted = true;
     });
 
     const helpContent = document.createElement('div');
     helpContent.className = 'help-content';
-    helpContent.innerText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dictum, erat vel porttitor egestas, lectus tellus blandit massa, vel convallis lacus leo ac ligula. In vitae sapien sagittis, pharetra mi nec, tristique mauris. In hac habitasse platea dictumst. Integer gravida purus sed rhoncus euismod.';
+    helpContent.innerText = 'A pong game made using BABYLON.JS. Use ARROW KEYS to control and SPACE to launch the ball.';
 
     mainContentHolder.appendChild(startButton);
     mainContentHolder.appendChild(helpContent);
@@ -80,6 +83,10 @@ const createScene = () => {
 
     const light = new BABYLON.HemisphericLight('mainLight', new BABYLON.Vector3(0, 1, 0), scene);
 
+    const genericBlackMaterial = new BABYLON.StandardMaterial('blackMaterial', scene);
+    genericBlackMaterial.diffuseColor = BABYLON.Color3.Black();
+    const highlightMaterial = new BABYLON.HighlightLayer('mainHighLighter', scene);
+
     const ground = BABYLON.MeshBuilder.CreateGround('mainGround', {
         width: 32,
         height: 70,
@@ -93,6 +100,8 @@ const createScene = () => {
             friction: 0,
             restitution: 0
         }, scene);
+    ground.material = genericBlackMaterial;
+    highlightMaterial.addMesh(ground, BABYLON.Color3.Green());
 
     const leftBar = BABYLON.MeshBuilder.CreateBox('leftBar', {
         width: 2,
@@ -107,6 +116,8 @@ const createScene = () => {
             friction: 0,
             restitution: 1
         });
+    leftBar.material = genericBlackMaterial;
+    highlightMaterial.addMesh(ground, BABYLON.Color3.Green());
 
     const rightBar = BABYLON.MeshBuilder.CreateBox('rightBar', {
         width: 2,
@@ -121,11 +132,13 @@ const createScene = () => {
             friction: 0,
             restitution: 1
         });
+    rightBar.material = genericBlackMaterial;
+    highlightMaterial.addMesh(ground, BABYLON.Color3.Green());
 
     return scene;
 };
 const scene = createScene();
-createDOMElementsStart();
+// createDOMElementsStart();
 // new BABYLON.Vector3(0, 0.5, -34)
 
 const player_1 = new Paddle('player_1', scene, new BABYLON.Vector3(0, 0.5, -34), 2, false);

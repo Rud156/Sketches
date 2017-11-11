@@ -21,6 +21,10 @@ class Ball {
         this.ball.position = spawnPosition;
         this.ball.physicsImpostor.uniqueId = ballId;
 
+        this.ballMaterial = new BABYLON.StandardMaterial('playingBallMaterial', scene);
+        this.ballMaterial.diffuseColor = BABYLON.Color3.Red();
+        this.ball.material = this.ballMaterial;
+
         this.initialPosition = spawnPosition.clone();
         this.isLaunched = false;
         this.color = color;
@@ -98,7 +102,7 @@ class Ball {
         this.ball.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
         this.ball.physicsImpostor.setAngularVelocity(BABYLON.Vector3.Zero());
         this.ball.position = this.initialPosition.clone();
-        
+
         this.isLaunched = false;
     }
 }

@@ -7,7 +7,7 @@
     top: 0;
     overflow: hidden;
     background-color: black;
-    transition-duration: 0.5s;
+    transition: 0.5s ease-out;
 }
 
 .overlay-content {
@@ -15,6 +15,7 @@
     width: 100%;
     text-align: center;
     margin-top: 35px;
+    font-family: 'Courgette', cursive;
 }
 
 .header {
@@ -22,22 +23,17 @@
     color: red;
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px red, 0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
     font-size: 60px;
-    clear: both;
-    font-variant: small-caps;
-    margin-bottom: 14%;
+    margin-bottom: 7%;
 }
 
 .start-button {
-    border: none;
     font-weight: bold;
     color: #FFDD1B;
-    float: left;
     font-size: 40px;
     font-variant: small-caps;
-    background: black;
+    background: transparent;
     cursor: pointer;
-    width: 50%;
-    transition: 0.5s ease-out;
+    width: 100%;
 }
 
 .start-button:hover {
@@ -46,15 +42,12 @@
 }
 
 .help-content {
-    border: 3px solid #0cd808;
-    box-shadow: 0 0 1px #b3ff51, 0 0 2px #b3ff51, 0 0 6px #b3ff51, 0 0 12px #b3ff51, inset 0 0 1px #b3ff51, inset 0 0 2px #b3ff51, inset 0 0 6px #b3ff51, inset 0 0 12px #b3ff51;
-    border-radius: 20px;
-    float: left;
-    font-size: 20px;
     color: white;
-    background: rgb(35, 35, 35);
-    width: 40%;
+    font-size: 30px;
+    width: 80%;
     padding: 21px;
+    margin: 70px auto;
+    animation: orangeNeon 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes yellowNeon {
@@ -63,5 +56,14 @@
     }
     to {
         text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FFDD1B, 0 0 35px #FFDD1B, 0 0 40px #FFDD1B, 0 0 50px #FFDD1B, 0 0 75px #FFDD1B;
+    }
+}
+
+@keyframes orangeNeon {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF9900, 0 0 70px #FF9900, 0 0 80px #FF9900, 0 0 100px #FF9900, 0 0 150px #FF9900;
+    }
+    to {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FF9900, 0 0 35px #FF9900, 0 0 40px #FF9900, 0 0 50px #FF9900, 0 0 75px #FF9900;
     }
 }

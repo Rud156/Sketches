@@ -20,6 +20,12 @@ class Paddle {
         this.paddle.physicsImpostor.setLinearVelocity(BABYLON.Vector3.Zero());
         this.paddle.physicsImpostor.uniqueId = paddleId;
 
+        this.paddleHighlight = new BABYLON.HighlightLayer(`paddle_${name}_highlight`, scene);
+        this.paddleHighlight.addMesh(this.paddle, BABYLON.Color3.Yellow());
+        this.paddleMaterial = new BABYLON.StandardMaterial(`paddle_${name}_material`, scene);
+        this.paddleMaterial.diffuseColor = BABYLON.Color3.Black();
+        this.paddle.material = this.paddleMaterial;
+
         this.initialPosition = spawnPosition.clone();
         this.color = color;
         this.movementSpeed = 5;

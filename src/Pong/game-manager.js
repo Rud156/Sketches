@@ -2,11 +2,15 @@
 
 class GameManager {
     constructor(scene, ballClassObject, paddleOne, paddleTwo) {
+        this.highlightLayer_1 = new BABYLON.HighlightLayer('scoreBoardHighlight', scene);
+        this.highlightLayer_2 = new BABYLON.HighlightLayer('resetPlaneHighlight', scene);
+
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
         this.maxScorePossible = 5;
 
-        this.gameStarted = false;
+        // TODO: Change at the end
+        this.gameStarted = true;
 
         this.scoreBoard = BABYLON.MeshBuilder.CreatePlane('scoreBoard', {
             height: 16,
@@ -14,8 +18,7 @@ class GameManager {
             sideOrientation: BABYLON.Mesh.DOUBLESIDE
         }, scene);
         this.scoreBoard.position = new BABYLON.Vector3(0, 16, 36);
-        this.highlightLayer = new BABYLON.HighlightLayer('scoreBoardHighlight', scene);
-        this.highlightLayer.addMesh(this.scoreBoard, new BABYLON.Color3(1, 0.41, 0));
+        this.highlightLayer_1.addMesh(this.scoreBoard, new BABYLON.Color3(1, 0.41, 0));
 
         this.ballResetCollider = BABYLON.MeshBuilder.CreateGround('ballCollider', {
             width: 64,
@@ -33,17 +36,17 @@ class GameManager {
         );
 
         this.ballResetColliderMaterial = new BABYLON.StandardMaterial('resetMaterial', scene);
-        this.ballResetColliderMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        this.ballResetColliderMaterial.diffuseColor = BABYLON.Color3.Black();
         this.ballResetCollider.material = this.ballResetColliderMaterial;
-        this.highlightLayer.addMesh(this.ballResetCollider, BABYLON.Color3.Red());
+        this.highlightLayer_2.addMesh(this.ballResetCollider, BABYLON.Color3.Red());
 
         this.scoreBoardMaterial = new BABYLON.StandardMaterial('scoreBoardMaterial', scene);
         // Options is to set the resolution - Or something like that
         this.scoreBoardTexture = new BABYLON.DynamicTexture('scoreBoardMaterialDynamic', 1024, scene, true);
         this.scoreBoardTextureContext = this.scoreBoardTexture.getContext();
         this.scoreBoardMaterial.diffuseTexture = this.scoreBoardTexture;
-        this.scoreBoardMaterial.emissiveColor = new BABYLON.Color3(0, 0, 0);
-        this.scoreBoardMaterial.specularColor = new BABYLON.Color3(1, 0, 0);
+        this.scoreBoardMaterial.emissiveColor = BABYLON.Color3.Black();
+        this.scoreBoardMaterial.specularColor = BABYLON.Color3.Red();
         this.scoreBoard.material = this.scoreBoardMaterial;
 
         this.scoreBoardTexture.drawText('Scores', 330, 150, `small-caps bolder 100px 'Quicksand', sans-serif`, '#ff6a00');
@@ -93,7 +96,7 @@ class GameManager {
         this.paddleOne.resetPaddle();
         this.paddleTwo.resetPaddle();
 
-        this.gameStarted =  false;
+        this.gameStarted = false;
     }
 
     update() {
