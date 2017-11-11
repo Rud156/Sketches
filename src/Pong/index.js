@@ -78,6 +78,11 @@ const createScene = () => {
     scene.workerCollisions = true;
     scene.clearColor = BABYLON.Color3.Black();
 
+    const groundHighlight = new BABYLON.HighlightLayer('groundHighlight', scene);
+    groundHighlight.blurHorizontalSize = 0.3;
+    groundHighlight.blurVerticalSize = 0.3;
+    groundHighlight.innerGlow = 0;
+
     const camera = new BABYLON.FreeCamera('mainCamera', new BABYLON.Vector3(0, 20, -60), scene);
     camera.setTarget(BABYLON.Vector3.Zero());
 
@@ -85,7 +90,6 @@ const createScene = () => {
 
     const genericBlackMaterial = new BABYLON.StandardMaterial('blackMaterial', scene);
     genericBlackMaterial.diffuseColor = BABYLON.Color3.Black();
-    const highlightMaterial = new BABYLON.HighlightLayer('mainHighLighter', scene);
 
     const ground = BABYLON.MeshBuilder.CreateGround('mainGround', {
         width: 32,
@@ -101,7 +105,7 @@ const createScene = () => {
             restitution: 0
         }, scene);
     ground.material = genericBlackMaterial;
-    highlightMaterial.addMesh(ground, BABYLON.Color3.Green());
+    groundHighlight.addMesh(ground, BABYLON.Color3.Red());
 
     const leftBar = BABYLON.MeshBuilder.CreateBox('leftBar', {
         width: 2,
@@ -117,7 +121,6 @@ const createScene = () => {
             restitution: 1
         });
     leftBar.material = genericBlackMaterial;
-    highlightMaterial.addMesh(ground, BABYLON.Color3.Green());
 
     const rightBar = BABYLON.MeshBuilder.CreateBox('rightBar', {
         width: 2,
@@ -133,7 +136,6 @@ const createScene = () => {
             restitution: 1
         });
     rightBar.material = genericBlackMaterial;
-    highlightMaterial.addMesh(ground, BABYLON.Color3.Green());
 
     return scene;
 };
@@ -149,6 +151,15 @@ playingBall.setCollisionComponents([player_1.paddle.physicsImpostor, aiPlayer.pa
 
 const gameManager = new GameManager(scene, playingBall, player_1, aiPlayer);
 gameManager.setCollisionComponents(playingBall.ball.physicsImpostor);
+const testHighlight = new BABYLON.HighlightLayer('testHighlight', scene);
+testHighlight.blurHorizontalSize = 0.3;
+testHighlight.blurVerticalSize = 0.3;
+testHighlight.addMesh(gameManager.ballResetCollider, BABYLON.Color3.Red());
+testHighlight.addExcludedMesh(player_1.paddle);
+testHighlight.addExcludedMesh(aiPlayer.paddle);
+const groundHighlight = scene.getHighlightLayerByName('groundHighlight');
+groundHighlight.addExcludedMesh(player_1.paddle);
+groundHighlight.addExcludedMesh(aiPlayer.paddle);
 
 engine.runRenderLoop(() => {
     if (!gameManager.gameStarted) {

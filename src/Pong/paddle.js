@@ -22,6 +22,8 @@ class Paddle {
 
         this.paddleHighlight = new BABYLON.HighlightLayer(`paddle_${name}_highlight`, scene);
         this.paddleHighlight.addMesh(this.paddle, BABYLON.Color3.Yellow());
+        this.paddleHighlight.blurHorizontalSize = 0.1;
+        this.paddleHighlight.blurVerticalSize = 0.1;
         this.paddleMaterial = new BABYLON.StandardMaterial(`paddle_${name}_material`, scene);
         this.paddleMaterial.diffuseColor = BABYLON.Color3.Black();
         this.paddle.material = this.paddleMaterial;

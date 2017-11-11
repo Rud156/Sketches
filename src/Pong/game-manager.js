@@ -3,7 +3,6 @@
 class GameManager {
     constructor(scene, ballClassObject, paddleOne, paddleTwo) {
         this.highlightLayer_1 = new BABYLON.HighlightLayer('scoreBoardHighlight', scene);
-        this.highlightLayer_2 = new BABYLON.HighlightLayer('resetPlaneHighlight', scene);
 
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
@@ -19,6 +18,8 @@ class GameManager {
         }, scene);
         this.scoreBoard.position = new BABYLON.Vector3(0, 16, 36);
         this.highlightLayer_1.addMesh(this.scoreBoard, new BABYLON.Color3(1, 0.41, 0));
+        this.highlightLayer_1.blurVerticalSize = 0.3;
+        this.highlightLayer_1.blurHorizontalSize = 0.3;
 
         this.ballResetCollider = BABYLON.MeshBuilder.CreateGround('ballCollider', {
             width: 64,
@@ -38,7 +39,6 @@ class GameManager {
         this.ballResetColliderMaterial = new BABYLON.StandardMaterial('resetMaterial', scene);
         this.ballResetColliderMaterial.diffuseColor = BABYLON.Color3.Black();
         this.ballResetCollider.material = this.ballResetColliderMaterial;
-        this.highlightLayer_2.addMesh(this.ballResetCollider, BABYLON.Color3.Red());
 
         this.scoreBoardMaterial = new BABYLON.StandardMaterial('scoreBoardMaterial', scene);
         // Options is to set the resolution - Or something like that

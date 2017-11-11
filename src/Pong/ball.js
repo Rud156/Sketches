@@ -25,6 +25,9 @@ class Ball {
         this.ballMaterial.diffuseColor = BABYLON.Color3.Red();
         this.ball.material = this.ballMaterial;
 
+        this.ballParticles = new BABYLON.ParticleSystem('playingBallParticles', 1000, scene);
+        this.ballParticles.em = this.ball;
+
         this.initialPosition = spawnPosition.clone();
         this.isLaunched = false;
         this.color = color;
