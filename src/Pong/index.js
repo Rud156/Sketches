@@ -51,7 +51,6 @@ const createDOMElementsStart = () => {
     startButton.className = 'start-button';
     startButton.innerText = 'Start Game';
     startButton.addEventListener('click', () => {
-        // Todo: Change Game State Here
         homeOverlay.style.width = '0';
         gameManager.gameStarted = true;
     });
@@ -68,7 +67,59 @@ const createDOMElementsStart = () => {
 };
 
 const createDOMElementsEnd = () => {
+    const endOverlay = document.createElement('div');
+    endOverlay.className = 'end-overlay';
 
+    const endOverlayContent = document.createElement('overlay-content');
+    endOverlayContent.className = 'overlay-content';
+    endOverlay.appendChild(endOverlayContent);
+
+    const header = document.createElement('div');
+    header.className = 'header';
+    header.id = 'winnerName';
+
+    const replayButton = document.createElement('span');
+    replayButton.className = 'start-button';
+    replayButton.innerText = 'Replay';
+    replayButton.addEventListener('click', () => {
+        endOverlay.style.height = '0';
+        gameManager.gameStarted = true;
+    });
+
+    const playerHolder = document.createElement('div');
+    playerHolder.className = 'player-holder';
+
+    const playerOne = document.createElement('div');
+    const computer = document.createElement('div');
+    playerOne.className = 'player';
+    computer.className = 'player';
+
+    const playerOneName = document.createElement('div');
+    playerOneName.className = 'name-holder';
+    const computerName = document.createElement('div');
+    computerName.className = 'name-holder';
+    playerOneName.innerText = 'Player 1';
+    computerName.innerText = 'Computer';
+
+    const playerOneScore = document.createElement('div');
+    playerOneScore.className = 'score-holder';
+    playerOneScore.id = 'player1Score';
+    const computerScore = document.createElement('div');
+    computerScore.className = 'score-holder';
+    computerScore.id = 'computerScore';
+
+    playerOne.appendChild(playerOneName);
+    playerOne.appendChild(playerOneScore);
+    computer.appendChild(computerName);
+    computer.appendChild(computerScore);
+
+    playerHolder.appendChild(playerOne);
+    playerHolder.appendChild(computer);
+
+    endOverlayContent.appendChild(header);
+    endOverlayContent.appendChild(playerHolder);
+    endOverlayContent.appendChild(replayButton);
+    document.body.appendChild(endOverlay);
 };
 
 const createScene = () => {
@@ -139,6 +190,8 @@ const createScene = () => {
 
     return scene;
 };
+createDOMElementsStart();
+createDOMElementsEnd();
 const scene = createScene();
 // createDOMElementsStart();
 // new BABYLON.Vector3(0, 0.5, -34)

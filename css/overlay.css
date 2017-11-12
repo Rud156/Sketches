@@ -10,11 +10,22 @@
     transition: 0.5s ease-out;
 }
 
+.end-overlay {
+    height: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    background-color: black;
+    transition: 0.5s ease-in;
+}
+
 .overlay-content {
     position: relative;
     width: 100%;
     text-align: center;
-    margin-top: 35px;
     font-family: 'Courgette', cursive;
 }
 
@@ -24,6 +35,7 @@
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px red, 0 0 70px red, 0 0 80px red, 0 0 100px red, 0 0 150px red;
     font-size: 60px;
     margin-bottom: 7%;
+    margin-top: 35px;
 }
 
 .start-button {
@@ -48,6 +60,29 @@
     padding: 21px;
     margin: 70px auto;
     animation: orangeNeon 1.5s ease-in-out infinite alternate;
+}
+
+.player-holder {
+    margin: 70px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player {
+    flex: 1;
+    animation: orangeNeon 1.5s ease-in-out infinite alternate;
+}
+
+.name-holder {
+    color: white;
+    font-size: 40px;
+}
+
+.score-holder {
+    color: white;
+    font-size: 50px;
+    margin-top: 21px;
 }
 
 @keyframes yellowNeon {

@@ -1,8 +1,4 @@
 /// <reference path="./../../typings/babylon.d.ts" />
-import {
-    isThisExpression
-} from "../../../../.cache/typescript/2.6/node_modules/@types/babel-types";
-
 
 class Ball {
     constructor(scene, spawnPosition, ballId, color = 1) {
@@ -26,22 +22,29 @@ class Ball {
         this.ball.physicsImpostor.uniqueId = ballId;
 
         this.ballMaterial = new BABYLON.StandardMaterial('playingBallMaterial', scene);
-        this.ballMaterial.diffuseColor = BABYLON.Color3.Red();
+        this.ballMaterial.diffuseTexture = new BABYLON.Texture('/assets/flare.png', scene);
+        this.ballMaterial.diffuseColor = BABYLON.Color3.Magenta();
         this.ball.material = this.ballMaterial;
 
-        // Todo: Fix ball particles
-        this.ballParticles = new BABYLON.ParticleSystem('playingBallParticles', 1000, scene);
+        this.ballParticles = new BABYLON.ParticleSystem('playingBallParticles', 5000, scene);
         this.ballParticles.emitter = this.ball;
-        this.ballParticles.particleTexture = new BABYLON.Texture('./../../assets/flare.png', scene);
-        this.ballParticles.textureMask = new BABYLON.Color4(0.1, 0.8, 0.8, 1.0);
-        this.ballParticles.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
-        this.ballParticles.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
-        this.ballParticles.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
-        this.ballParticles.minSize = 0.1;
-        this.ballParticles.maxSize = 0.5;
-        this.ballParticles.minLifeTime = 0.5;
-        this.ballParticles.maxLifeTime = 1.5;
-        this.ballParticles.emitRate = 500;
+        this.ballParticles.particleTexture = new BABYLON.Texture('/assets/flare.png', scene);
+        this.ballParticles.color1 = BABYLON.Color3.Red();
+        this.ballParticles.color2 = BABYLON.Color3.Magenta();
+        this.ballParticles.colorDead = new BABYLON.Color4(0, 0, 0, 0.0);
+        this.ballParticles.minSize = 0.3;
+        this.ballParticles.maxSize = 1;
+        this.ballParticles.minLifeTime = 0.2;
+        this.ballParticles.maxLifeTime = 0.4;
+        this.ballParticles.minAngularSpeed = 0;
+        this.ballParticles.maxAngularSpeed = Math.PI;
+        this.ballParticles.emitRate = 1500;
+        this.ballParticles.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+        this.ballParticles.minEmitPower = 1;
+        this.ballParticles.maxEmitPower = 3;
+        this.ballParticles.updateSpeed = 0.007;
+        this.ballParticles.direction1 = BABYLON.Vector3.Zero();
+        this.ballParticles.direction2 = BABYLON.Vector3.Zero();
         this.ballParticles.start();
 
         this.initialPosition = spawnPosition.clone();

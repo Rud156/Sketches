@@ -84,19 +84,33 @@ class GameManager {
         this.scoreBoardTexture.drawText(`${this.playerOneScore}`, 150, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
         this.scoreBoardTexture.drawText(`${this.playerTwoScore}`, 680, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
 
-        if (this.playerOneScore > this.maxScorePossible || this.playerTwoScore > this.maxScorePossible) {
+        if (this.playerOneScore >= this.maxScorePossible || this.playerTwoScore >= this.maxScorePossible) {
             this.resetGame();
         }
     }
 
     resetGame() {
+        if (this.playerOneScore > this.playerTwoScore) {
+            document.getElementById('winnerName').innerText = 'Player 1 Wins';
+        } else {
+            document.getElementById('winnerName').innerText = 'Computer Wins';
+        }
+        document.getElementsByClassName('end-overlay')[0].style.height = '100%';
+        document.getElementById('player1Score').innerText = this.playerOneScore;
+        document.getElementById('computerScore').innerText = this.playerTwoScore;
+
+        this.gameStarted = false;
+
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
         this.playingBall.resetBallStats();
         this.paddleOne.resetPaddle();
         this.paddleTwo.resetPaddle();
 
-        this.gameStarted = false;
+        this.scoreBoardTextureContext.clearRect(0, 500, 1024, 1024);
+        this.scoreBoardTexture.drawText(`${0}`, 150, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText(`${0}`, 680, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+
     }
 
     update() {
