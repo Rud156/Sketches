@@ -49,11 +49,11 @@ class GameManager {
         this.scoreBoardMaterial.specularColor = BABYLON.Color3.Red();
         this.scoreBoard.material = this.scoreBoardMaterial;
 
-        this.scoreBoardTexture.drawText('Scores', 330, 150, `small-caps bolder 100px 'Quicksand', sans-serif`, '#ff6a00');
-        this.scoreBoardTexture.drawText('Player 1', 50, 400, `90px 'Quicksand', sans-serif`, '#ff6a00');
-        this.scoreBoardTexture.drawText('Player 2', 620, 400, `90px 'Quicksand', sans-serif`, '#ff6a00');
-        this.scoreBoardTexture.drawText(`${this.playerOneScore}`, 150, 700, ` bolder 200px 'Quicksand', sans-serif`, '#ff6a00');
-        this.scoreBoardTexture.drawText(`${this.playerTwoScore}`, 730, 700, `bolder 200px 'Quicksand', sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText('Scores', 330, 150, `small-caps bolder 100px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText('Player 1', 50, 400, `90px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText('Computer', 520, 400, `90px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText(`${this.playerOneScore}`, 150, 700, ` bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText(`${this.playerTwoScore}`, 680, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
 
 
         this.playingBall = ballClassObject;
@@ -81,8 +81,8 @@ class GameManager {
         this.paddleTwo.resetPaddle();
 
         this.scoreBoardTextureContext.clearRect(0, 500, 1024, 1024);
-        this.scoreBoardTexture.drawText(`${this.playerOneScore}`, 150, 700, `bolder 200px 'Quicksand', sans-serif`, '#ff6a00');
-        this.scoreBoardTexture.drawText(`${this.playerTwoScore}`, 730, 700, `bolder 200px 'Quicksand', sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText(`${this.playerOneScore}`, 150, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText(`${this.playerTwoScore}`, 680, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
 
         if (this.playerOneScore > this.maxScorePossible || this.playerTwoScore > this.maxScorePossible) {
             this.resetGame();

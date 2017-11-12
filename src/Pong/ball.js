@@ -1,4 +1,8 @@
 /// <reference path="./../../typings/babylon.d.ts" />
+import {
+    isThisExpression
+} from "../../../../.cache/typescript/2.6/node_modules/@types/babel-types";
+
 
 class Ball {
     constructor(scene, spawnPosition, ballId, color = 1) {
@@ -25,8 +29,20 @@ class Ball {
         this.ballMaterial.diffuseColor = BABYLON.Color3.Red();
         this.ball.material = this.ballMaterial;
 
+        // Todo: Fix ball particles
         this.ballParticles = new BABYLON.ParticleSystem('playingBallParticles', 1000, scene);
-        this.ballParticles.em = this.ball;
+        this.ballParticles.emitter = this.ball;
+        this.ballParticles.particleTexture = new BABYLON.Texture('./../../assets/flare.png', scene);
+        this.ballParticles.textureMask = new BABYLON.Color4(0.1, 0.8, 0.8, 1.0);
+        this.ballParticles.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+        this.ballParticles.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+        this.ballParticles.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+        this.ballParticles.minSize = 0.1;
+        this.ballParticles.maxSize = 0.5;
+        this.ballParticles.minLifeTime = 0.5;
+        this.ballParticles.maxLifeTime = 1.5;
+        this.ballParticles.emitRate = 500;
+        this.ballParticles.start();
 
         this.initialPosition = spawnPosition.clone();
         this.isLaunched = false;
