@@ -3,8 +3,6 @@
 /// <reference path="./ball.js" />
 /// <reference path="./game-manager.js" />
 
-// ToDo: Remove `showBoundingBox` from all bodies
-
 const canvasHolder = document.getElementById('canvas-holder');
 const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth - 25;

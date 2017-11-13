@@ -9,4 +9,4 @@ gulp <project_name>
 Project Names:
 * Space Invaders - `<project_name> = spaceInavders` https://codepen.io/Rud156/full/VreYvr
 * Starfield - `<project_name> = starField` https://codepen.io/Rud156/full/EbKrEQ
-* Pong - (Incomplete)
+* Pong - `<project_name> = pong` https://codepen.io/Rud156/full/xPdQJg/

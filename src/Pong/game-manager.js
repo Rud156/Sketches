@@ -8,8 +8,7 @@ class GameManager {
         this.playerTwoScore = 0;
         this.maxScorePossible = 5;
 
-        // TODO: Change at the end
-        this.gameStarted = true;
+        this.gameStarted = false;
 
         this.scoreBoard = BABYLON.MeshBuilder.CreatePlane('scoreBoard', {
             height: 16,
