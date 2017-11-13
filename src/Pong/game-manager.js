@@ -9,6 +9,7 @@ class GameManager {
         this.maxScorePossible = 5;
 
         this.gameStarted = false;
+        this.currentLevel = 1;
 
         this.scoreBoard = BABYLON.MeshBuilder.CreatePlane('scoreBoard', {
             height: 16,
@@ -48,7 +49,7 @@ class GameManager {
         this.scoreBoardMaterial.specularColor = BABYLON.Color3.Red();
         this.scoreBoard.material = this.scoreBoardMaterial;
 
-        this.scoreBoardTexture.drawText('Scores', 330, 150, `small-caps bolder 100px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
+        this.scoreBoardTexture.drawText(`Level ${this.currentLevel}`, 300, 150, `small-caps bolder 100px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
         this.scoreBoardTexture.drawText('Player 1', 50, 400, `90px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
         this.scoreBoardTexture.drawText('Computer', 520, 400, `90px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
         this.scoreBoardTexture.drawText(`${this.playerOneScore}`, 150, 700, ` bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
@@ -83,7 +84,15 @@ class GameManager {
         this.scoreBoardTexture.drawText(`${this.playerOneScore}`, 150, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
         this.scoreBoardTexture.drawText(`${this.playerTwoScore}`, 680, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
 
-        if (this.playerOneScore >= this.maxScorePossible || this.playerTwoScore >= this.maxScorePossible) {
+        if (this.playerOneScore >= this.maxScorePossible) {
+            this.currentLevel++;
+            this.paddleOne.movementSpeed += 5;
+            this.paddleTwo.movementSpeed += 5;
+            this.resetGame();
+        } else if (this.playerTwoScore >= this.maxScorePossible) {
+            this.currentLevel = 1;
+            this.paddleOne.movementSpeed = 5;
+            this.paddleTwo.movementSpeed = 5;
             this.resetGame();
         }
     }
@@ -91,8 +100,10 @@ class GameManager {
     resetGame() {
         if (this.playerOneScore > this.playerTwoScore) {
             document.getElementById('winnerName').innerText = 'Player 1 Wins';
+            document.getElementById('replayButton').innerText = 'Next Level';
         } else {
             document.getElementById('winnerName').innerText = 'Computer Wins';
+            document.getElementById('replayButton').innerText = 'Replay';
         }
         document.getElementsByClassName('end-overlay')[0].style.height = '100%';
         document.getElementById('player1Score').innerText = this.playerOneScore;
@@ -106,6 +117,8 @@ class GameManager {
         this.paddleOne.resetPaddle();
         this.paddleTwo.resetPaddle();
 
+        this.scoreBoardTextureContext.clearRect(0, 0, 1024, 200);
+        this.scoreBoardTexture.drawText(`Level ${this.currentLevel}`, 300, 150, `small-caps bolder 100px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
         this.scoreBoardTextureContext.clearRect(0, 500, 1024, 1024);
         this.scoreBoardTexture.drawText(`${0}`, 150, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');
         this.scoreBoardTexture.drawText(`${0}`, 680, 700, `bolder 200px 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif`, '#ff6a00');

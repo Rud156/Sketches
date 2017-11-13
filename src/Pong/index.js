@@ -79,6 +79,7 @@ const createDOMElementsEnd = () => {
     const replayButton = document.createElement('span');
     replayButton.className = 'start-button';
     replayButton.innerText = 'Replay';
+    replayButton.id = 'replayButton';
     replayButton.addEventListener('click', () => {
         endOverlay.style.height = '0';
         gameManager.gameStarted = true;

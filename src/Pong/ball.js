@@ -3,7 +3,7 @@
 class Ball {
     constructor(scene, spawnPosition, ballId, color = 1) {
         this.minBallSpeed = 10;
-        this.maxBallSpeed = 100;
+        this.maxBallSpeed = 1000;
 
         this.ball = BABYLON.MeshBuilder.CreateSphere('playBall', {
             segments: 16,
