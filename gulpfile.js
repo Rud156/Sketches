@@ -7,6 +7,7 @@ const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 const gutil = require('gulp-util');
 const lazypipe = require('lazypipe');
+const inject = require('gulp-inject');
 
 let processJS = lazypipe()
     .pipe(plumber, {
@@ -37,7 +38,7 @@ gulp.task('serve', () => {
     browserSync.init({
         server: {
             baseDir: './',
-            index: 'index.html'
+            index: './lib/index.html'
         },
         open: false,
         logLevel: 'debug',
@@ -51,6 +52,11 @@ gulp.task('general', () => {
 });
 
 gulp.task('starfield', ['serve', 'general', 'starFieldHelper'], () => {
+    let target = gulp.src('./index.html');
+    let sources = gulp.src(['./js/p5.min.js']);
+    target.pipe(inject(sources))
+        .pipe(gulp.dest('lib'));
+
     gulp.watch(['src/Starfield/*.js'], ['starFieldHelper']);
 });
 gulp.task('starFieldHelper', () => {
@@ -62,6 +68,11 @@ gulp.task('starFieldHelper', () => {
 });
 
 gulp.task('spaceInvaders', ['serve', 'general', 'spaceInvadersHelper'], () => {
+    let target = gulp.src('./index.html');
+    let sources = gulp.src(['./js/p5.min.js', './js/p5.dom.min.js', './js/howler.min.js']);
+    target.pipe(inject(sources))
+        .pipe(gulp.dest('lib'));
+
     gulp.watch(['src/SpaceInvaders/*.js'], ['spaceInvadersHelper']);
 });
 gulp.task('spaceInvadersHelper', () => {
@@ -78,6 +89,11 @@ gulp.task('spaceInvadersHelper', () => {
 });
 
 gulp.task('pong', ['serve', 'general', 'pongHelper'], () => {
+    let target = gulp.src('./index.html');
+    let sources = gulp.src(['./js/babylon.min.js']);
+    target.pipe(inject(sources))
+        .pipe(gulp.dest('lib'));
+
     gulp.watch(['src/Pong/*.js'], ['pongHelper']);
 });
 gulp.task('pongHelper', () => {
