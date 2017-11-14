@@ -11,8 +11,10 @@ class Player {
 
         this.radius = radius;
         this.movementSpeed = 10;
-        this.angularVelocity = 0.4;
+        this.angularVelocity = 0.2;
+
         this.jumpHeight = 10;
+        this.jumpBreathingSpace = 3;
 
         this.grounded = true;
         this.maxJumpNumber = 3;
@@ -29,30 +31,39 @@ class Player {
         push();
         translate(pos.x, pos.y);
         rotate(angle);
+
         ellipse(0, 0, this.radius * 2);
+
         fill(255);
+        ellipse(0, 0, this.radius);
         rect(0 - this.radius / 2, 0, 30, 10);
+
+        strokeWeight(1);
+        stroke(0);
+        line(0, 0, -this.radius * 1.25, 0);
+
         pop();
     }
 
     moveHorizontal(activeKeys) {
         let yVelocity = this.body.velocity.y;
 
-        if (keyStates[37]) {
+        if (activeKeys[37]) {
             Matter.Body.setVelocity(this.body, {
                 x: -this.movementSpeed,
                 y: yVelocity
             });
-            if (!this.grounded)
-                Matter.Body.setAngularVelocity(this.body, -this.angularVelocity);
-        } else if (keyStates[39]) {
+            Matter.Body.setAngularVelocity(this.body, 0);
+        } else if (activeKeys[39]) {
             Matter.Body.setVelocity(this.body, {
                 x: this.movementSpeed,
                 y: yVelocity
             });
-            if (!this.grounded)
-                Matter.Body.setAngularVelocity(this.body, this.angularVelocity);
-
+            Matter.Body.setAngularVelocity(this.body, 0);
+        } else if (activeKeys[38]) {
+            Matter.Body.setAngularVelocity(this.body, -this.angularVelocity);
+        } else if (activeKeys[40]) {
+            Matter.Body.setAngularVelocity(this.body, this.angularVelocity);
         }
 
         if ((!keyStates[37] && !keyStates[39]) || (keyStates[37] && keyStates[39])) {
@@ -60,6 +71,8 @@ class Player {
                 x: 0,
                 y: yVelocity
             });
+        }
+        if ((!keyStates[38] && !keyStates[40]) || (keyStates[38] && keyStates[40])) {
             Matter.Body.setAngularVelocity(this.body, 0);
         }
     }
@@ -79,7 +92,7 @@ class Player {
             minDistance = distance < minDistance ? distance : minDistance;
         }
 
-        if (minDistance <= this.radius + ground.height / 2 + 3) {
+        if (minDistance <= this.radius + ground.height / 2 + this.jumpBreathingSpace) {
             this.grounded = true;
             this.currentJumpNumber = 0;
         } else
