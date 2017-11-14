@@ -10,7 +10,13 @@ class Player {
         Matter.World.add(world, this.body);
 
         this.radius = radius;
-        this.speedScale = 4;
+        this.movementSpeed = 10;
+        this.angularVelocity = 0.4;
+        this.jumpHeight = 10;
+
+        this.grounded = true;
+        this.maxJumpNumber = 3;
+        this.currentJumpNumber = 0;
     }
 
     show() {
@@ -24,31 +30,82 @@ class Player {
         translate(pos.x, pos.y);
         rotate(angle);
         ellipse(0, 0, this.radius * 2);
-        stroke(255);
-        line(0, 0, this.radius, 0);
+        fill(255);
+        rect(0 - this.radius / 2, 0, 30, 10);
         pop();
     }
 
-    update(activeKeys) {
+    moveHorizontal(activeKeys) {
         let yVelocity = this.body.velocity.y;
-        let xVelocity = this.body.velocity.x;
 
         if (keyStates[37]) {
             Matter.Body.setVelocity(this.body, {
-                x: -this.speedScale,
+                x: -this.movementSpeed,
                 y: yVelocity
             });
+            if (!this.grounded)
+                Matter.Body.setAngularVelocity(this.body, -this.angularVelocity);
         } else if (keyStates[39]) {
             Matter.Body.setVelocity(this.body, {
-                x: this.speedScale,
+                x: this.movementSpeed,
                 y: yVelocity
             });
+            if (!this.grounded)
+                Matter.Body.setAngularVelocity(this.body, this.angularVelocity);
+
         }
 
-        if ((!keyStates[37] && !keyStates[39]) || (keyStates[37] && keyStates[39]))
+        if ((!keyStates[37] && !keyStates[39]) || (keyStates[37] && keyStates[39])) {
             Matter.Body.setVelocity(this.body, {
                 x: 0,
                 y: yVelocity
             });
+            Matter.Body.setAngularVelocity(this.body, 0);
+        }
+    }
+
+    moveVertical(activeKeys, ground) {
+        let xVelocity = this.body.velocity.x;
+        let pos = this.body.position
+
+        let collisions = Matter.Query.ray([ground.body], pos, {
+            x: pos.x,
+            y: height
+        });
+        let minDistance = Number.MAX_SAFE_INTEGER;
+        for (let i = 0; i < collisions.length; i++) {
+            let distance = dist(pos.x, pos.y,
+                pos.x, collisions[i].bodyA.position.y);
+            minDistance = distance < minDistance ? distance : minDistance;
+        }
+
+        if (minDistance <= this.radius + ground.height / 2 + 3) {
+            this.grounded = true;
+            this.currentJumpNumber = 0;
+        } else
+            this.grounded = false;
+
+        if (activeKeys[32]) {
+            if (!this.grounded && this.currentJumpNumber < this.maxJumpNumber) {
+                Matter.Body.setVelocity(this.body, {
+                    x: xVelocity,
+                    y: -this.jumpHeight
+                });
+                this.currentJumpNumber++;
+            } else if (this.grounded) {
+                Matter.Body.setVelocity(this.body, {
+                    x: xVelocity,
+                    y: -this.jumpHeight
+                });
+                this.currentJumpNumber++;
+            }
+        }
+
+        activeKeys[32] = false;
+    }
+
+    update(activeKeys, ground) {
+        this.moveHorizontal(activeKeys);
+        this.moveVertical(activeKeys, ground);
     }
 }

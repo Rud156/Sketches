@@ -5,7 +5,7 @@
 let engine;
 let world;
 
-let ground;
+let grounds = [];
 let players = [];
 
 const keyStates = {
@@ -26,7 +26,10 @@ function setup() {
     engine = Matter.Engine.create();
     world = engine.world;
 
-    ground = new Ground(width / 2, height - 10, width, 20, world);
+    grounds.push(new Ground(width / 2, height - 10, width, 20, world));
+    grounds.push(new Ground(10, height - 170, 20, 300, world));
+    grounds.push(new Ground(width - 10, height - 170, 20, 300, world));
+
 
     for (let i = 0; i < 1; i++) {
         players.push(new Player(width / 2, height / 2, 20, world));
@@ -39,10 +42,12 @@ function draw() {
     background(0);
     Matter.Engine.update(engine);
 
-    ground.show();
+    grounds.forEach(element => {
+        element.show();
+    });
     players.forEach(element => {
         element.show();
-        element.update(keyStates);
+        element.update(keyStates, grounds[0]);
     });
 }
 
