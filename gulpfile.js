@@ -105,3 +105,20 @@ gulp.task('pongHelper', () => {
         ])
         .pipe(processJS());
 });
+
+gulp.task('ballBlasters', ['serve', 'general', 'ballHelper'], () => {
+    let target = gulp.src('./index.html');
+    let sources = gulp.src(['./js/p5.min.js', './js/p5.dom.min.js', './js/matter.js']);
+    target.pipe(inject(sources))
+        .pipe(gulp.dest('lib'));
+
+    gulp.watch(['src/BallBlasters/*.js'], ['ballHelper']);
+});
+gulp.task('ballHelper', () => {
+    return gulp.src([
+            'src/BallBlasters/ground.js',
+            'src/BallBlasters/player.js',
+            'src/BallBlasters/index.js'
+        ])
+        .pipe(processJS());
+});
