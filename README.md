@@ -7,6 +7,7 @@ First install `gulp` via `npm install gulp-cli -g`
 ```bash
 gulp <project_name>
 ```
+Open http://localhost:3000 to view
 
 Project Names:
 * Space Invaders - `<project_name> = spaceInavders` https://codepen.io/Rud156/full/VreYvr
