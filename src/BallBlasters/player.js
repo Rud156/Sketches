@@ -1,4 +1,7 @@
 /// <reference path="./../../typings/matter.d.ts" />
+/// <reference path="./basic-fire.js" />import { port } from "_debugger";
+
+
 
 class Player {
     constructor(x, y, radius, world) {
@@ -8,6 +11,7 @@ class Player {
             restitution: 0.3
         });
         Matter.World.add(world, this.body);
+        this.world = world;
 
         this.radius = radius;
         this.movementSpeed = 10;
@@ -19,6 +23,8 @@ class Player {
         this.grounded = true;
         this.maxJumpNumber = 3;
         this.currentJumpNumber = 0;
+
+        this.bullets = [];
     }
 
     show() {
@@ -36,13 +42,27 @@ class Player {
 
         fill(255);
         ellipse(0, 0, this.radius);
-        rect(0 - this.radius / 2, 0, 30, 10);
+        rect(0 + this.radius / 2, 0, this.radius * 1.5, this.radius / 2);
+
+        // ellipse(-this.radius * 1.5, 0, 5);
 
         strokeWeight(1);
         stroke(0);
-        line(0, 0, -this.radius * 1.25, 0);
+        line(0, 0, this.radius * 1.25, 0);
 
         pop();
+    }
+
+    rotateBlaster(activeKeys) {
+        if (activeKeys[38]) {
+            Matter.Body.setAngularVelocity(this.body, -this.angularVelocity);
+        } else if (activeKeys[40]) {
+            Matter.Body.setAngularVelocity(this.body, this.angularVelocity);
+        }
+
+        if ((!keyStates[38] && !keyStates[40]) || (keyStates[38] && keyStates[40])) {
+            Matter.Body.setAngularVelocity(this.body, 0);
+        }
     }
 
     moveHorizontal(activeKeys) {
@@ -60,10 +80,6 @@ class Player {
                 y: yVelocity
             });
             Matter.Body.setAngularVelocity(this.body, 0);
-        } else if (activeKeys[38]) {
-            Matter.Body.setAngularVelocity(this.body, -this.angularVelocity);
-        } else if (activeKeys[40]) {
-            Matter.Body.setAngularVelocity(this.body, this.angularVelocity);
         }
 
         if ((!keyStates[37] && !keyStates[39]) || (keyStates[37] && keyStates[39])) {
@@ -71,9 +87,6 @@ class Player {
                 x: 0,
                 y: yVelocity
             });
-        }
-        if ((!keyStates[38] && !keyStates[40]) || (keyStates[38] && keyStates[40])) {
-            Matter.Body.setAngularVelocity(this.body, 0);
         }
     }
 
@@ -117,8 +130,36 @@ class Player {
         activeKeys[32] = false;
     }
 
+    shoot(activeKeys) {
+        if (activeKeys[13]) {
+            let pos = this.body.position;
+            let angle = this.body.angle;
+
+            let x = this.radius * cos(angle) * 1.5 + pos.x;
+            let y = this.radius * sin(angle) * 1.5 + pos.y;
+            this.bullets.push(new BasicFire(x, y, angle, this.world));
+
+            let length = this.bullets.length;
+            this.bullets[length - 1].setVelocity();
+
+            activeKeys[13] = false;
+        }
+    }
+
     update(activeKeys, ground) {
+        this.rotateBlaster(activeKeys);
         this.moveHorizontal(activeKeys);
         this.moveVertical(activeKeys, ground);
+
+        this.shoot(activeKeys);
+
+        for (let i = 0; i < this.bullets.length; i++) {
+            this.bullets[i].show();
+
+            if (this.bullets[i].checkVelocityZero()) {
+                this.bullets.splice(i, 1);
+                i -= 1;
+            }
+        }
     }
 }

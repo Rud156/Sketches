@@ -17,7 +17,8 @@ const keyStates = {
     87: false, // W
     65: false, // A
     83: false, // S
-    68: false // D
+    68: false, // D
+    13: false
 };
 
 function setup() {
