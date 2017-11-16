@@ -139,9 +139,6 @@ class Player {
             let y = this.radius * sin(angle) * 1.5 + pos.y;
             this.bullets.push(new BasicFire(x, y, angle, this.world));
 
-            let length = this.bullets.length;
-            this.bullets[length - 1].setVelocity();
-
             activeKeys[13] = false;
         }
     }
@@ -157,6 +154,7 @@ class Player {
             this.bullets[i].show();
 
             if (this.bullets[i].checkVelocityZero()) {
+                this.bullets[i].removeFromWorld();
                 this.bullets.splice(i, 1);
                 i -= 1;
             }

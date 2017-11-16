@@ -12,16 +12,13 @@ class BasicFire {
 
         this.movementSpeed = 7;
         this.angle = angle;
+        this.world = world;
+
+        this.setVelocity();
     }
 
     show() {
-        let xVelocity = this.body.velocity.x;
-        
-        let alphaValue = 255;
-        if (xVelocity <= 0.3)
-            alphaValue = map(xVelocity, 0, 0.3, 0, 255);
-
-        fill(255, 255, 255, alphaValue);
+        fill(255);
         noStroke();
 
         let pos = this.body.position;
@@ -39,7 +36,12 @@ class BasicFire {
         });
     }
 
+    removeFromWorld() {
+        Matter.World.remove(this.world, this.body);
+    }
+
     checkVelocityZero() {
-        return Math.abs(this.body.velocity.x) <= 0;
+        let velocity = this.body.velocity;
+        return sqrt(sq(velocity.x) + sq(velocity.y)) <= 0.07;
     }
 }
