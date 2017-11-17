@@ -25,6 +25,11 @@ class Player {
         this.currentJumpNumber = 0;
 
         this.bullets = [];
+        this.initialChargeValue = 5;
+        this.maxChargeValue = 12;
+        this.currentChargeValue = this.initialChargeValue;
+        this.chargeIncrementValue = 0.1;
+        this.chargeStarted = false;
     }
 
     show() {
@@ -130,16 +135,34 @@ class Player {
         activeKeys[32] = false;
     }
 
-    shoot(activeKeys) {
+    drawChargedShot(x, y, radius) {
+        fill(255);
+        noStroke();
+
+        ellipse(x, y, radius * 2);
+    }
+
+    chargeAndShoot(activeKeys) {
+        let pos = this.body.position;
+        let angle = this.body.angle;
+
+        let x = this.radius * cos(angle) * 1.5 + pos.x;
+        let y = this.radius * sin(angle) * 1.5 + pos.y;
+
         if (activeKeys[13]) {
-            let pos = this.body.position;
-            let angle = this.body.angle;
+            this.chargeStarted = true;
+            this.currentChargeValue += this.chargeIncrementValue;
 
-            let x = this.radius * cos(angle) * 1.5 + pos.x;
-            let y = this.radius * sin(angle) * 1.5 + pos.y;
-            this.bullets.push(new BasicFire(x, y, angle, this.world));
+            this.currentChargeValue = this.currentChargeValue > this.maxChargeValue ?
+                this.maxChargeValue : this.currentChargeValue;
 
-            activeKeys[13] = false;
+            this.drawChargedShot(x, y, this.currentChargeValue);
+
+        } else if (!activeKeys[13] && this.chargeStarted) {
+            this.bullets.push(new BasicFire(x, y, this.currentChargeValue, angle, this.world));
+
+            this.chargeStarted = false;
+            this.currentChargeValue = this.initialChargeValue;
         }
     }
 
@@ -148,7 +171,7 @@ class Player {
         this.moveHorizontal(activeKeys);
         this.moveVertical(activeKeys, ground);
 
-        this.shoot(activeKeys);
+        this.chargeAndShoot(activeKeys);
 
         for (let i = 0; i < this.bullets.length; i++) {
             this.bullets[i].show();

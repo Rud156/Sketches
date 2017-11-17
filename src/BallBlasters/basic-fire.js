@@ -1,8 +1,8 @@
 /// <reference path="./../../typings/matter.d.ts" />
 
 class BasicFire {
-    constructor(x, y, angle, world) {
-        this.radius = 5;
+    constructor(x, y, radius, angle, world) {
+        this.radius = radius;
         this.body = Matter.Bodies.circle(x, y, this.radius, {
             label: 'basicFire',
             friction: 0.1,
@@ -10,7 +10,7 @@ class BasicFire {
         });
         Matter.World.add(world, this.body);
 
-        this.movementSpeed = 7;
+        this.movementSpeed = this.radius * 1.4;
         this.angle = angle;
         this.world = world;
 
