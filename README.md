@@ -8,8 +8,8 @@ npm run <project_name>
 ```
 Or if you prefer yarn:
 ```bash
-yarn install
-yarn run <project_name>
+yarn
+yarn <project_name>
 ```
 Open http://localhost:3000 to view
 

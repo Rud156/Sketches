@@ -9,6 +9,7 @@ let grounds = [];
 let players = [];
 
 const keyStates = {
+    13: false, // ENTER
     32: false, // SPACE
     37: false, // LEFT
     38: false, // UP
@@ -18,7 +19,6 @@ const keyStates = {
     65: false, // A
     83: false, // S
     68: false, // D
-    13: false
 };
 
 const groundCategory = 0x0001;
@@ -70,11 +70,15 @@ function draw() {
 function keyPressed() {
     if (keyCode in keyStates)
         keyStates[keyCode] = true;
+
+    return false;
 }
 
 function keyReleased() {
     if (keyCode in keyStates)
         keyStates[keyCode] = false;
+
+    return false;
 }
 
 function collisionEvent(event) {
@@ -82,20 +86,21 @@ function collisionEvent(event) {
         let labelA = event.pairs[i].bodyA.label;
         let labelB = event.pairs[i].bodyB.label;
 
-        if (labelA === 'basicFire' && labelB === 'staticGround') {
+        if (labelA === 'basicFire' && (labelB.match(/^(staticGround|fakeBottomPart)$/))) {
             event.pairs[i].bodyA.collisionFilter = {
                 category: bulletCollisionLayer,
                 mask: groundCategory
-            }
-        } else if (labelB === 'basicFire' && labelA === 'staticGround') {
+            };
+        } else if (labelB === 'basicFire' && (labelA.match(/^(staticGround|fakeBottomPart)$/))) {
             event.pairs[i].bodyB.collisionFilter = {
                 category: bulletCollisionLayer,
                 mask: groundCategory
-            }
+            };
         } else if (labelA === 'player' && labelB === 'staticGround') {
             event.pairs[i].bodyA.grounded = true;
             event.pairs[i].bodyA.currentJumpNumber = 0;
         } else if (labelB === 'player' && labelA === 'staticGround') {
+            event.pairs[i].bodyB.grounded = true;
             event.pairs[i].bodyB.currentJumpNumber = 0;
         }
     }

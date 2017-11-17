@@ -9,7 +9,7 @@ class Player {
     }) {
         this.body = Matter.Bodies.circle(x, y, radius, {
             label: 'player',
-            friction: 0.3,
+            friction: 0,
             restitution: 0.3,
             collisionFilter: {
                 category: catAndMask.category,
