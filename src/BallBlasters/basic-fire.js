@@ -1,12 +1,16 @@
 /// <reference path="./../../typings/matter.d.ts" />
 
 class BasicFire {
-    constructor(x, y, radius, angle, world) {
+    constructor(x, y, radius, angle, world, catAndMask) {
         this.radius = radius;
         this.body = Matter.Bodies.circle(x, y, this.radius, {
             label: 'basicFire',
             friction: 0.1,
-            restitution: 0.8
+            restitution: 0.8,
+            collisionFilter: {
+                category: catAndMask.category,
+                mask: catAndMask.mask
+            }
         });
         Matter.World.add(world, this.body);
 

@@ -1,13 +1,17 @@
 /// <reference path="./../../typings/matter.d.ts" />
 
 class Ground {
-    constructor(x, y, groundWidth, groundHeight, world, angle = 0) {
+    constructor(x, y, groundWidth, groundHeight, world, catAndMask, angle = 0) {
         this.body = Matter.Bodies.rectangle(x, y, groundWidth, groundHeight, {
             isStatic: true,
             friction: 1,
             restitution: 0,
             angle: angle,
-            label: 'staticGround'
+            label: 'staticGround',
+            collisionFilter: {
+                category: catAndMask.category,
+                mask: catAndMask.mask
+            }
         });
         Matter.World.add(world, this.body);
 

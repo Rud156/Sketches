@@ -1,14 +1,17 @@
 /// <reference path="./../../typings/matter.d.ts" />
-/// <reference path="./basic-fire.js" />import { port } from "_debugger";
-
+/// <reference path="./basic-fire.js" />
 
 
 class Player {
-    constructor(x, y, radius, world) {
+    constructor(x, y, radius, world, catAndMask) {
         this.body = Matter.Bodies.circle(x, y, radius, {
             label: 'player',
             friction: 0.3,
-            restitution: 0.3
+            restitution: 0.3,
+            collisionFilter: {
+                category: catAndMask.category,
+                mask: catAndMask.mask
+            }
         });
         Matter.World.add(world, this.body);
         this.world = world;
@@ -159,7 +162,10 @@ class Player {
             this.drawChargedShot(x, y, this.currentChargeValue);
 
         } else if (!activeKeys[13] && this.chargeStarted) {
-            this.bullets.push(new BasicFire(x, y, this.currentChargeValue, angle, this.world));
+            this.bullets.push(new BasicFire(x, y, this.currentChargeValue, angle, this.world, {
+                category: basicFireCategory,
+                mask: groundCategory | playerCategory | basicFireCategory
+            }));
 
             this.chargeStarted = false;
             this.currentChargeValue = this.initialChargeValue;

@@ -21,33 +21,44 @@ const keyStates = {
     13: false
 };
 
+const groundCategory = 0x0001;
+const playerCategory = 0x0002;
+const basicFireCategory = 0x0004;
+const bulletCollisionLayer = 0x0008;
+
 function setup() {
     let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 30);
     canvas.parent('canvas-holder');
     engine = Matter.Engine.create();
     world = engine.world;
 
-    Matter.Events.on(engine, 'collisionStart', event => {
-        event.pairs.forEach(element => {
-            let labelA = element.bodyA.label;
-            let labelB = element.bodyB.label;
-
-            if (labelA === 'basicFire' && labelB === 'staticGround') {
-
-            } else if (labelB === 'basicFire' && labelA === 'staticGround') {
-
-            }
-        });
-    });
-
+    Matter.Events.on(engine, 'collisionStart', collisionEvent);
 
     for (let i = 25; i < width; i += 200) {
         let randomValue = random(10, 300);
-        grounds.push(new Ground(i + 50, height - randomValue / 2, 100, randomValue, world));
+        grounds.push(new Ground(i + 50, height - randomValue / 2, 100, randomValue, world, {
+            category: groundCategory,
+            mask: groundCategory | playerCategory | basicFireCategory | bulletCollisionLayer
+        }));
     }
+    // grounds.push(new Ground(width / 2, height - 10, width, 20, world, {
+    //     category: groundCategory,
+    //     mask: groundCategory | bulletCollisionLayer | playerCategory | basicFireCategory
+    // }));
+    // grounds.push(new Ground(10, height - 170, 20, 300, world, {
+    //     category: groundCategory,
+    //     mask: groundCategory | bulletCollisionLayer | playerCategory | basicFireCategory
+    // }));
+    // grounds.push(new Ground(width - 10, height - 170, 20, 300, world, {
+    //     category: groundCategory,
+    //     mask: groundCategory | bulletCollisionLayer | playerCategory | basicFireCategory
+    // }));
 
     for (let i = 0; i < 1; i++) {
-        players.push(new Player(width / 2, height / 2, 20, world));
+        players.push(new Player(width / 2, height / 2, 20, world, {
+            category: playerCategory,
+            mask: groundCategory | playerCategory | basicFireCategory
+        }));
     }
 
     rectMode(CENTER);
@@ -64,6 +75,10 @@ function draw() {
         element.show();
         element.update(keyStates, grounds[0]);
     });
+
+    fill(255);
+    textSize(30);
+    text(`${round(frameRate())}`, width - 75, 50)
 }
 
 function keyPressed() {
@@ -74,4 +89,23 @@ function keyPressed() {
 function keyReleased() {
     if (keyCode in keyStates)
         keyStates[keyCode] = false;
+}
+
+function collisionEvent(event) {
+    for (let i = 0; i < event.pairs.length; i++) {
+        let labelA = event.pairs[i].bodyA.label;
+        let labelB = event.pairs[i].bodyB.label;
+
+        if (labelA === 'basicFire' && labelB === 'staticGround') {
+            event.pairs[i].bodyA.collisionFilter = {
+                category: bulletCollisionLayer,
+                mask: groundCategory
+            }
+        } else if (labelB === 'basicFire' && labelA === 'staticGround') {
+            event.pairs[i].bodyB.collisionFilter = {
+                category: bulletCollisionLayer,
+                mask: groundCategory
+            }
+        }
+    }
 }
