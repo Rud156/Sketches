@@ -3,10 +3,12 @@ A collection of sketches and mini games inspired by [The Coding Train](https://w
 
 To run any project:
 ```bash
+npm install
 npm run <project_name>
 ```
 Or if you prefer yarn:
 ```bash
+yarn install
 yarn run <project_name>
 ```
 Open http://localhost:3000 to view
