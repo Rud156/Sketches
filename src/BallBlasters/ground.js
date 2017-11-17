@@ -1,7 +1,10 @@
 /// <reference path="./../../typings/matter.d.ts" />
 
 class Ground {
-    constructor(x, y, groundWidth, groundHeight, world, catAndMask, angle = 0) {
+    constructor(x, y, groundWidth, groundHeight, world, catAndMask = {
+        category: groundCategory,
+        mask: groundCategory | playerCategory | basicFireCategory | bulletCollisionLayer
+    }, angle = 0) {
         this.body = Matter.Bodies.rectangle(x, y, groundWidth, groundHeight, {
             isStatic: true,
             friction: 1,

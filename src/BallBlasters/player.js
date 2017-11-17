@@ -3,7 +3,10 @@
 
 
 class Player {
-    constructor(x, y, radius, world, catAndMask) {
+    constructor(x, y, radius, world, catAndMask = {
+        category: playerCategory,
+        mask: groundCategory | playerCategory | basicFireCategory
+    }) {
         this.body = Matter.Bodies.circle(x, y, radius, {
             label: 'player',
             friction: 0.3,
@@ -23,9 +26,9 @@ class Player {
         this.jumpHeight = 10;
         this.jumpBreathingSpace = 3;
 
-        this.grounded = true;
+        this.body.grounded = true;
         this.maxJumpNumber = 3;
-        this.currentJumpNumber = 0;
+        this.body.currentJumpNumber = 0;
 
         this.bullets = [];
         this.initialChargeValue = 5;
@@ -98,40 +101,23 @@ class Player {
         }
     }
 
-    moveVertical(activeKeys, ground) {
+    moveVertical(activeKeys, groundObjects) {
         let xVelocity = this.body.velocity.x;
-        let pos = this.body.position
-
-        let collisions = Matter.Query.ray([ground.body], pos, {
-            x: pos.x,
-            y: height
-        });
-        let minDistance = Number.MAX_SAFE_INTEGER;
-        for (let i = 0; i < collisions.length; i++) {
-            let distance = dist(pos.x, pos.y,
-                pos.x, collisions[i].bodyA.position.y);
-            minDistance = distance < minDistance ? distance : minDistance;
-        }
-
-        if (minDistance <= this.radius + ground.height / 2 + this.jumpBreathingSpace) {
-            this.grounded = true;
-            this.currentJumpNumber = 0;
-        } else
-            this.grounded = false;
 
         if (activeKeys[32]) {
-            if (!this.grounded && this.currentJumpNumber < this.maxJumpNumber) {
+            if (!this.body.grounded && this.body.currentJumpNumber < this.maxJumpNumber) {
                 Matter.Body.setVelocity(this.body, {
                     x: xVelocity,
                     y: -this.jumpHeight
                 });
-                this.currentJumpNumber++;
-            } else if (this.grounded) {
+                this.body.currentJumpNumber++;
+            } else if (this.body.grounded) {
                 Matter.Body.setVelocity(this.body, {
                     x: xVelocity,
                     y: -this.jumpHeight
                 });
-                this.currentJumpNumber++;
+                this.body.currentJumpNumber++;
+                this.body.grounded = false;
             }
         }
 
@@ -172,10 +158,10 @@ class Player {
         }
     }
 
-    update(activeKeys, ground) {
+    update(activeKeys, groundObjects) {
         this.rotateBlaster(activeKeys);
         this.moveHorizontal(activeKeys);
-        this.moveVertical(activeKeys, ground);
+        this.moveVertical(activeKeys, groundObjects);
 
         this.chargeAndShoot(activeKeys);
 

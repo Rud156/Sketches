@@ -35,30 +35,15 @@ function setup() {
     Matter.Events.on(engine, 'collisionStart', collisionEvent);
 
     for (let i = 25; i < width; i += 200) {
-        let randomValue = random(10, 300);
-        grounds.push(new Ground(i + 50, height - randomValue / 2, 100, randomValue, world, {
-            category: groundCategory,
-            mask: groundCategory | playerCategory | basicFireCategory | bulletCollisionLayer
-        }));
+        let randomValue = random(100, 300);
+        grounds.push(new Ground(i + 50, height - randomValue / 2, 100, randomValue, world));
     }
-    // grounds.push(new Ground(width / 2, height - 10, width, 20, world, {
-    //     category: groundCategory,
-    //     mask: groundCategory | bulletCollisionLayer | playerCategory | basicFireCategory
-    // }));
-    // grounds.push(new Ground(10, height - 170, 20, 300, world, {
-    //     category: groundCategory,
-    //     mask: groundCategory | bulletCollisionLayer | playerCategory | basicFireCategory
-    // }));
-    // grounds.push(new Ground(width - 10, height - 170, 20, 300, world, {
-    //     category: groundCategory,
-    //     mask: groundCategory | bulletCollisionLayer | playerCategory | basicFireCategory
-    // }));
+    // grounds.push(new Ground(width / 2, height - 10, width, 20, world));
+    // grounds.push(new Ground(10, height - 170, 20, 300, world));
+    // grounds.push(new Ground(width - 10, height - 170, 20, 300, world));
 
     for (let i = 0; i < 1; i++) {
-        players.push(new Player(width / 2, height / 2, 20, world, {
-            category: playerCategory,
-            mask: groundCategory | playerCategory | basicFireCategory
-        }));
+        players.push(new Player(width / 2, height / 2, 20, world));
     }
 
     rectMode(CENTER);
@@ -71,9 +56,10 @@ function draw() {
     grounds.forEach(element => {
         element.show();
     });
+
     players.forEach(element => {
         element.show();
-        element.update(keyStates, grounds[0]);
+        element.update(keyStates, grounds);
     });
 
     fill(255);
@@ -106,6 +92,11 @@ function collisionEvent(event) {
                 category: bulletCollisionLayer,
                 mask: groundCategory
             }
+        } else if (labelA === 'player' && labelB === 'staticGround') {
+            event.pairs[i].bodyA.grounded = true;
+            event.pairs[i].bodyA.currentJumpNumber = 0;
+        } else if (labelB === 'player' && labelA === 'staticGround') {
+            event.pairs[i].bodyB.currentJumpNumber = 0;
         }
     }
 }
