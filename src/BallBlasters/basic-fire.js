@@ -44,4 +44,11 @@ class BasicFire {
         let velocity = this.body.velocity;
         return sqrt(sq(velocity.x) + sq(velocity.y)) <= 0.07;
     }
+
+    checkOutOfScreen() {
+        let pos = this.body.position;
+        return (
+            pos.x > width || pos.x < 0 || pos.y > height
+        );
+    }
 }

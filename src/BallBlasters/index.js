@@ -27,10 +27,24 @@ function setup() {
     engine = Matter.Engine.create();
     world = engine.world;
 
-    grounds.push(new Ground(width / 2, height - 10, width, 20, world));
-    grounds.push(new Ground(10, height - 170, 20, 300, world));
-    grounds.push(new Ground(width - 10, height - 170, 20, 300, world));
+    Matter.Events.on(engine, 'collisionStart', event => {
+        event.pairs.forEach(element => {
+            let labelA = element.bodyA.label;
+            let labelB = element.bodyB.label;
 
+            if (labelA === 'basicFire' && labelB === 'staticGround') {
+
+            } else if (labelB === 'basicFire' && labelA === 'staticGround') {
+
+            }
+        });
+    });
+
+
+    for (let i = 25; i < width; i += 200) {
+        let randomValue = random(10, 300);
+        grounds.push(new Ground(i + 50, height - randomValue / 2, 100, randomValue, world));
+    }
 
     for (let i = 0; i < 1; i++) {
         players.push(new Player(width / 2, height / 2, 20, world));

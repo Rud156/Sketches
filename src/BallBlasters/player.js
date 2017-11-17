@@ -176,7 +176,7 @@ class Player {
         for (let i = 0; i < this.bullets.length; i++) {
             this.bullets[i].show();
 
-            if (this.bullets[i].checkVelocityZero()) {
+            if (this.bullets[i].checkVelocityZero() || this.bullets[i].checkOutOfScreen()) {
                 this.bullets[i].removeFromWorld();
                 this.bullets.splice(i, 1);
                 i -= 1;
