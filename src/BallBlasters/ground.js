@@ -19,7 +19,8 @@ class Ground {
         });
 
         let modifiedHeight = groundHeight - 20;
-        this.fakeBottomPart = Matter.Bodies.rectangle(x, y + 10, groundWidth, modifiedHeight, {
+        let modifiedWidth = 50;
+        this.fakeBottomPart = Matter.Bodies.rectangle(x, y + 10, modifiedWidth, modifiedHeight, {
             isStatic: true,
             friction: 0,
             restitution: 1,
@@ -35,6 +36,7 @@ class Ground {
         this.width = groundWidth;
         this.height = 20;
         this.modifiedHeight = modifiedHeight;
+        this.modifiedWidth = modifiedWidth;
     }
 
     show() {
@@ -43,7 +45,17 @@ class Ground {
 
         let bodyVertices = this.body.vertices;
         let fakeBottomVertices = this.fakeBottomPart.vertices;
-        let vertices = [bodyVertices[0], bodyVertices[1], fakeBottomVertices[2], fakeBottomVertices[3]];
+        let vertices = [
+            bodyVertices[0], 
+            bodyVertices[1],
+            bodyVertices[2],
+            fakeBottomVertices[1], 
+            fakeBottomVertices[2], 
+            fakeBottomVertices[3], 
+            fakeBottomVertices[0],
+            bodyVertices[3]
+        ];
+
 
         beginShape();
         for (let i = 0; i < vertices.length; i++)
