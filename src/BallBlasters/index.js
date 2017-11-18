@@ -13,7 +13,7 @@ let minForceMagnitude = 20;
 
 const playerKeys = [
     [37, 39, 38, 40, 13, 32],
-    [65, 68, 87, 83, 49, 50]
+    [65, 68, 87, 83, 16, 18]
 ];
 
 const keyStates = {
@@ -27,8 +27,8 @@ const keyStates = {
     65: false, // A
     83: false, // S
     68: false, // D
-    49: false, // 1
-    50: false // 2
+    16: false, // Shift
+    18: false // Alt
 };
 
 const groundCategory = 0x0001;
