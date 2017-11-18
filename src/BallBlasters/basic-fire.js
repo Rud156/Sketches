@@ -50,7 +50,7 @@ class BasicFire {
         Matter.World.remove(this.world, this.body);
     }
 
-    checkVelocityZero() {
+    isVelocityZero() {
         let velocity = this.body.velocity;
         return sqrt(sq(velocity.x) + sq(velocity.y)) <= 0.07;
     }
