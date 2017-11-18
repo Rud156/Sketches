@@ -18,14 +18,14 @@ class BasicFire {
         this.angle = angle;
         this.world = world;
 
-        this.body.damagedPlayer = false;
+        this.body.damaged = false;
         this.body.damageAmount = this.radius / 2;
 
         this.setVelocity();
     }
 
     show() {
-        if (!this.body.damagedPlayer) {
+        if (!this.body.damaged) {
 
             fill(255);
             noStroke();
@@ -55,7 +55,7 @@ class BasicFire {
         return sqrt(sq(velocity.x) + sq(velocity.y)) <= 0.07;
     }
 
-    checkOutOfScreen() {
+    isOutOfScreen() {
         let pos = this.body.position;
         return (
             pos.x > width || pos.x < 0 || pos.y > height

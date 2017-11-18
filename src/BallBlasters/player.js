@@ -1,9 +1,8 @@
 /// <reference path="./../../typings/matter.d.ts" />
 /// <reference path="./basic-fire.js" />
 
-
 class Player {
-    constructor(x, y, world, catAndMask = {
+    constructor(x, y, world, playerIndex, catAndMask = {
         category: playerCategory,
         mask: groundCategory | playerCategory | basicFireCategory
     }) {
@@ -37,8 +36,15 @@ class Player {
         this.chargeIncrementValue = 0.1;
         this.chargeStarted = false;
 
+        this.maxHealth = 100;
         this.body.damageLevel = 1;
+        this.body.health = this.maxHealth;
+        this.fullHealthColor = color('hsl(120, 100%, 50%)');
+        this.halfHealthColor = color('hsl(60, 100%, 50%)');
+        this.zeroHealthColor = color('hsl(0, 100%, 50%)');
+
         this.keys = [];
+        this.index = playerIndex;
     }
 
     setControlKeys(keys) {
@@ -46,11 +52,21 @@ class Player {
     }
 
     show() {
-        fill(0, 255, 0);
         noStroke();
-
         let pos = this.body.position;
         let angle = this.body.angle;
+
+        let currentColor = null;
+        let mappedHealth = map(this.body.health, 0, this.maxHealth, 0, 100);
+        if (mappedHealth < 50) {
+            currentColor = lerpColor(this.zeroHealthColor, this.halfHealthColor, mappedHealth / 50);
+        } else {
+            currentColor = lerpColor(this.halfHealthColor, this.fullHealthColor, (mappedHealth - 50) / 50);
+        }
+        fill(currentColor);
+        rect(pos.x, pos.y - this.radius - 10, 100, 2);
+
+        fill(0, 255, 0);
 
         push();
         translate(pos.x, pos.y);
@@ -62,13 +78,18 @@ class Player {
         ellipse(0, 0, this.radius);
         rect(0 + this.radius / 2, 0, this.radius * 1.5, this.radius / 2);
 
-        // ellipse(-this.radius * 1.5, 0, 5);
-
         strokeWeight(1);
         stroke(0);
         line(0, 0, this.radius * 1.25, 0);
 
         pop();
+    }
+
+    isOutOfScreen() {
+        let pos = this.body.position;
+        return (
+            pos.x > 100 + width || pos.x < -100 || pos.y > height + 100
+        );
     }
 
     rotateBlaster(activeKeys) {
@@ -121,7 +142,7 @@ class Player {
         }
     }
 
-    moveVertical(activeKeys, groundObjects) {
+    moveVertical(activeKeys) {
         let xVelocity = this.body.velocity.x;
 
         if (activeKeys[this.keys[5]]) {
@@ -178,17 +199,17 @@ class Player {
         }
     }
 
-    update(activeKeys, groundObjects) {
+    update(activeKeys) {
         this.rotateBlaster(activeKeys);
         this.moveHorizontal(activeKeys);
-        this.moveVertical(activeKeys, groundObjects);
+        this.moveVertical(activeKeys);
 
         this.chargeAndShoot(activeKeys);
 
         for (let i = 0; i < this.bullets.length; i++) {
             this.bullets[i].show();
 
-            if (this.bullets[i].checkVelocityZero() || this.bullets[i].checkOutOfScreen()) {
+            if (this.bullets[i].checkVelocityZero() || this.bullets[i].isOutOfScreen()) {
                 this.bullets[i].removeFromWorld();
                 this.bullets.splice(i, 1);
                 i -= 1;

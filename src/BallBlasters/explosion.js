@@ -1,7 +1,7 @@
 /// <reference path="./particle.js" />
 
 class Explosion {
-    constructor(spawnX, spawnY, maxStrokeWeight) {
+    constructor(spawnX, spawnY, maxStrokeWeight = 5) {
         this.position = createVector(spawnX, spawnY);
         this.gravity = createVector(0, 0.2);
         this.maxStrokeWeight = maxStrokeWeight;

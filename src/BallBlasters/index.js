@@ -58,7 +58,7 @@ function setup() {
         if (!grounds[i])
             break;
 
-        players.push(new Player(grounds[i].body.position.x, 0, world));
+        players.push(new Player(grounds[i].body.position.x, 0, world, i));
         players[i].setControlKeys(playerKeys[i]);
     }
 
@@ -73,10 +73,23 @@ function draw() {
         element.show();
     });
 
-    players.forEach(element => {
-        element.show();
-        element.update(keyStates, grounds);
-    });
+    for (let i = 0; i < players.length; i++) {
+        players[i].show();
+        players[i].update(keyStates);
+
+        if (players[i].body.health <= 0) {
+            let pos = players[i].body.position;
+            explosions.push(new Explosion(pos.x, pos.y, 10));
+
+            players.splice(i, 1);
+            i -= 1;
+        }
+
+        if (players[i].isOutOfScreen()) {
+            players.splice(i, 1);
+            i -= 1;
+        }
+    }
 
     for (let i = 0; i < explosions.length; i++) {
         explosions[i].show();
@@ -109,8 +122,9 @@ function keyReleased() {
 
 function damagePlayerBasic(player, basicFire) {
     player.damageLevel += basicFire.damageAmount;
+    player.health -= basicFire.damageAmount * 2;
 
-    basicFire.damagedPlayer = true;
+    basicFire.damaged = true;
     basicFire.collisionFilter = {
         category: bulletCollisionLayer,
         mask: groundCategory
@@ -127,7 +141,25 @@ function damagePlayerBasic(player, basicFire) {
         y: directionVector.y
     });
 
-    explosions.push(new Explosion(basicFire.position.x, basicFire.position.y, 10));
+    explosions.push(new Explosion(basicFire.position.x, basicFire.position.y));
+}
+
+function explosionCollide(basicFireA, basicFireB) {
+    let posX = (basicFireA.position.x + basicFireB.position.x) / 2;
+    let posY = (basicFireA.position.y + basicFireB.position.y) / 2;
+
+    basicFireA.damaged = true;
+    basicFireB.damaged = true;
+    basicFireA.collisionFilter = {
+        category: bulletCollisionLayer,
+        mask: groundCategory
+    };
+    basicFireB.collisionFilter = {
+        category: bulletCollisionLayer,
+        mask: groundCategory
+    };
+
+    explosions.push(new Explosion(posX, posY));
 }
 
 function collisionEvent(event) {
@@ -163,6 +195,13 @@ function collisionEvent(event) {
             let basicFire = event.pairs[i].bodyA;
             let player = event.pairs[i].bodyB;
             damagePlayerBasic(player, basicFire);
+        }
+
+        if (labelA === 'basicFire' && labelB === 'basicFire') {
+            let basicFireA = event.pairs[i].bodyA;
+            let basicFireB = event.pairs[i].bodyB;
+
+            explosionCollide(basicFireA, basicFireB);
         }
     }
 }
