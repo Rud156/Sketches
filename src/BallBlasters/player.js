@@ -3,13 +3,13 @@
 
 
 class Player {
-    constructor(x, y, radius, world, catAndMask = {
+    constructor(x, y, world, catAndMask = {
         category: playerCategory,
         mask: groundCategory | playerCategory | basicFireCategory
     }) {
-        this.body = Matter.Bodies.circle(x, y, radius, {
+        this.body = Matter.Bodies.circle(x, y, 20, {
             label: 'player',
-            friction: 0,
+            friction: 0.1,
             restitution: 0.3,
             collisionFilter: {
                 category: catAndMask.category,
@@ -19,7 +19,7 @@ class Player {
         Matter.World.add(world, this.body);
         this.world = world;
 
-        this.radius = radius;
+        this.radius = 20;
         this.movementSpeed = 10;
         this.angularVelocity = 0.2;
 
@@ -36,6 +36,13 @@ class Player {
         this.currentChargeValue = this.initialChargeValue;
         this.chargeIncrementValue = 0.1;
         this.chargeStarted = false;
+
+        this.body.damageLevel = 1;
+        this.keys = [];
+    }
+
+    setControlKeys(keys) {
+        this.keys = keys;
     }
 
     show() {
@@ -65,46 +72,59 @@ class Player {
     }
 
     rotateBlaster(activeKeys) {
-        if (activeKeys[38]) {
+        if (activeKeys[this.keys[2]]) {
             Matter.Body.setAngularVelocity(this.body, -this.angularVelocity);
-        } else if (activeKeys[40]) {
+        } else if (activeKeys[this.keys[3]]) {
             Matter.Body.setAngularVelocity(this.body, this.angularVelocity);
         }
 
-        if ((!keyStates[38] && !keyStates[40]) || (keyStates[38] && keyStates[40])) {
+        if ((!keyStates[this.keys[2]] && !keyStates[this.keys[3]]) ||
+            (keyStates[this.keys[2]] && keyStates[this.keys[3]])) {
             Matter.Body.setAngularVelocity(this.body, 0);
         }
     }
 
     moveHorizontal(activeKeys) {
         let yVelocity = this.body.velocity.y;
+        let xVelocity = this.body.velocity.x;
 
-        if (activeKeys[37]) {
-            Matter.Body.setVelocity(this.body, {
-                x: -this.movementSpeed,
-                y: yVelocity
-            });
-            Matter.Body.setAngularVelocity(this.body, 0);
-        } else if (activeKeys[39]) {
-            Matter.Body.setVelocity(this.body, {
-                x: this.movementSpeed,
-                y: yVelocity
-            });
-            Matter.Body.setAngularVelocity(this.body, 0);
-        }
+        let absXVelocity = abs(xVelocity);
+        let sign = xVelocity < 0 ? -1 : 1;
 
-        if ((!keyStates[37] && !keyStates[39]) || (keyStates[37] && keyStates[39])) {
-            Matter.Body.setVelocity(this.body, {
-                x: 0,
-                y: yVelocity
+        if (activeKeys[this.keys[0]]) {
+            if (absXVelocity > this.movementSpeed) {
+                Matter.Body.setVelocity(this.body, {
+                    x: this.movementSpeed * sign,
+                    y: yVelocity
+                });
+            }
+
+            Matter.Body.applyForce(this.body, this.body.position, {
+                x: -0.005,
+                y: 0
             });
+
+            Matter.Body.setAngularVelocity(this.body, 0);
+        } else if (activeKeys[this.keys[1]]) {
+            if (absXVelocity > this.movementSpeed) {
+                Matter.Body.setVelocity(this.body, {
+                    x: this.movementSpeed * sign,
+                    y: yVelocity
+                });
+            }
+            Matter.Body.applyForce(this.body, this.body.position, {
+                x: 0.005,
+                y: 0
+            });
+
+            Matter.Body.setAngularVelocity(this.body, 0);
         }
     }
 
     moveVertical(activeKeys, groundObjects) {
         let xVelocity = this.body.velocity.x;
 
-        if (activeKeys[32]) {
+        if (activeKeys[this.keys[5]]) {
             if (!this.body.grounded && this.body.currentJumpNumber < this.maxJumpNumber) {
                 Matter.Body.setVelocity(this.body, {
                     x: xVelocity,
@@ -121,7 +141,7 @@ class Player {
             }
         }
 
-        activeKeys[32] = false;
+        activeKeys[this.keys[5]] = false;
     }
 
     drawChargedShot(x, y, radius) {
@@ -138,7 +158,7 @@ class Player {
         let x = this.radius * cos(angle) * 1.5 + pos.x;
         let y = this.radius * sin(angle) * 1.5 + pos.y;
 
-        if (activeKeys[13]) {
+        if (activeKeys[this.keys[4]]) {
             this.chargeStarted = true;
             this.currentChargeValue += this.chargeIncrementValue;
 
@@ -147,7 +167,7 @@ class Player {
 
             this.drawChargedShot(x, y, this.currentChargeValue);
 
-        } else if (!activeKeys[13] && this.chargeStarted) {
+        } else if (!activeKeys[this.keys[4]] && this.chargeStarted) {
             this.bullets.push(new BasicFire(x, y, this.currentChargeValue, angle, this.world, {
                 category: basicFireCategory,
                 mask: groundCategory | playerCategory | basicFireCategory

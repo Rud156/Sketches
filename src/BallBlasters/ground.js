@@ -9,7 +9,7 @@ class Ground {
 
         this.body = Matter.Bodies.rectangle(x, modifiedY, groundWidth, 20, {
             isStatic: true,
-            friction: 1,
+            friction: 0,
             restitution: 0,
             label: 'staticGround',
             collisionFilter: {
@@ -21,7 +21,7 @@ class Ground {
         let modifiedHeight = groundHeight - 20;
         this.fakeBottomPart = Matter.Bodies.rectangle(x, y + 10, groundWidth, modifiedHeight, {
             isStatic: true,
-            friction: 0.1,
+            friction: 0,
             restitution: 1,
             label: 'fakeBottomPart',
             collisionFilter: {

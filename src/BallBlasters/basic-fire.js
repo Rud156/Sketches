@@ -18,19 +18,25 @@ class BasicFire {
         this.angle = angle;
         this.world = world;
 
+        this.body.damagedPlayer = false;
+        this.body.damageAmount = this.radius / 2;
+
         this.setVelocity();
     }
 
     show() {
-        fill(255);
-        noStroke();
+        if (!this.body.damagedPlayer) {
 
-        let pos = this.body.position;
+            fill(255);
+            noStroke();
 
-        push();
-        translate(pos.x, pos.y);
-        ellipse(0, 0, this.radius * 2);
-        pop();
+            let pos = this.body.position;
+
+            push();
+            translate(pos.x, pos.y);
+            ellipse(0, 0, this.radius * 2);
+            pop();
+        }
     }
 
     setVelocity() {
