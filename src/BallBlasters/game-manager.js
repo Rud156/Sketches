@@ -3,6 +3,7 @@
 /// <reference path="./ground.js" />
 /// <reference path="./explosion.js" />
 /// <reference path="./boundary.js" />
+/// <reference path="./object-collect.js" />
 
 class GameManager {
     constructor() {
@@ -16,6 +17,8 @@ class GameManager {
         this.platforms = [];
         this.explosions = [];
 
+        this.collectibleFlags = [];
+
         this.minForceMagnitude = 0.05;
 
         this.createGrounds();
@@ -23,12 +26,14 @@ class GameManager {
         this.createPlatforms();
         this.createPlayers();
         this.attachEventListeners();
+
+        this.createFlags();
     }
 
     createGrounds() {
-        for (let i = 25; i < width - 100; i += 275) {
-            let randomValue = random(50, 200);
-            this.grounds.push(new Ground(i + 100, height - randomValue / 2, 200, randomValue, this.world));
+        for (let i = 12.5; i < width - 100; i += 275) {
+            let randomValue = random(height / 6.34, height / 3.17);
+            this.grounds.push(new Ground(i + 125, height - randomValue / 2, 250, randomValue, this.world));
         }
     }
 
@@ -46,16 +51,21 @@ class GameManager {
         this.platforms.push(new Boundary(100, height / 2.17, 200, 20, this.world, 'staticGround'));
         this.platforms.push(new Boundary(width - 100, height / 2.17, 200, 20, this.world, 'staticGround'));
 
-        this.platforms.push(new Boundary(width / 2, 200, 300, 20, this.world, 'staticGround'));
+        this.platforms.push(new Boundary(width / 2, height / 3.17, 300, 20, this.world, 'staticGround'));
     }
 
     createPlayers() {
-        this.players.push(new Player(this.grounds[0].body.position.x, 50, this.world, 0));
+        this.players.push(new Player(this.grounds[0].body.position.x, height / 2.536, this.world, 0));
         this.players[0].setControlKeys(playerKeys[0]);
 
         this.players.push(new Player(this.grounds[this.grounds.length - 1].body.position.x,
-            50, this.world, 1, 179));
+            height / 2.536, this.world, 1, 179));
         this.players[1].setControlKeys(playerKeys[1]);
+    }
+
+    createFlags() {
+        this.collectibleFlags.push(new ObjectCollect(50, 50, 30, 30, this.world));
+        this.collectibleFlags.push(new ObjectCollect(width - 50, 50, 30, 30, this.world));
     }
 
     attachEventListeners() {
@@ -84,7 +94,8 @@ class GameManager {
                     category: bulletCollisionLayer,
                     mask: groundCategory
                 };
-                this.explosions.push(new Explosion(basicFire.position.x, basicFire.position.y));
+                basicFire.friction = 1;
+                basicFire.frictionAir = 1;
             } else if (labelB === 'basicFire' && (labelA.match(/^(staticGround|boundaryControlLines)$/))) {
                 let basicFire = event.pairs[i].bodyB;
                 if (!basicFire.damaged)
@@ -94,6 +105,8 @@ class GameManager {
                     category: bulletCollisionLayer,
                     mask: groundCategory
                 };
+                basicFire.friction = 1;
+                basicFire.frictionAir = 1;
             }
 
             if (labelA === 'player' && labelB === 'staticGround') {
@@ -141,6 +154,10 @@ class GameManager {
             category: bulletCollisionLayer,
             mask: groundCategory
         };
+        basicFireA.friction = 1;
+        basicFireA.frictionAir = 1;
+        basicFireB.friction = 1;
+        basicFireB.frictionAir = 1;
 
         this.explosions.push(new Explosion(posX, posY));
     }
@@ -175,7 +192,8 @@ class GameManager {
         for (let i = 0; i < bodies.length; i++) {
             let body = bodies[i];
 
-            if (body.isStatic || body.isSleeping || body.label === 'basicFire')
+            if (body.isStatic || body.isSleeping || body.label === 'basicFire' ||
+                body.label === 'collectibleFlag')
                 continue;
 
             body.force.y += body.mass * 0.001;
@@ -195,13 +213,18 @@ class GameManager {
             element.show();
         })
 
+        for (let i = 0; i < this.collectibleFlags.length; i++) {
+            this.collectibleFlags[i].update();
+            this.collectibleFlags[i].show();
+        }
+
         for (let i = 0; i < this.players.length; i++) {
             this.players[i].show();
             this.players[i].update(keyStates);
 
             if (this.players[i].body.health <= 0) {
                 let pos = this.players[i].body.position;
-                explosions.push(new Explosion(pos.x, pos.y, 10));
+                this.explosions.push(new Explosion(pos.x, pos.y, 10));
 
                 this.players.splice(i, 1);
                 i -= 1;
