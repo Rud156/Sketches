@@ -24,7 +24,7 @@ class Ground {
             isStatic: true,
             friction: 0,
             restitution: 1,
-            label: 'fakeBottomPart',
+            label: 'boundaryControlLines',
             collisionFilter: {
                 category: catAndMask.category,
                 mask: catAndMask.mask

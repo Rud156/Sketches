@@ -2,7 +2,7 @@
 /// <reference path="./basic-fire.js" />
 
 class Player {
-    constructor(x, y, world, playerIndex, catAndMask = {
+    constructor(x, y, world, playerIndex, angle = 0, catAndMask = {
         category: playerCategory,
         mask: groundCategory | playerCategory | basicFireCategory
     }) {
@@ -13,7 +13,8 @@ class Player {
             collisionFilter: {
                 category: catAndMask.category,
                 mask: catAndMask.mask
-            }
+            },
+            angle: angle
         });
         Matter.World.add(world, this.body);
         this.world = world;

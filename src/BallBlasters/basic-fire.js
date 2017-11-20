@@ -5,8 +5,9 @@ class BasicFire {
         this.radius = radius;
         this.body = Matter.Bodies.circle(x, y, this.radius, {
             label: 'basicFire',
-            friction: 0.1,
-            restitution: 0.8,
+            friction: 0,
+            frictionAir: 0,
+            restitution: 0,
             collisionFilter: {
                 category: catAndMask.category,
                 mask: catAndMask.mask
@@ -14,7 +15,7 @@ class BasicFire {
         });
         Matter.World.add(world, this.body);
 
-        this.movementSpeed = this.radius * 1.4;
+        this.movementSpeed = this.radius * 3;
         this.angle = angle;
         this.world = world;
 
@@ -58,7 +59,7 @@ class BasicFire {
     isOutOfScreen() {
         let pos = this.body.position;
         return (
-            pos.x > width || pos.x < 0 || pos.y > height
+            pos.x > width || pos.x < 0 || pos.y > height || pos.y < 0
         );
     }
 }

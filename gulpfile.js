@@ -119,8 +119,10 @@ gulp.task('ballHelper', () => {
             'src/BallBlasters/particle.js',
             'src/BallBlasters/explosion.js',
             'src/BallBlasters/basic-fire.js',
+            'src/BallBlasters/boundary.js',
             'src/BallBlasters/ground.js',
             'src/BallBlasters/player.js',
+            'src/BallBlasters/game-manager.js',
             'src/BallBlasters/index.js'
         ])
         .pipe(processJS());
