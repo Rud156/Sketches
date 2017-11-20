@@ -4,8 +4,8 @@
 /// <reference path="./explosion.js" />
 
 const playerKeys = [
-    [37, 39, 38, 40, 13, 32],
-    [65, 68, 87, 83, 90, 88]
+    [65, 68, 87, 83, 90, 88],
+    [37, 39, 38, 40, 13, 32]
 ];
 
 const keyStates = {

@@ -13,41 +13,49 @@ class GameManager {
         this.players = [];
         this.grounds = [];
         this.boundaries = [];
+        this.platforms = [];
         this.explosions = [];
 
         this.minForceMagnitude = 0.05;
 
         this.createGrounds();
         this.createBoundaries();
+        this.createPlatforms();
         this.createPlayers();
         this.attachEventListeners();
     }
 
     createGrounds() {
-        for (let i = 25; i < width; i += 250) {
+        for (let i = 25; i < width - 100; i += 275) {
             let randomValue = random(50, 200);
-            this.grounds.push(new Ground(i + 50, height - randomValue / 2, 200, randomValue, this.world));
+            this.grounds.push(new Ground(i + 100, height - randomValue / 2, 200, randomValue, this.world));
         }
     }
 
     createBoundaries() {
-        this.boundaries.push(new Boundary(5, height / 2, 10, height));
-        this.boundaries.push(new Boundary(width - 5, height / 2, 10, height));
-        this.boundaries.push(new Boundary(width / 2, 5, width, 10));
-        this.boundaries.push(new Boundary(width / 2, height - 5, width, 10));
+        this.boundaries.push(new Boundary(5, height / 2, 10, height, this.world));
+        this.boundaries.push(new Boundary(width - 5, height / 2, 10, height, this.world));
+        this.boundaries.push(new Boundary(width / 2, 5, width, 10, this.world));
+        this.boundaries.push(new Boundary(width / 2, height - 5, width, 10, this.world));
+    }
+
+    createPlatforms() {
+        this.platforms.push(new Boundary(150, height / 6.34, 300, 20, this.world, 'staticGround'));
+        this.platforms.push(new Boundary(width - 150, height / 6.43, 300, 20, this.world, 'staticGround'));
+
+        this.platforms.push(new Boundary(100, height / 2.17, 200, 20, this.world, 'staticGround'));
+        this.platforms.push(new Boundary(width - 100, height / 2.17, 200, 20, this.world, 'staticGround'));
+
+        this.platforms.push(new Boundary(width / 2, 200, 300, 20, this.world, 'staticGround'));
     }
 
     createPlayers() {
-        for (let i = 0; i < 2; i++) {
-            if (i != 0) {
-                this.players.push(new Player(this.grounds[this.grounds.length - i].body.position.x,
-                    0, this.world, i, 179));
-            } else {
-                this.players.push(new Player(this.grounds[i].body.position.x, 0, this.world, i));
-            }
+        this.players.push(new Player(this.grounds[0].body.position.x, 50, this.world, 0));
+        this.players[0].setControlKeys(playerKeys[0]);
 
-            this.players[i].setControlKeys(playerKeys[i]);
-        }
+        this.players.push(new Player(this.grounds[this.grounds.length - 1].body.position.x,
+            50, this.world, 1, 179));
+        this.players[1].setControlKeys(playerKeys[1]);
     }
 
     attachEventListeners() {
@@ -69,6 +77,8 @@ class GameManager {
 
             if (labelA === 'basicFire' && (labelB.match(/^(staticGround|boundaryControlLines)$/))) {
                 let basicFire = event.pairs[i].bodyA;
+                if (!basicFire.damaged)
+                    this.explosions.push(new Explosion(basicFire.position.x, basicFire.position.y));
                 basicFire.damaged = true;
                 basicFire.collisionFilter = {
                     category: bulletCollisionLayer,
@@ -77,12 +87,13 @@ class GameManager {
                 this.explosions.push(new Explosion(basicFire.position.x, basicFire.position.y));
             } else if (labelB === 'basicFire' && (labelA.match(/^(staticGround|boundaryControlLines)$/))) {
                 let basicFire = event.pairs[i].bodyB;
+                if (!basicFire.damaged)
+                    this.explosions.push(new Explosion(basicFire.position.x, basicFire.position.y));
                 basicFire.damaged = true;
                 basicFire.collisionFilter = {
                     category: bulletCollisionLayer,
                     mask: groundCategory
                 };
-                this.explosions.push(new Explosion(basicFire.position.x, basicFire.position.y));
             }
 
             if (labelA === 'player' && labelB === 'staticGround') {
@@ -180,6 +191,9 @@ class GameManager {
         this.boundaries.forEach(element => {
             element.show();
         });
+        this.platforms.forEach(element => {
+            element.show();
+        })
 
         for (let i = 0; i < this.players.length; i++) {
             this.players[i].show();
