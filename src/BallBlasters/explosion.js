@@ -1,7 +1,7 @@
 /// <reference path="./particle.js" />
 
 class Explosion {
-    constructor(spawnX, spawnY, maxStrokeWeight = 5) {
+    constructor(spawnX, spawnY, maxStrokeWeight = 5, velocity = 20, number = 100) {
         this.position = createVector(spawnX, spawnY);
         this.gravity = createVector(0, 0.2);
         this.maxStrokeWeight = maxStrokeWeight;
@@ -10,12 +10,16 @@ class Explosion {
         this.color = randomColor;
 
         this.particles = [];
+        this.velocity = velocity;
+        this.number = number;
+
         this.explode();
     }
 
     explode() {
-        for (let i = 0; i < 100; i++) {
-            let particle = new Particle(this.position.x, this.position.y, this.color, this.maxStrokeWeight);
+        for (let i = 0; i < this.number; i++) {
+            let particle = new Particle(this.position.x, this.position.y, this.color,
+                this.maxStrokeWeight, this.velocity);
             this.particles.push(particle);
         }
     }

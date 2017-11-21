@@ -4,7 +4,7 @@
 class Player {
     constructor(x, y, world, playerIndex, angle = 0, catAndMask = {
         category: playerCategory,
-        mask: groundCategory | playerCategory | basicFireCategory
+        mask: groundCategory | playerCategory | basicFireCategory | flagCategory
     }) {
         this.body = Matter.Bodies.circle(x, y, 20, {
             label: 'player',
@@ -45,7 +45,9 @@ class Player {
         this.zeroHealthColor = color('hsl(0, 100%, 50%)');
 
         this.keys = [];
-        this.index = playerIndex;
+        this.body.index = playerIndex;
+
+        this.disableControls = false;
     }
 
     setControlKeys(keys) {
@@ -67,7 +69,7 @@ class Player {
         fill(currentColor);
         rect(pos.x, pos.y - this.radius - 10, (this.body.health * 100) / 100, 2);
 
-        if (this.index === 0)
+        if (this.body.index === 0)
             fill(208, 0, 255);
         else
             fill(255, 165, 0);
@@ -204,11 +206,13 @@ class Player {
     }
 
     update(activeKeys) {
-        this.rotateBlaster(activeKeys);
-        this.moveHorizontal(activeKeys);
-        this.moveVertical(activeKeys);
+        if (!this.disableControls) {
+            this.rotateBlaster(activeKeys);
+            this.moveHorizontal(activeKeys);
+            this.moveVertical(activeKeys);
 
-        this.chargeAndShoot(activeKeys);
+            this.chargeAndShoot(activeKeys);
+        }
 
         for (let i = 0; i < this.bullets.length; i++) {
             this.bullets[i].show();

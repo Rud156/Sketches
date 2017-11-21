@@ -27,6 +27,7 @@ const groundCategory = 0x0001;
 const playerCategory = 0x0002;
 const basicFireCategory = 0x0004;
 const bulletCollisionLayer = 0x0008;
+const flagCategory = 0x0016;
 
 let gameManager;
 let endTime;
@@ -64,10 +65,22 @@ function draw() {
         text(`${seconds}`, width / 2, 50);
     } else {
         if (displayTextFor > 0) {
-            displayTextFor -= 1;
+            displayTextFor -= 1 * 60 / frameRate();
             fill(255);
             textSize(30);
             text(`Capture the opponent's base`, width / 2, 50);
+        }
+    }
+
+    if (gameManager.gameEnded) {
+        if (gameManager.playerWon === 0) {
+            fill(255);
+            textSize(100);
+            text(`Player 1 Won`, width / 2, height / 2);
+        } else if (gameManager.playerWon === 1) {
+            fill(255);
+            textSize(100);
+            text(`Player 2 Won`, width / 2, height / 2);
         }
     }
 }

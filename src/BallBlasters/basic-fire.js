@@ -37,16 +37,6 @@ class BasicFire {
             translate(pos.x, pos.y);
             ellipse(0, 0, this.radius * 2);
             pop();
-        } else {
-            fill(0, 255, 0);
-            noStroke();
-
-            let pos = this.body.position;
-
-            push();
-            translate(pos.x, pos.y);
-            ellipse(0, 0, this.radius * 2);
-            pop();
         }
     }
 

@@ -1,8 +1,8 @@
 class Particle {
-    constructor(x, y, colorNumber, maxStrokeWeight) {
+    constructor(x, y, colorNumber, maxStrokeWeight, velocity = 20) {
         this.position = createVector(x, y);
         this.velocity = p5.Vector.random2D();
-        this.velocity.mult(random(0, 20));
+        this.velocity.mult(random(0, velocity));
         this.acceleration = createVector(0, 0);
 
         this.alpha = 1;

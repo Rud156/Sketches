@@ -21,6 +21,9 @@ class GameManager {
 
         this.minForceMagnitude = 0.05;
 
+        this.gameEnded = false;
+        this.playerWon = -1;
+
         this.createGrounds();
         this.createBoundaries();
         this.createPlatforms();
@@ -45,8 +48,8 @@ class GameManager {
     }
 
     createPlatforms() {
-        this.platforms.push(new Boundary(150, height / 6.34, 300, 20, this.world, 0, 'staticGround'));
-        this.platforms.push(new Boundary(width - 150, height / 6.43, 300, 20, this.world, 1, 'staticGround'));
+        this.platforms.push(new Boundary(150, height / 6.34, 300, 20, this.world, 'staticGround', 0));
+        this.platforms.push(new Boundary(width - 150, height / 6.43, 300, 20, this.world, 'staticGround', 1));
 
         this.platforms.push(new Boundary(100, height / 2.17, 200, 20, this.world, 'staticGround'));
         this.platforms.push(new Boundary(width - 100, height / 2.17, 200, 20, this.world, 'staticGround'));
@@ -133,11 +136,42 @@ class GameManager {
 
                 this.explosionCollide(basicFireA, basicFireB);
             }
+
+            if (labelA === 'collectibleFlag' && labelB === 'player') {
+                if (event.pairs[i].bodyA.index !== event.pairs[i].bodyB.index) {
+                    event.pairs[i].bodyA.opponentCollided = true;
+                } else {
+                    event.pairs[i].bodyA.playerCollided = true;
+                }
+            } else if (labelB === 'collectibleFlag' && labelA === 'player') {
+                if (event.pairs[i].bodyA.index !== event.pairs[i].bodyB.index) {
+                    event.pairs[i].bodyB.opponentCollided = true;
+                } else {
+                    event.pairs[i].bodyB.playerCollided = true;
+                }
+            }
         }
     }
 
     onTriggerExit(event) {
-        // Will be used to check when the player leaves its flag location
+        for (let i = 0; i < event.pairs.length; i++) {
+            let labelA = event.pairs[i].bodyA.label;
+            let labelB = event.pairs[i].bodyB.label;
+
+            if (labelA === 'collectibleFlag' && labelB === 'player') {
+                if (event.pairs[i].bodyA.index !== event.pairs[i].bodyB.index) {
+                    event.pairs[i].bodyA.opponentCollided = false;
+                } else {
+                    event.pairs[i].bodyA.playerCollided = false;
+                }
+            } else if (labelB === 'collectibleFlag' && labelA === 'player') {
+                if (event.pairs[i].bodyA.index !== event.pairs[i].bodyB.index) {
+                    event.pairs[i].bodyB.opponentCollided = false;
+                } else {
+                    event.pairs[i].bodyB.playerCollided = false;
+                }
+            }
+        }
     }
 
     explosionCollide(basicFireA, basicFireB) {
@@ -164,7 +198,8 @@ class GameManager {
 
     damagePlayerBasic(player, basicFire) {
         player.damageLevel += basicFire.damageAmount;
-        player.health -= basicFire.damageAmount * 2;
+        let mappedDamage = map(basicFire.damageAmount, 5, 12, 5, 34);
+        player.health -= mappedDamage;
 
         basicFire.damaged = true;
         basicFire.collisionFilter = {
@@ -216,6 +251,27 @@ class GameManager {
         for (let i = 0; i < this.collectibleFlags.length; i++) {
             this.collectibleFlags[i].update();
             this.collectibleFlags[i].show();
+
+            if (this.collectibleFlags[i].health <= 0) {
+                let pos = this.collectibleFlags[i].body.position;
+                this.gameEnded = true;
+
+                if (this.collectibleFlags[i].body.index === 0) {
+                    this.playerWon = 0;
+                    this.explosions.push(new Explosion(pos.x, pos.y, 10, 90, 200));
+                } else {
+                    this.playerWon = 1;
+                    this.explosions.push(new Explosion(pos.x, pos.y, 10, 90, 200));
+                }
+
+                this.collectibleFlags[i].removeFromWorld();
+                this.collectibleFlags.splice(i, 1);
+                i -= 1;
+
+                for (let j = 0; j < this.players.length; j++) {
+                    this.players[j].disableControls = true;
+                }
+            }
         }
 
         for (let i = 0; i < this.players.length; i++) {
