@@ -65,9 +65,12 @@ class Player {
             currentColor = lerpColor(this.halfHealthColor, this.fullHealthColor, (mappedHealth - 50) / 50);
         }
         fill(currentColor);
-        rect(pos.x, pos.y - this.radius - 10, 100, 2);
+        rect(pos.x, pos.y - this.radius - 10, (this.body.health * 100) / 100, 2);
 
-        fill(0, 255, 0);
+        if (this.index === 0)
+            fill(208, 0, 255);
+        else
+            fill(255, 165, 0);
 
         push();
         translate(pos.x, pos.y);
@@ -216,5 +219,9 @@ class Player {
                 i -= 1;
             }
         }
+    }
+
+    removeFromWorld() {
+        Matter.World.remove(this.world, this.body);
     }
 }

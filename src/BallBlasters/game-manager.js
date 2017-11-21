@@ -27,7 +27,7 @@ class GameManager {
         this.createPlayers();
         this.attachEventListeners();
 
-        this.createFlags();
+        // this.createFlags();
     }
 
     createGrounds() {
@@ -45,8 +45,8 @@ class GameManager {
     }
 
     createPlatforms() {
-        this.platforms.push(new Boundary(150, height / 6.34, 300, 20, this.world, 'staticGround'));
-        this.platforms.push(new Boundary(width - 150, height / 6.43, 300, 20, this.world, 'staticGround'));
+        this.platforms.push(new Boundary(150, height / 6.34, 300, 20, this.world, 0, 'staticGround'));
+        this.platforms.push(new Boundary(width - 150, height / 6.43, 300, 20, this.world, 1, 'staticGround'));
 
         this.platforms.push(new Boundary(100, height / 2.17, 200, 20, this.world, 'staticGround'));
         this.platforms.push(new Boundary(width - 100, height / 2.17, 200, 20, this.world, 'staticGround'));
@@ -55,17 +55,17 @@ class GameManager {
     }
 
     createPlayers() {
-        this.players.push(new Player(this.grounds[0].body.position.x, height / 2.536, this.world, 0));
+        this.players.push(new Player(this.grounds[0].body.position.x, height / 1.811, this.world, 0));
         this.players[0].setControlKeys(playerKeys[0]);
 
         this.players.push(new Player(this.grounds[this.grounds.length - 1].body.position.x,
-            height / 2.536, this.world, 1, 179));
+            height / 1.811, this.world, 1, 179));
         this.players[1].setControlKeys(playerKeys[1]);
     }
 
     createFlags() {
-        this.collectibleFlags.push(new ObjectCollect(50, 50, 30, 30, this.world));
-        this.collectibleFlags.push(new ObjectCollect(width - 50, 50, 30, 30, this.world));
+        this.collectibleFlags.push(new ObjectCollect(50, 50, 20, 20, this.world, 0));
+        this.collectibleFlags.push(new ObjectCollect(width - 50, 50, 20, 20, this.world, 1));
     }
 
     attachEventListeners() {
@@ -137,7 +137,7 @@ class GameManager {
     }
 
     onTriggerExit(event) {
-
+        // Will be used to check when the player leaves its flag location
     }
 
     explosionCollide(basicFireA, basicFireB) {
@@ -226,11 +226,13 @@ class GameManager {
                 let pos = this.players[i].body.position;
                 this.explosions.push(new Explosion(pos.x, pos.y, 10));
 
+                this.players[i].removeFromWorld();
                 this.players.splice(i, 1);
                 i -= 1;
             }
 
             if (this.players[i].isOutOfScreen()) {
+                this.players[i].removeFromWorld();
                 this.players.splice(i, 1);
                 i -= 1;
             }

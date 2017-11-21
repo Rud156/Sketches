@@ -29,14 +29,24 @@ const basicFireCategory = 0x0004;
 const bulletCollisionLayer = 0x0008;
 
 let gameManager;
+let endTime;
+let seconds = 6;
+let displayTextFor = 120;
 
 function setup() {
     let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 30);
     canvas.parent('canvas-holder');
 
     gameManager = new GameManager();
+    window.setTimeout(() => {
+        gameManager.createFlags();
+    }, 5000);
+
+    let currentDateTime = new Date();
+    endTime = new Date(currentDateTime.getTime() + 6000).getTime();
 
     rectMode(CENTER);
+    textAlign(CENTER, CENTER);
 }
 
 function draw() {
@@ -44,9 +54,22 @@ function draw() {
 
     gameManager.draw();
 
-    fill(255);
-    textSize(30);
-    text(`${round(frameRate())}`, width - 75, 50)
+    if (seconds > 0) {
+        let currentTime = new Date().getTime();
+        let diff = endTime - currentTime;
+        seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        fill(255);
+        textSize(30);
+        text(`${seconds}`, width / 2, 50);
+    } else {
+        if (displayTextFor > 0) {
+            displayTextFor -= 1;
+            fill(255);
+            textSize(30);
+            text(`Capture the opponent's base`, width / 2, 50);
+        }
+    }
 }
 
 function keyPressed() {
