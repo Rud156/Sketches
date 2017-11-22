@@ -28,12 +28,18 @@ const playerCategory = 0x0002;
 const basicFireCategory = 0x0004;
 const bulletCollisionLayer = 0x0008;
 const flagCategory = 0x0016;
+const displayTime = 120;
+
 
 let gameManager;
 let endTime;
 let seconds = 6;
-let displayTextFor = 120;
-let displayStartFor = 120;
+let displayTextFor = displayTime;
+let displayStartFor = displayTime;
+
+let timeoutCalled = false;
+let button;
+let buttonDisplayed = false;
 
 function setup() {
     let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 30);
@@ -74,14 +80,20 @@ function draw() {
     }
 
     if (gameManager.gameEnded) {
-        if (gameManager.playerWon === 0) {
+        if (gameManager.playerWon.length === 1) {
+            if (gameManager.playerWon[0] === 0) {
+                fill(255);
+                textSize(100);
+                text(`Player 1 Won`, width / 2, height / 2);
+            } else if (gameManager.playerWon[0] === 1) {
+                fill(255);
+                textSize(100);
+                text(`Player 2 Won`, width / 2, height / 2);
+            }
+        } else if (gameManager.playerWon.length === 2) {
             fill(255);
             textSize(100);
-            text(`Player 1 Won`, width / 2, height / 2);
-        } else if (gameManager.playerWon === 1) {
-            fill(255);
-            textSize(100);
-            text(`Player 2 Won`, width / 2, height / 2);
+            text(`Draw`, width / 2, height / 2);
         }
     }
 

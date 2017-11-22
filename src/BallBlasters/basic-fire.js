@@ -22,6 +22,8 @@ class BasicFire {
         this.body.damaged = false;
         this.body.damageAmount = this.radius / 2;
 
+        this.body.health = map(this.radius, 5, 12, 34, 100);
+
         this.setVelocity();
     }
 

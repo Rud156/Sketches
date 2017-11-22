@@ -22,15 +22,13 @@ class GameManager {
         this.minForceMagnitude = 0.05;
 
         this.gameEnded = false;
-        this.playerWon = -1;
+        this.playerWon = [];
 
         this.createGrounds();
         this.createBoundaries();
         this.createPlatforms();
         this.createPlayers();
         this.attachEventListeners();
-
-        // this.createFlags();
     }
 
     createGrounds() {
@@ -182,20 +180,32 @@ class GameManager {
         let posX = (basicFireA.position.x + basicFireB.position.x) / 2;
         let posY = (basicFireA.position.y + basicFireB.position.y) / 2;
 
-        basicFireA.damaged = true;
-        basicFireB.damaged = true;
-        basicFireA.collisionFilter = {
-            category: bulletCollisionLayer,
-            mask: groundCategory
-        };
-        basicFireB.collisionFilter = {
-            category: bulletCollisionLayer,
-            mask: groundCategory
-        };
-        basicFireA.friction = 1;
-        basicFireA.frictionAir = 1;
-        basicFireB.friction = 1;
-        basicFireB.frictionAir = 1;
+        let damageA = basicFireA.damageAmount;
+        let damageB = basicFireB.damageAmount;
+        let mappedDamageA = map(damageA, 2.5, 6, 34, 100);
+        let mappedDamageB = map(damageB, 2.5, 6, 34, 100);
+
+        basicFireA.health -= mappedDamageB;
+        basicFireB.health -= mappedDamageA;
+
+        if (basicFireA.health <= 0) {
+            basicFireA.damaged = true;
+            basicFireA.collisionFilter = {
+                category: bulletCollisionLayer,
+                mask: groundCategory
+            };
+            basicFireA.friction = 1;
+            basicFireA.frictionAir = 1;
+        }
+        if (basicFireB.health <= 0) {
+            basicFireB.damaged = true;
+            basicFireB.collisionFilter = {
+                category: bulletCollisionLayer,
+                mask: groundCategory
+            };
+            basicFireB.friction = 1;
+            basicFireB.frictionAir = 1;
+        }
 
         this.explosions.push(new Explosion(posX, posY));
     }
@@ -261,10 +271,10 @@ class GameManager {
                 this.gameEnded = true;
 
                 if (this.collectibleFlags[i].body.index === 0) {
-                    this.playerWon = 0;
+                    this.playerWon.push(0);
                     this.explosions.push(new Explosion(pos.x, pos.y, 10, 90, 200));
                 } else {
-                    this.playerWon = 1;
+                    this.playerWon.push(1);
                     this.explosions.push(new Explosion(pos.x, pos.y, 10, 90, 200));
                 }
 
@@ -286,9 +296,15 @@ class GameManager {
                 let pos = this.players[i].body.position;
                 this.explosions.push(new Explosion(pos.x, pos.y, 10, 90, 200));
 
+                this.gameEnded = true;
+                this.playerWon.push(this.players[i].body.index);
+
+                for (let j = 0; j < this.players.length; j++) {
+                    this.players[j].disableControls = true;
+                }
+
                 this.players[i].removeFromWorld();
                 this.players.splice(i, 1);
-                i -= 1;
             }
         }
 
