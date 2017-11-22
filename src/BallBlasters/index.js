@@ -5,12 +5,12 @@
 
 const playerKeys = [
     [65, 68, 87, 83, 84, 89],
-    [37, 39, 38, 40, 13, 110]
+    [37, 39, 38, 40, 17, 32]
 ];
 
 const keyStates = {
-    13: false, // ENTER
-    110: false, // DECIMAL POINT
+    32: false, // SPACE
+    17: false, // CTRL
     37: false, // LEFT
     38: false, // UP
     39: false, // RIGHT
