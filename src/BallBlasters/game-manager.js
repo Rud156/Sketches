@@ -198,7 +198,7 @@ class GameManager {
 
     damagePlayerBasic(player, basicFire) {
         player.damageLevel += basicFire.damageAmount;
-        let mappedDamage = map(basicFire.damageAmount, 5, 12, 5, 34);
+        let mappedDamage = map(basicFire.damageAmount, 2.5, 6, 5, 34);
         player.health -= mappedDamage;
 
         basicFire.damaged = true;

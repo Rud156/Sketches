@@ -4,7 +4,7 @@
 /// <reference path="./explosion.js" />
 
 const playerKeys = [
-    [65, 68, 87, 83, 90, 88],
+    [65, 68, 87, 83, 88, 90],
     [37, 39, 38, 40, 13, 32]
 ];
 

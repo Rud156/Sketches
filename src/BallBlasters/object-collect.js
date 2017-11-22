@@ -48,6 +48,7 @@ class ObjectCollect {
         fill(currentColor);
         noStroke();
 
+        rect(pos.x, pos.y - this.height - 10, this.width * 2 * this.health / this.maxHealth, 3);
         push();
         translate(pos.x, pos.y);
         rotate(angle);

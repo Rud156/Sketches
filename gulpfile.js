@@ -21,8 +21,8 @@ let processJS = lazypipe()
             gutil.log(error.codeFrame);
         }
     })
-    .pipe(concat, 'bundle.js')
     .pipe(sourceMaps.init)
+    .pipe(concat, 'bundle.js')
     .pipe(babel, {
         presets: ['env', 'stage-2'],
         highlightCode: true,
