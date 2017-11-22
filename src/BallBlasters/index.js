@@ -4,7 +4,7 @@
 /// <reference path="./explosion.js" />
 
 const playerKeys = [
-    [65, 68, 87, 83, 88, 90],
+    [65, 68, 87, 83, 67, 86],
     [37, 39, 38, 40, 13, 32]
 ];
 
@@ -19,8 +19,8 @@ const keyStates = {
     65: false, // A
     83: false, // S
     68: false, // D
-    90: false, // Z
-    88: false // X
+    86: false, // V
+    67: false // C
 };
 
 const groundCategory = 0x0001;
@@ -33,6 +33,7 @@ let gameManager;
 let endTime;
 let seconds = 6;
 let displayTextFor = 120;
+let displayStartFor = 120;
 
 function setup() {
     let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 30);
@@ -62,10 +63,10 @@ function draw() {
 
         fill(255);
         textSize(30);
-        text(`${seconds}`, width / 2, 50);
+        text(`Crystals appear in: ${seconds}`, width / 2, 50);
     } else {
         if (displayTextFor > 0) {
-            displayTextFor -= 1 * 60 / frameRate();
+            displayTextFor -= 1 * 60 / formattedFrameRate();
             fill(255);
             textSize(30);
             text(`Capture the opponent's base`, width / 2, 50);
@@ -83,6 +84,13 @@ function draw() {
             text(`Player 2 Won`, width / 2, height / 2);
         }
     }
+
+    if (displayStartFor > 0) {
+        displayStartFor -= 1 * 60 / formattedFrameRate();
+        fill(255);
+        textSize(100);
+        text(`FIGHT`, width / 2, height / 2);
+    }
 }
 
 function keyPressed() {
@@ -97,4 +105,8 @@ function keyReleased() {
         keyStates[keyCode] = false;
 
     return false;
+}
+
+function formattedFrameRate() {
+    return frameRate() <= 0 ? 60 : frameRate();
 }

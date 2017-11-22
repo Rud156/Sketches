@@ -280,14 +280,8 @@ class GameManager {
 
             if (this.players[i].body.health <= 0) {
                 let pos = this.players[i].body.position;
-                this.explosions.push(new Explosion(pos.x, pos.y, 10));
+                this.explosions.push(new Explosion(pos.x, pos.y, 10, 90, 200));
 
-                this.players[i].removeFromWorld();
-                this.players.splice(i, 1);
-                i -= 1;
-            }
-
-            if (this.players[i].isOutOfScreen()) {
                 this.players[i].removeFromWorld();
                 this.players.splice(i, 1);
                 i -= 1;
