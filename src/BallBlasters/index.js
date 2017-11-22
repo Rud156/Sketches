@@ -69,12 +69,12 @@ function setup() {
     canvas.parent('canvas-holder');
 
     button = createButton('Play');
-    button.position(width / 2 - 62, height / 1.5 + 30);
+    button.position(width / 2 - 62, height / 1.6);
     button.elt.className = 'button pulse';
     button.elt.style.display = 'none';
     button.mousePressed(resetGame);
 
-    backgroundAudio.setVolume(0.1);
+    backgroundAudio.setVolume(0.05);
     backgroundAudio.play();
     backgroundAudio.loop();
 
@@ -86,13 +86,16 @@ function draw() {
     background(0);
     if (sceneCount === 0) {
         textStyle(BOLD);
-        textSize(30);
+        textSize(50);
         noStroke();
         fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
-        text('BALL BLASTERS', width / 2 + 10, height / 4);
+        text('BALL BLASTERS', width / 2 + 10, 50);
         fill(255);
-        text('ARROW KEYS to move, SPACE to jump and ENTER to fire for Player 1', width / 2, height / 2.5);
-        text('WASD to move, V to jump and C to fire for Player 2', width / 2, height / 2);
+        textSize(30);
+        text('ARROW KEYS to move, SPACE to jump and ENTER to fire for Player 1', width / 2, height / 4);
+        text('WASD to move, V to jump and C to fire for Player 2', width / 2, height / 2.75);
+        fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
+        text('Destroy your opponent or capture their crystal to win', width / 2, height / 2);
         if (!buttonDisplayed) {
             button.elt.style.display = 'block';
             button.elt.innerText = 'Play Game';
