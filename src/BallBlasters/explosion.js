@@ -2,6 +2,8 @@
 
 class Explosion {
     constructor(spawnX, spawnY, maxStrokeWeight = 5, velocity = 20, numberOfParticles = 100) {
+        explosionAudio.play();
+
         this.position = createVector(spawnX, spawnY);
         this.gravity = createVector(0, 0.2);
         this.maxStrokeWeight = maxStrokeWeight;

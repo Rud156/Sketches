@@ -108,7 +108,7 @@ gulp.task('pongHelper', () => {
 
 gulp.task('ballBlasters', ['serve', 'general', 'ballHelper'], () => {
     let target = gulp.src('./index.html');
-    let sources = gulp.src(['./js/p5.min.js', './js/p5.dom.min.js', './js/matter.js']);
+    let sources = gulp.src(['./js/p5.min.js', './js/p5.dom.min.js', './js/p5.sound.min.js', './js/matter.js']);
     target.pipe(inject(sources))
         .pipe(gulp.dest('lib'));
 

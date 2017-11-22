@@ -2,6 +2,8 @@
 
 class BasicFire {
     constructor(x, y, radius, angle, world, catAndMask) {
+        fireAudio.play();
+
         this.radius = radius;
         this.body = Matter.Bodies.circle(x, y, this.radius, {
             label: 'basicFire',

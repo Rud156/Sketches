@@ -40,18 +40,18 @@ class Ground {
     }
 
     show() {
-        fill(255, 0, 0);
+        fill(0, 100, 255);
         noStroke();
 
         let bodyVertices = this.body.vertices;
         let fakeBottomVertices = this.fakeBottomPart.vertices;
         let vertices = [
-            bodyVertices[0], 
+            bodyVertices[0],
             bodyVertices[1],
             bodyVertices[2],
-            fakeBottomVertices[1], 
-            fakeBottomVertices[2], 
-            fakeBottomVertices[3], 
+            fakeBottomVertices[1],
+            fakeBottomVertices[2],
+            fakeBottomVertices[3],
             fakeBottomVertices[0],
             bodyVertices[3]
         ];
