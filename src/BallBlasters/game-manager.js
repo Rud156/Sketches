@@ -58,10 +58,14 @@ class GameManager {
     }
 
     createPlayers() {
-        this.players.push(new Player(this.grounds[0].body.position.x, height / 1.811, this.world, 0));
+        this.players.push(new Player(
+            this.grounds[0].body.position.x + this.grounds[0].width / 2 - 40,
+            height / 1.811, this.world, 0));
         this.players[0].setControlKeys(playerKeys[0]);
 
-        this.players.push(new Player(this.grounds[this.grounds.length - 1].body.position.x,
+        let length = this.grounds.length;
+        this.players.push(new Player(
+            this.grounds[length - 1].body.position.x - this.grounds[length - 1].width / 2 + 40,
             height / 1.811, this.world, 1, 179));
         this.players[1].setControlKeys(playerKeys[1]);
     }
