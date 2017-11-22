@@ -58,13 +58,13 @@ class GameManager {
     createPlayers() {
         this.players.push(new Player(
             this.grounds[0].body.position.x + this.grounds[0].width / 2 - 40,
-            height / 1.811, this.world, 0));
+            height / 1.811, this.world, 1));
         this.players[0].setControlKeys(playerKeys[0]);
 
         let length = this.grounds.length;
         this.players.push(new Player(
             this.grounds[length - 1].body.position.x - this.grounds[length - 1].width / 2 + 40,
-            height / 1.811, this.world, 1, 179));
+            height / 1.811, this.world, 0, 179));
         this.players[1].setControlKeys(playerKeys[1]);
     }
 
