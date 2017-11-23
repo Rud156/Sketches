@@ -92,7 +92,7 @@ function draw() {
         text('BALL BLASTERS', width / 2 + 10, 50);
         fill(255);
         textSize(30);
-        text('ARROW KEYS to move, DOT to jump and ENTER to fire for Player 1', width / 2, height / 4);
+        text('ARROW KEYS to move, SPACE to jump and CTRL to fire for Player 1', width / 2, height / 4);
         text('WASD to move, Y to jump and T to fire for Player 2', width / 2, height / 2.75);
         fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
         text('Destroy your opponent or capture their crystal to win', width / 2, height / 2);
