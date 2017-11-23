@@ -105,6 +105,8 @@ class Player {
         // PI / 2 -> Down
         // 3 * PI / 2 -> Up
 
+        if (this.angle >= 2 * PI)
+            this.angle = 0;
         let angle = this.angle;
 
         if (activeKeys[this.keys[2]]) {
@@ -114,9 +116,15 @@ class Player {
                 this.angle += this.angularVelocity;
         }
         if (activeKeys[this.keys[3]]) {
-            if (angle > 0)
-                this.angle -= this.angularVelocity;
-            else if (angle < 0)
+            if (angle > 0) {
+                let diff_1 = abs(2 * PI - angle);
+                let diff_2 = abs(0 - angle);
+                if (diff_1 < diff_2) {
+                    this.angle += this.angularVelocity;
+                } else {
+                    this.angle -= this.angularVelocity;
+                }
+            } else if (angle < 0)
                 this.angle += this.angularVelocity;
         }
         if (activeKeys[this.keys[4]]) {
