@@ -16,5 +16,5 @@ Open http://localhost:3000 to view
 Project Names:
 * Space Invaders - `<project_name> = spaceInvaders` https://codepen.io/Rud156/full/VreYvr
 * Starfield - `<project_name> = starField` https://codepen.io/Rud156/full/EbKrEQ
-* Pong - `<project_name> = pong` https://codepen.io/Rud156/full/xPdQJg/
-* Ball Blasters - `<project_name> = ballBlasters` (Incomplete)
+* Pong - `<project_name> = pong` https://codepen.io/Rud156/full/xPdQJg
+* Ball Blasters - `<project_name> = ballBlasters` https://codepen.io/Rud156/full/VrxNYE (Incomplete)
