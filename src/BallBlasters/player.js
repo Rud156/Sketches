@@ -21,7 +21,7 @@ class Player {
 
         this.radius = 20;
         this.movementSpeed = 10;
-        this.angularVelocity = 0.2;
+        this.angularVelocity = 0.1;
 
         this.jumpHeight = 10;
         this.jumpBreathingSpace = 3;
