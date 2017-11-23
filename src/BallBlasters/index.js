@@ -5,8 +5,8 @@
 
 const playerKeys = [
     // Left, Right, Move Shooter Left, Move Shooter Right, Move Shooter Up, Move Shooter Down, Shoot, Jump
-    [65, 68, 71, 74, 89, 72, 83, 87],
-    [37, 39, 100, 102, 104, 101, 40, 38]
+    [65, 68, 71, 74, 89, 72, 32, 87],
+    [37, 39, 100, 102, 104, 101, 17, 38]
 ];
 
 const keyStates = {
@@ -17,10 +17,10 @@ const keyStates = {
     37: false, // LEFT - Move Left
     38: false, // UP - Jump
     39: false, // RIGHT - Move Right
-    40: false, // DOWN - Charge And Shoot
+    17: false, // DOWN - Charge And Shoot
     87: false, // W - Jump
     65: false, // A - Move Left
-    83: false, // S - Charge And Shoot
+    32: false, // S - Charge And Shoot
     68: false, // D - Move Right
     71: false, // G - Move Shooter Left
     74: false, // J - Move Shooter Right
@@ -97,8 +97,8 @@ function draw() {
         text('BALL BLASTERS', width / 2 + 10, 50);
         fill(255);
         textSize(20);
-        text('LEFT/RIGHT to move, UP to jump, DOWN to shoot and NUMPAD 8456 to rotate for Player 1', width / 2, height / 4);
-        text('A/D to move, W to jump, S to shoot and YGHJ to rotate for Player 2', width / 2, height / 2.75);
+        text('LEFT/RIGHT to move, UP to jump, CTRL to shoot and NUMPAD 8456 to rotate for Player 1', width / 2, height / 4);
+        text('A/D to move, W to jump, SPACE to shoot and YGHJ to rotate for Player 2', width / 2, height / 2.75);
         textSize(30);
         fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
         text('Destroy your opponent or capture their crystal to win', width / 2, height / 2);
@@ -235,5 +235,5 @@ function successLoad() {
 }
 
 function whileLoading(value) {
-    divElement.innerText = `${value * 100} %`;
+    divElement.innerText = `Loaded ${int(value * 100)} %`;
 }
