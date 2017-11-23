@@ -96,9 +96,10 @@ function draw() {
         fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
         text('BALL BLASTERS', width / 2 + 10, 50);
         fill(255);
+        textSize(20);
+        text('LEFT/RIGHT to move, UP to jump, DOWN to shoot and NUMPAD 8456 to rotate for Player 1', width / 2, height / 4);
+        text('A/D to move, W to jump, S to shoot and YGHJ to rotate for Player 2', width / 2, height / 2.75);
         textSize(30);
-        text('ARROW KEYS to move, SPACE to jump and CTRL to fire for Player 1', width / 2, height / 4);
-        text('WASD to move, Y to jump and T to fire for Player 2', width / 2, height / 2.75);
         fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
         text('Destroy your opponent or capture their crystal to win', width / 2, height / 2);
         if (!buttonDisplayed) {
@@ -151,7 +152,7 @@ function draw() {
             }
 
             let randomValue = random();
-            if (randomValue < 0.1) {
+            if (randomValue < 0.07) {
                 explosions.push(
                     new Explosion(
                         random(0, width),
