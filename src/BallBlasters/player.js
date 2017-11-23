@@ -48,6 +48,7 @@ class Player {
         this.body.index = playerIndex;
 
         this.disableControls = false;
+        this.angle = angle;
     }
 
     setControlKeys(keys) {
@@ -99,16 +100,39 @@ class Player {
     }
 
     rotateBlaster(activeKeys) {
+        // 0 -> Right
+        // PI -> Left
+        // PI / 2 -> Down
+        // 3 * PI / 2 -> Up
+
+        let angle = this.angle;
+
         if (activeKeys[this.keys[2]]) {
-            Matter.Body.setAngularVelocity(this.body, -this.angularVelocity);
-        } else if (activeKeys[this.keys[3]]) {
-            Matter.Body.setAngularVelocity(this.body, this.angularVelocity);
+            if (angle > PI)
+                this.angle -= this.angularVelocity;
+            else if (angle < PI)
+                this.angle += this.angularVelocity;
+        }
+        if (activeKeys[this.keys[3]]) {
+            if (angle > 0)
+                this.angle -= this.angularVelocity;
+            else if (angle < 0)
+                this.angle += this.angularVelocity;
+        }
+        if (activeKeys[this.keys[4]]) {
+            if (angle > 3 * PI / 2)
+                this.angle -= this.angularVelocity;
+            else if (angle < 3 * PI / 2)
+                this.angle += this.angularVelocity;
+        }
+        if (activeKeys[this.keys[5]]) {
+            if (angle > PI / 2)
+                this.angle -= this.angularVelocity;
+            else if (angle < PI / 2)
+                this.angle += this.angularVelocity;
         }
 
-        if ((!keyStates[this.keys[2]] && !keyStates[this.keys[3]]) ||
-            (keyStates[this.keys[2]] && keyStates[this.keys[3]])) {
-            Matter.Body.setAngularVelocity(this.body, 0);
-        }
+        Matter.Body.setAngle(this.body, this.angle);
     }
 
     moveHorizontal(activeKeys) {
@@ -130,8 +154,6 @@ class Player {
                 x: -0.005,
                 y: 0
             });
-
-            Matter.Body.setAngularVelocity(this.body, 0);
         } else if (activeKeys[this.keys[1]]) {
             if (absXVelocity > this.movementSpeed) {
                 Matter.Body.setVelocity(this.body, {
@@ -143,15 +165,13 @@ class Player {
                 x: 0.005,
                 y: 0
             });
-
-            Matter.Body.setAngularVelocity(this.body, 0);
         }
     }
 
     moveVertical(activeKeys) {
         let xVelocity = this.body.velocity.x;
 
-        if (activeKeys[this.keys[5]]) {
+        if (activeKeys[this.keys[7]]) {
             if (!this.body.grounded && this.body.currentJumpNumber < this.maxJumpNumber) {
                 Matter.Body.setVelocity(this.body, {
                     x: xVelocity,
@@ -168,7 +188,7 @@ class Player {
             }
         }
 
-        activeKeys[this.keys[5]] = false;
+        activeKeys[this.keys[7]] = false;
     }
 
     drawChargedShot(x, y, radius) {
@@ -185,7 +205,7 @@ class Player {
         let x = this.radius * cos(angle) * 1.5 + pos.x;
         let y = this.radius * sin(angle) * 1.5 + pos.y;
 
-        if (activeKeys[this.keys[4]]) {
+        if (activeKeys[this.keys[6]]) {
             this.chargeStarted = true;
             this.currentChargeValue += this.chargeIncrementValue;
 
@@ -194,7 +214,7 @@ class Player {
 
             this.drawChargedShot(x, y, this.currentChargeValue);
 
-        } else if (!activeKeys[this.keys[4]] && this.chargeStarted) {
+        } else if (!activeKeys[this.keys[6]] && this.chargeStarted) {
             this.bullets.push(new BasicFire(x, y, this.currentChargeValue, angle, this.world, {
                 category: basicFireCategory,
                 mask: groundCategory | playerCategory | basicFireCategory
@@ -212,6 +232,8 @@ class Player {
             this.moveVertical(activeKeys);
 
             this.chargeAndShoot(activeKeys);
+
+            Matter.Body.setAngularVelocity(this.body, 0);
         }
 
         for (let i = 0; i < this.bullets.length; i++) {

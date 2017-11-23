@@ -4,23 +4,28 @@
 /// <reference path="./explosion.js" />
 
 const playerKeys = [
-    [65, 68, 87, 83, 84, 89],
-    [37, 39, 38, 40, 17, 32]
+    // Left, Right, Move Shooter Left, Move Shooter Right, Move Shooter Up, Move Shooter Down, Shoot, Jump
+    [65, 68, 71, 74, 89, 72, 83, 87],
+    [37, 39, 100, 102, 104, 101, 40, 38]
 ];
 
 const keyStates = {
-    32: false, // SPACE
-    17: false, // CTRL
-    37: false, // LEFT
-    38: false, // UP
-    39: false, // RIGHT
-    40: false, // DOWN
-    87: false, // W
-    65: false, // A
-    83: false, // S
-    68: false, // D
-    84: false, // T
-    89: false // Y
+    102: false, // NUMPAD 6 - Move Shooter Left
+    100: false, // NUMPAD 4 - Move Shooter Right
+    104: false, // NUMPAD 8 - Move Shooter Up
+    101: false, //NUMPAD 2 - Move Shooter Down
+    37: false, // LEFT - Move Left
+    38: false, // UP - Jump
+    39: false, // RIGHT - Move Right
+    40: false, // DOWN - Charge And Shoot
+    87: false, // W - Jump
+    65: false, // A - Move Left
+    83: false, // S - Charge And Shoot
+    68: false, // D - Move Right
+    71: false, // G - Move Shooter Left
+    74: false, // J - Move Shooter Right
+    89: false, // Y - Move Shooter Up
+    72: false // H - Move Shooter Down
 };
 
 const groundCategory = 0x0001;
@@ -74,7 +79,7 @@ function setup() {
     button.elt.style.display = 'none';
     button.mousePressed(resetGame);
 
-    backgroundAudio.setVolume(0.05);
+    backgroundAudio.setVolume(0.1);
     backgroundAudio.play();
     backgroundAudio.loop();
 
