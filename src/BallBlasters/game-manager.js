@@ -69,8 +69,8 @@ class GameManager {
     }
 
     createFlags() {
-        this.collectibleFlags.push(new ObjectCollect(50, 50, 20, 20, this.world, 0));
-        this.collectibleFlags.push(new ObjectCollect(width - 50, 50, 20, 20, this.world, 1));
+        this.collectibleFlags.push(new ObjectCollect(50, 50, 20, 20, this.world, 1));
+        this.collectibleFlags.push(new ObjectCollect(width - 50, 50, 20, 20, this.world, 0));
     }
 
     attachEventListeners() {
