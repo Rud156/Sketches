@@ -2,7 +2,7 @@
 /// <reference path="./player.js" />
 /// <reference path="./ground.js" />
 /// <reference path="./explosion.js" />
-/// <reference path="./boundary.js" />
+/// <reference path="./platform.js" />
 /// <reference path="./object-collect.js" />
 
 class GameManager {
@@ -32,38 +32,35 @@ class GameManager {
     }
 
     createGrounds() {
-        for (let i = 12.5; i < width - 100; i += 275) {
-            let randomValue = random(height / 6.34, height / 3.17);
-            this.grounds.push(new Ground(i + 125, height - randomValue / 2, 250, randomValue, this.world));
-        }
+        // Todo: Implement this function
     }
 
     createBoundaries() {
-        this.boundaries.push(new Boundary(5, height / 2, 10, height, this.world));
-        this.boundaries.push(new Boundary(width - 5, height / 2, 10, height, this.world));
-        this.boundaries.push(new Boundary(width / 2, 5, width, 10, this.world));
-        this.boundaries.push(new Boundary(width / 2, height - 5, width, 10, this.world));
+        this.boundaries.push(new Platform(5, height / 2, 10, height, this.world));
+        this.boundaries.push(new Platform(width - 5, height / 2, 10, height, this.world));
+        this.boundaries.push(new Platform(width / 2, 5, width, 10, this.world));
+        this.boundaries.push(new Platform(width / 2, height - 5, width, 10, this.world, 'staticGround'));
     }
 
     createPlatforms() {
-        this.platforms.push(new Boundary(150, height / 6.34, 300, 20, this.world, 'staticGround', 0));
-        this.platforms.push(new Boundary(width - 150, height / 6.43, 300, 20, this.world, 'staticGround', 1));
+        this.platforms.push(new Platform(150, height / 6.34, 300, 20, this.world, 'staticGround', 0));
+        this.platforms.push(new Platform(width - 150, height / 6.43, 300, 20, this.world, 'staticGround', 1));
 
-        this.platforms.push(new Boundary(100, height / 2.17, 200, 20, this.world, 'staticGround'));
-        this.platforms.push(new Boundary(width - 100, height / 2.17, 200, 20, this.world, 'staticGround'));
+        this.platforms.push(new Platform(100, height / 2.17, 200, 20, this.world, 'staticGround'));
+        this.platforms.push(new Platform(width - 100, height / 2.17, 200, 20, this.world, 'staticGround'));
 
-        this.platforms.push(new Boundary(width / 2, height / 3.17, 300, 20, this.world, 'staticGround'));
+        this.platforms.push(new Platform(width / 2, height / 3.17, 300, 20, this.world, 'staticGround'));
     }
 
     createPlayers() {
         this.players.push(new Player(
-            this.grounds[0].body.position.x + this.grounds[0].width / 2 - 40,
+            40,
             height / 1.811, this.world, 1));
         this.players[0].setControlKeys(playerKeys[0]);
 
         let length = this.grounds.length;
         this.players.push(new Player(
-            this.grounds[length - 1].body.position.x - this.grounds[length - 1].width / 2 + 40,
+            width - 40,
             height / 1.811, this.world, 0, PI));
         this.players[1].setControlKeys(playerKeys[1]);
     }

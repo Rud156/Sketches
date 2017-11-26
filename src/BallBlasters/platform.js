@@ -1,6 +1,6 @@
 /// <reference path="./../../typings/matter.d.ts" />
 
-class Boundary {
+class Platform {
     constructor(x, y, boundaryWidth, boundaryHeight, world, label = 'boundaryControlLines', index = -1) {
         this.body = Matter.Bodies.rectangle(x, y, boundaryWidth, boundaryHeight, {
             isStatic: true,

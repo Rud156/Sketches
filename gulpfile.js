@@ -17,7 +17,7 @@ let processJS = lazypipe()
                 message: error.message
             })(error);
             gutil.beep();
-            gutil.log(gutil.colors.red(error.message));
+            gutil.log(gutil.colors.cyan(error.message));
             gutil.log(error.codeFrame);
         }
     })
@@ -120,7 +120,7 @@ gulp.task('ballHelper', () => {
             'src/BallBlasters/particle.js',
             'src/BallBlasters/explosion.js',
             'src/BallBlasters/basic-fire.js',
-            'src/BallBlasters/boundary.js',
+            'src/BallBlasters/platform.js',
             'src/BallBlasters/ground.js',
             'src/BallBlasters/player.js',
             'src/BallBlasters/game-manager.js',

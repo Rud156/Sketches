@@ -6,7 +6,7 @@
 const playerKeys = [
     // Left, Right, Move Shooter Left, Move Shooter Right, Move Shooter Up, Move Shooter Down, Shoot, Jump
     [65, 68, 71, 74, 89, 72, 32, 87],
-    [37, 39, 100, 102, 104, 101, 17, 38]
+    [37, 39, 100, 102, 104, 101, 96, 38]
 ];
 
 const keyStates = {
@@ -17,7 +17,7 @@ const keyStates = {
     37: false, // LEFT - Move Left
     38: false, // UP - Jump
     39: false, // RIGHT - Move Right
-    17: false, // DOWN - Charge And Shoot
+    96: false, // NUMPAD 0 - Charge And Shoot
     87: false, // W - Jump
     65: false, // A - Move Left
     32: false, // S - Charge And Shoot
@@ -79,9 +79,9 @@ function setup() {
     button.elt.style.display = 'none';
     button.mousePressed(resetGame);
 
-    backgroundAudio.setVolume(0.1);
-    backgroundAudio.play();
-    backgroundAudio.loop();
+    // backgroundAudio.setVolume(0.1);
+    // backgroundAudio.play();
+    // backgroundAudio.loop();
 
     rectMode(CENTER);
     textAlign(CENTER, CENTER);
@@ -97,7 +97,7 @@ function draw() {
         text('BALL BLASTERS', width / 2 + 10, 50);
         fill(255);
         textSize(20);
-        text('LEFT/RIGHT to move, UP to jump, CTRL to shoot and NUMPAD 8456 to rotate for Player 1', width / 2, height / 4);
+        text('LEFT/RIGHT to move, UP to jump, NUMPAD 0 to shoot and NUMPAD 8456 to rotate for Player 1', width / 2, height / 4);
         text('A/D to move, W to jump, SPACE to shoot and YGHJ to rotate for Player 2', width / 2, height / 2.75);
         textSize(30);
         fill(color(`hsl(${int(random(359))}, 100%, 50%)`));
