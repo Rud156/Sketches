@@ -1,4 +1,12 @@
-import Hello from './test.js';
+/// <reference path="./paddle.js" />
+/// <reference path="./ball.js" />
 
-var hello = new Hello();
-hello.printSomething();
+let ball;
+function setup() {
+    ball = new Ball(0, 0, 0);
+}
+
+function draw() {
+    background(0);
+    ball.draw();
+}
