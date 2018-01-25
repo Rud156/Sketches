@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
+    "beeper": "^1.1.1",
     "browser-sync": "^2.18.13",
+    "chalk": "^2.3.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
     "gulp-concat": "^2.6.1",
@@ -14,13 +17,18 @@
     "gulp-plumber": "^1.1.0",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-util": "^3.0.8",
-    "lazypipe": "^1.0.1"
+    "lazypipe": "^1.0.1",
+    "node-notifier": "^5.2.1",
+    "rollup": "^0.55.0",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^8.2.6"
   },
   "scripts": {
     "starfield": "gulp starfield",
     "spaceInvaders": "gulp spaceInvaders",
     "pong": "gulp pong",
-    "ballBlasters": "gulp ballBlasters"
+    "ballBlasters": "gulp ballBlasters",
+    "powerPong": "gulp powerPong"
   },
   "license": "MIT",
   "dependencies": {}

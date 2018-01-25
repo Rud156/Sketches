@@ -11,7 +11,7 @@ const inject = require('gulp-inject');
 
 let processJS = lazypipe()
     .pipe(plumber, {
-        errorHandler: (error) => {
+        errorHandler: error => {
             notify.onError({
                 title: 'Gulp error in ' + error.plugin,
                 message: error.message
@@ -54,29 +54,30 @@ gulp.task('general', () => {
 gulp.task('starfield', ['serve', 'general', 'starFieldHelper'], () => {
     let target = gulp.src('./index.html');
     let sources = gulp.src(['./js/p5.min.js']);
-    target.pipe(inject(sources))
-        .pipe(gulp.dest('lib'));
+    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
 
     gulp.watch(['src/Starfield/*.js'], ['starFieldHelper']);
 });
 gulp.task('starFieldHelper', () => {
-    return gulp.src([
-            'src/Starfield/star.js',
-            'src/Starfield/index.js'
-        ])
+    return gulp
+        .src(['src/Starfield/star.js', 'src/Starfield/index.js'])
         .pipe(processJS());
 });
 
 gulp.task('spaceInvaders', ['serve', 'general', 'spaceInvadersHelper'], () => {
     let target = gulp.src('./index.html');
-    let sources = gulp.src(['./js/p5.min.js', './js/p5.dom.min.js', './js/howler.min.js']);
-    target.pipe(inject(sources))
-        .pipe(gulp.dest('lib'));
+    let sources = gulp.src([
+        './js/p5.min.js',
+        './js/p5.dom.min.js',
+        './js/howler.min.js'
+    ]);
+    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
 
     gulp.watch(['src/SpaceInvaders/*.js'], ['spaceInvadersHelper']);
 });
 gulp.task('spaceInvadersHelper', () => {
-    return gulp.src([
+    return gulp
+        .src([
             'src/SpaceInvaders/particle.js',
             'src/SpaceInvaders/bullet.js',
             'src/SpaceInvaders/explosion.js',
@@ -91,13 +92,13 @@ gulp.task('spaceInvadersHelper', () => {
 gulp.task('pong', ['serve', 'general', 'pongHelper'], () => {
     let target = gulp.src('./index.html');
     let sources = gulp.src(['./js/babylon.min.js']);
-    target.pipe(inject(sources))
-        .pipe(gulp.dest('lib'));
+    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
 
     gulp.watch(['src/Pong/*.js'], ['pongHelper']);
 });
 gulp.task('pongHelper', () => {
-    return gulp.src([
+    return gulp
+        .src([
             'src/Pong/game-manager.js',
             'src/Pong/ball.js',
             'src/Pong/paddle.js',
@@ -108,14 +109,19 @@ gulp.task('pongHelper', () => {
 
 gulp.task('ballBlasters', ['serve', 'general', 'ballHelper'], () => {
     let target = gulp.src('./index.html');
-    let sources = gulp.src(['./js/p5.min.js', './js/p5.dom.min.js', './js/p5.sound.min.js', './js/matter.js']);
-    target.pipe(inject(sources))
-        .pipe(gulp.dest('lib'));
+    let sources = gulp.src([
+        './js/p5.min.js',
+        './js/p5.dom.min.js',
+        './js/p5.sound.min.js',
+        './js/matter.js'
+    ]);
+    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
 
     gulp.watch(['src/BallBlasters/*.js'], ['ballHelper']);
 });
 gulp.task('ballHelper', () => {
-    return gulp.src([
+    return gulp
+        .src([
             'src/BallBlasters/object-collect.js',
             'src/BallBlasters/particle.js',
             'src/BallBlasters/explosion.js',
@@ -127,4 +133,71 @@ gulp.task('ballHelper', () => {
             'src/BallBlasters/index.js'
         ])
         .pipe(processJS());
+});
+
+const rollup = require('rollup');
+const babelRollup = require('rollup-plugin-babel');
+const commonJS = require('rollup-plugin-commonjs');
+const notifier = require('node-notifier');
+const chalk = require('chalk');
+const beeper = require('beeper');
+
+let rollupProcessJs = (inputFile, filePath) => {
+    return rollup.rollup({
+        input: `${filePath}${inputFile}`,
+        plugins: [
+            commonJS(),
+            babelRollup({
+                exclude: 'node_modules/**',
+                babelrc: false,
+                presets: [
+                    [
+                        'env',
+                        {
+                            modules: false
+                        }
+                    ]
+                ],
+                comments: false,
+                highlightCode: false,
+                plugins: ['external-helpers']
+            })
+        ]
+    });
+};
+
+let rollupWriteBundle = async bundle => {
+    await bundle.write({
+        file: './lib/bundle.js',
+        format: 'umd',
+        name: 'library',
+        sourcemap: true
+    });
+};
+
+gulp.task('powerPong', ['serve', 'general', 'powerPongHelper'], () => {
+    let target = gulp.src('./index.html');
+    let sources = gulp.src([
+        './js/p5.min.js',
+        './js/p5.dom.min.js',
+        './js/p5.sound.min.js',
+        './js/matter.js'
+    ]);
+    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
+
+    gulp.watch(['src/PowerPong/*.js'], ['powerPongHelper']);
+});
+gulp.task('powerPongHelper', async () => {
+    try {
+        const bundle = await rollupProcessJs('index.js', './src/PowerPong/');
+        await rollupWriteBundle(bundle);
+    } catch (error) {
+        notifier.notify({
+            title: `Gulp error in line ${error.loc.line}, positon ${error.pos}`,
+            message: `${error}`
+        });
+        beeper(3);
+        console.log(chalk.default.cyan(error));
+        console.log(chalk.default.red(error.code));
+    }
 });
