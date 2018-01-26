@@ -19,3 +19,5 @@ class Paddle {
         this.position.add(this.velocity);
     }
 }
+
+export default Paddle;

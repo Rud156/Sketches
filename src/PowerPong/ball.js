@@ -12,3 +12,5 @@ class Ball {
 
     update() {}
 }
+
+export default Ball;
