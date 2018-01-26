@@ -145,7 +145,6 @@ const beeper = require('beeper');
 let rollupProcessJs = (inputFile, filePath) => {
     return rollup.rollup({
         input: `${filePath}${inputFile}`,
-
         plugins: [
             commonJS(),
             babelRollup({
@@ -176,12 +175,14 @@ let rollupWriteBundle = async bundle => {
 
 let handleError = error => {
     notifier.notify({
-        title: `Gulp error in line ${error.loc.line}, positon ${error.pos}`,
+        title: `Gulp error in line ${error.loc.line}, positon ${
+            error.loc.column
+        }`,
         message: `${error}`
     });
     beeper();
-    console.log(chalk.default.cyan(error));
-    console.log(chalk.default.red(error.code));
+    console.log(chalk.default.red(error));
+    console.log(chalk.default.blueBright(error.code));
 };
 
 gulp.task('powerPong', ['serve', 'general', 'powerPongHelper'], () => {
@@ -200,6 +201,9 @@ gulp.task('powerPongHelper', async () => {
     try {
         const bundle = await rollupProcessJs('index.js', './src/PowerPong/');
         await rollupWriteBundle(bundle);
+        browserSync.reload({
+            stream: false
+        });
     } catch (error) {
         handleError(error);
     }
