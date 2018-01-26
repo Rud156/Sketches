@@ -191,7 +191,8 @@ gulp.task('powerPong', ['serve', 'general', 'powerPongHelper'], () => {
         './js/p5.min.js',
         './js/p5.dom.min.js',
         './js/p5.sound.min.js',
-        './js/matter.js'
+        './js/matter.js',
+        './js/socket.io.js'
     ]);
     target.pipe(inject(sources)).pipe(gulp.dest('lib'));
 

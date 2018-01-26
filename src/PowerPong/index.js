@@ -7,7 +7,8 @@ let keys = {
     87: false, // W
     83: false, // S
     38: false, // Up,
-    40: false // Down
+    40: false, // Down
+    32: false // Space
 };
 
 function setup() {
@@ -27,11 +28,11 @@ function draw() {
 
     for (let paddle of paddles) {
         paddle.draw();
-        paddle.update(keys);
+        paddle.update(keys, ball);
     }
 
     ball.draw();
-    ball.update();
+    ball.update(keys);
 }
 
 function keyPressed(fxn) {

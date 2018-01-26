@@ -23,6 +23,31 @@ class Paddle {
         this.position.add(this.velocity);
     }
 
+    collideWithBall(ball) {
+        let { x: ballX, y: ballY } = ball.position;
+        let radius = ball.radius;
+
+        let { x, y } = this.position;
+        let halfWidth = this.width / 2;
+        let halfHeight = this.height / 2;
+
+        if (
+            ballY - radius > y - halfHeight &&
+            ballY + radius < y + halfHeight
+        ) {
+            if (
+                (x < width / 2 && ballX - radius <= x + halfWidth) ||
+                (x > width / 2 && ballX + radius >= x - halfWidth)
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     draw() {
         fill(255);
 
@@ -30,18 +55,21 @@ class Paddle {
         rect(x, y, this.width, this.height);
     }
 
-    update(keys) {
+    update(keys, ball) {
         let { up, down } = this.keys;
 
-        if (
-            (keys[up] && keys[down]) ||
-            (!keys[up] && !keys[down])
-        ) {
+        if ((keys[up] && keys[down]) || (!keys[up] && !keys[down])) {
             this.movePaddle(0);
         } else if (keys[up]) {
             this.movePaddle(-1);
         } else if (keys[down]) {
             this.movePaddle(1);
+        }
+
+        if (this.collideWithBall(ball)) {
+            let { x } = ball.velocity;
+            ball.velocity.x = -1 * x;
+            ball.velocity.add(this.velocity);
         }
     }
 }
