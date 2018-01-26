@@ -1,5 +1,6 @@
 import Ball from './Ball';
 import Paddle from './Paddle';
+import { BASE_URL } from './config';
 
 let paddles = [];
 let ball;
@@ -11,6 +12,8 @@ let keys = {
     32: false // Space
 };
 
+let socket = io(BASE_URL);
+
 function setup() {
     let canvas = createCanvas(window.innerWidth - 25, window.innerHeight - 30);
     canvas.parent('canvas-holder');
@@ -18,9 +21,9 @@ function setup() {
     rectMode(CENTER);
     ellipseMode(CENTER);
 
-    paddles.push(new Paddle(7, height / 2, 10, 100, 87, 83));
-    paddles.push(new Paddle(width - 7, height / 2, 10, 100, 38, 40));
-    ball = new Ball(width / 2, height / 2, 10);
+    paddles.push(new Paddle(7, height / 2, 87, 83, socket, 1));
+    paddles.push(new Paddle(width - 7, height / 2, 38, 40, socket, 2));
+    ball = new Ball(width / 2, height / 2, socket);
 }
 
 function draw() {

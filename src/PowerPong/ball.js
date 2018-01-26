@@ -1,5 +1,5 @@
 class Ball {
-    constructor(x, y, radius) {
+    constructor(x, y, socket, radius = 10) {
         this.initialPosition = { x: x, y: y };
 
         this.position = createVector(x, y);
@@ -9,6 +9,8 @@ class Ball {
         this.minSpeed = 5;
         this.maxSpeed = 7;
         this.ballLaunched = false;
+
+        this.socket = socket;
     }
 
     launchBall() {
@@ -50,13 +52,27 @@ class Ball {
             this.velocity.y = -1 * velY;
         }
 
-        this.checkOutOfScreen();
-        this.clampBallSpeed();
-
         if (keys[32] && !this.ballLaunched) {
             this.ballLaunched = true;
             this.launchBall();
         }
+
+        this.checkOutOfScreen();
+        this.clampBallSpeed();
+        this.emitEvents();
+    }
+
+    emitEvents() {
+        this.socket.emit('ballPosition', {
+            position: {
+                x: this.position.x,
+                y: this.position.y
+            },
+            velocity: {
+                x: this.velocity.x,
+                y: this.velocity.y
+            }
+        });
     }
 
     checkOutOfScreen() {
@@ -68,6 +84,7 @@ class Ball {
             );
             this.ballLaunched = false;
             this.velocity = createVector(0, 0);
+            console.log('Out Of Screen');
         }
     }
 }

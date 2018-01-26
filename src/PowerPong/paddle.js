@@ -1,5 +1,5 @@
 class Paddle {
-    constructor(x, y, width, height, upKey, downKey) {
+    constructor(x, y, upKey, downKey, socket, id, width = 10, height = 100) {
         this.position = createVector(x, y);
         this.velocity = createVector(0, 0);
         this.width = width;
@@ -10,6 +10,9 @@ class Paddle {
             up: upKey,
             down: downKey
         };
+
+        this.socket = socket;
+        this.id = id;
     }
 
     movePaddle(direction) {
@@ -67,10 +70,26 @@ class Paddle {
         }
 
         if (this.collideWithBall(ball)) {
+            ball.setPaddleId(this.id);
             let { x } = ball.velocity;
             ball.velocity.x = -1 * x;
             ball.velocity.add(this.velocity);
         }
+        this.emitEvents();
+    }
+
+    emitEvents() {
+        this.socket.emit('paddlePosition', {
+            position: {
+                x: this.position.x,
+                y: this.position.y
+            },
+            velocity: {
+                x: this.velocity.x,
+                y: this.velocity.y
+            },
+            id: this.id
+        });
     }
 }
 
