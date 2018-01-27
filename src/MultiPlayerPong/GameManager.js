@@ -4,14 +4,13 @@ import Ball from './Ball';
 class GameManager {
     constructor(socket) {
         this.paddles = [];
-        this.ball = null;
 
         this.socket = socket;
         this.id = null;
 
-        this.paddles.push(new Paddle(7, height / 2, 38, 40, socket));
-        this.paddles.push(new Paddle(width - 7, height / 2, 38, 40, socket));
         this.ball = new Ball(width / 2, height / 2, socket);
+        this.paddles.push(new Paddle(7, height / 2, 38, 40, socket, this.ball));
+        this.paddles.push(new Paddle(width - 7, height / 2, 38, 40, socket, this.ball));
 
         this.socket.emit('getPlayerId');
         this.socket.on(
@@ -19,6 +18,7 @@ class GameManager {
             this.handleRecievePlayerId.bind(this)
         );
         this.socket.on('startGame', this.handleStartGame.bind(this));
+        this.socket.on('ballPosition', this.handleRecieveBallData.bind(this));
 
         this.startGame = false;
         this.draw = this.draw.bind(this);
@@ -35,6 +35,12 @@ class GameManager {
     handleStartGame(value) {
         console.log('Game Started');
         this.startGame = value;
+    }
+
+    handleRecieveBallData(data) {
+        let { position, velocity } = data;
+        this.ball.position = createVector(position.x, position.y);
+        this.ball.velocity = createVector(velocity.x, velocity.y);
     }
 
     draw(keys) {

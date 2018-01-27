@@ -150,6 +150,8 @@ let rollupProcessJs = (inputFile, filePath) => {
             babelRollup({
                 exclude: 'node_modules/**',
                 babelrc: false,
+                highlightCode: true,
+                comments: false,
                 presets: [
                     [
                         'env',
@@ -185,21 +187,28 @@ let handleError = error => {
     console.log(chalk.default.blueBright(error.code));
 };
 
-gulp.task('multiPlayerPong', ['serve', 'general', 'multiPlayerPongHelper'], () => {
-    let target = gulp.src('./index.html');
-    let sources = gulp.src([
-        './js/p5.min.js',
-        './js/p5.dom.min.js',
-        './js/p5.sound.min.js',
-        './js/socket.io.js'
-    ]);
-    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
+gulp.task(
+    'multiPlayerPong',
+    ['serve', 'general', 'multiPlayerPongHelper'],
+    () => {
+        let target = gulp.src('./index.html');
+        let sources = gulp.src([
+            './js/p5.min.js',
+            './js/p5.dom.min.js',
+            './js/p5.sound.min.js',
+            './js/socket.io.js'
+        ]);
+        target.pipe(inject(sources)).pipe(gulp.dest('lib'));
 
-    gulp.watch(['src/MultiPlayerPong/*.js'], ['multiPlayerPongHelper']);
-});
+        gulp.watch(['src/MultiPlayerPong/*.js'], ['multiPlayerPongHelper']);
+    }
+);
 gulp.task('multiPlayerPongHelper', async () => {
     try {
-        const bundle = await rollupProcessJs('index.js', './src/MultiPlayerPong/');
+        const bundle = await rollupProcessJs(
+            'index.js',
+            './src/MultiPlayerPong/'
+        );
         await rollupWriteBundle(bundle);
         browserSync.reload({
             stream: false

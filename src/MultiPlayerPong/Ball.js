@@ -6,16 +6,34 @@ class Ball {
         this.velocity = createVector(0, 0);
         this.radius = radius;
 
-        this.minSpeed = 5;
-        this.maxSpeed = 7;
+        this.minSpeed = 3;
+        this.maxSpeed = 4;
         this.ballLaunched = false;
 
         this.socket = socket;
+
+        this.launchBall = this.launchBall.bind(this);
+        this.clampBallSpeed = this.clampBallSpeed.bind(this);
+        this.draw = this.draw.bind(this);
+        this.update = this.update.bind(this);
+        this.checkOutOfScreen = this.checkOutOfScreen.bind(this);
+        this.emitEvents = this.emitEvents.bind(this);
     }
 
     launchBall() {
         this.velocity = p5.Vector.random2D();
         this.velocity.setMag(this.minSpeed);
+
+        this.socket.emit('ballPosition', {
+            position: {
+                x: this.position.x,
+                y: this.position.y
+            },
+            velocity: {
+                x: this.velocity.x,
+                y: this.velocity.y
+            }
+        });
     }
 
     clampBallSpeed() {
@@ -59,7 +77,6 @@ class Ball {
 
         this.checkOutOfScreen();
         this.clampBallSpeed();
-        this.emitEvents();
     }
 
     emitEvents() {

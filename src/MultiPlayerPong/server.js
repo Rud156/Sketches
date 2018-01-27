@@ -15,7 +15,7 @@ io.on('connection', socket => {
     console.log(chalk.default.blue('A User Connected'));
 
     socket.on('ballPosition', ballPosition => {
-        // socket.broadcast.emit('ballPosition', ballPosition);
+        socket.broadcast.emit('ballPosition', ballPosition);
     });
 
     socket.on('paddlePosition', paddlePosition => {
