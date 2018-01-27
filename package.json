@@ -30,8 +30,8 @@
         "spaceInvaders": "gulp spaceInvaders",
         "pong": "gulp pong",
         "ballBlasters": "gulp ballBlasters",
-        "powerPong":
-            "concurrently \"gulp powerPong\" \"nodemon ./src/PowerPong/server.js\""
+        "multiPPong":
+            "concurrently \"gulp multiPlayerPong\" \"nodemon ./src/PowerPong/server.js\""
     },
     "license": "MIT",
     "dependencies": {

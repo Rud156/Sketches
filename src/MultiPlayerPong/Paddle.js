@@ -13,6 +13,8 @@ class Paddle {
 
         this.socket = socket;
         this.id = id;
+
+        this.alpha = 255;
     }
 
     movePaddle(direction) {
@@ -24,6 +26,10 @@ class Paddle {
         this.velocity = createVector(0, direction * height);
         this.velocity.setMag(this.moveSpeed);
         this.position.add(this.velocity);
+    }
+
+    reduceAlpha() {
+        this.alpha = 100;
     }
 
     collideWithBall(ball) {
@@ -52,7 +58,7 @@ class Paddle {
     }
 
     draw() {
-        fill(255);
+        fill(255, this.alpha);
 
         let { x, y } = this.position;
         rect(x, y, this.width, this.height);

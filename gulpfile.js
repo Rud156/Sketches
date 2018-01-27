@@ -185,7 +185,7 @@ let handleError = error => {
     console.log(chalk.default.blueBright(error.code));
 };
 
-gulp.task('powerPong', ['serve', 'general', 'powerPongHelper'], () => {
+gulp.task('multiPlayerPong', ['serve', 'general', 'multiPlayerPongHelper'], () => {
     let target = gulp.src('./index.html');
     let sources = gulp.src([
         './js/p5.min.js',
@@ -196,9 +196,9 @@ gulp.task('powerPong', ['serve', 'general', 'powerPongHelper'], () => {
     ]);
     target.pipe(inject(sources)).pipe(gulp.dest('lib'));
 
-    gulp.watch(['src/PowerPong/*.js'], ['powerPongHelper']);
+    gulp.watch(['src/MultiPlayerPong/*.js'], ['multiPlayerPongHelper']);
 });
-gulp.task('powerPongHelper', async () => {
+gulp.task('multiPlayerPongHelper', async () => {
     try {
         const bundle = await rollupProcessJs('index.js', './src/PowerPong/');
         await rollupWriteBundle(bundle);
