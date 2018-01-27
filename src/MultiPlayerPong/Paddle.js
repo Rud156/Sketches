@@ -1,5 +1,5 @@
 class Paddle {
-    constructor(x, y, upKey, downKey, socket, id, width = 10, height = 100) {
+    constructor(x, y, upKey, downKey, socket, width = 10, height = 100) {
         this.position = createVector(x, y);
         this.velocity = createVector(0, 0);
         this.width = width;
@@ -12,9 +12,26 @@ class Paddle {
         };
 
         this.socket = socket;
-        this.id = id;
+        this.gameManagerId = null;
 
-        this.alpha = 255;
+        this.alpha = 100;
+
+        this.socket.on('paddlePosition', this.handlePaddlePosition.bind(this));
+
+        this.movePaddle = this.movePaddle.bind(this);
+        this.increaseAlpha = this.increaseAlpha.bind(this);
+        this.collideWithBall = this.collideWithBall.bind(this);
+        this.draw = this.draw.bind(this);
+        this.update = this.update.bind(this);
+        this.emitEvents = this.emitEvents.bind(this);
+    }
+
+    handlePaddlePosition(data) {
+        if (this.gameManagerId !== null) return;
+
+        let { position, velocity } = data;
+        this.position = createVector(position.x, position.y);
+        this.velocity = createVector(velocity.x, velocity.y);
     }
 
     movePaddle(direction) {
@@ -28,8 +45,8 @@ class Paddle {
         this.position.add(this.velocity);
     }
 
-    reduceAlpha() {
-        this.alpha = 100;
+    increaseAlpha() {
+        this.alpha = 255;
     }
 
     collideWithBall(ball) {
@@ -75,12 +92,13 @@ class Paddle {
             this.movePaddle(1);
         }
 
-        if (this.collideWithBall(ball)) {
-            ball.setPaddleId(this.id);
-            let { x } = ball.velocity;
-            ball.velocity.x = -1 * x;
-            ball.velocity.add(this.velocity);
-        }
+        // if (this.collideWithBall(ball)) {
+        //     ball.setPaddleId(this.id);
+        //     let { x } = ball.velocity;
+        //     ball.velocity.x = -1 * x;
+        //     ball.velocity.add(this.velocity);
+        // }
+
         this.emitEvents();
     }
 
@@ -93,8 +111,7 @@ class Paddle {
             velocity: {
                 x: this.velocity.x,
                 y: this.velocity.y
-            },
-            id: this.id
+            }
         });
     }
 }

@@ -31,7 +31,7 @@
         "pong": "gulp pong",
         "ballBlasters": "gulp ballBlasters",
         "multiPPong":
-            "concurrently \"gulp multiPlayerPong\" \"nodemon ./src/PowerPong/server.js\""
+            "concurrently \"gulp multiPlayerPong\" \"nodemon ./src/MultiPlayerPong/server.js\""
     },
     "license": "MIT",
     "dependencies": {

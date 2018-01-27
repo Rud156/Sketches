@@ -1,6 +1,7 @@
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const chalk = require('chalk');
 
 app.get('/', (req, res) => {
     return res.json({
@@ -8,13 +9,13 @@ app.get('/', (req, res) => {
     });
 });
 
-let initialId = 0;
+let initialId = -1;
 
 io.on('connection', socket => {
-    console.log('A User Connected');
+    console.log(chalk.default.blue('A User Connected'));
 
     socket.on('ballPosition', ballPosition => {
-        socket.broadcast.emit('ballPosition', ballPosition);
+        // socket.broadcast.emit('ballPosition', ballPosition);
     });
 
     socket.on('paddlePosition', paddlePosition => {
@@ -23,14 +24,18 @@ io.on('connection', socket => {
 
     socket.on('getPlayerId', () => {
         initialId += 1;
+        console.log(chalk.default.yellowBright(`Player Id: ${initialId}`));
         socket.emit('recievePlayerId', initialId);
-        if (initialId % 2 == 0) {
-            socket.emit('startGame', true);
+        if (initialId == 1) {
+            console.log(chalk.default.greenBright('Game Start Initiated'));
+            io.emit('startGame', true);
+            initialId = -1;
         }
     });
 
     socket.on('disconnect', () => {
-        console.log('A User Disconnected');
+        initialId = -1;
+        console.log(chalk.default.blue('A User Disconnected'));
     });
 });
 

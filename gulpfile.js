@@ -191,7 +191,6 @@ gulp.task('multiPlayerPong', ['serve', 'general', 'multiPlayerPongHelper'], () =
         './js/p5.min.js',
         './js/p5.dom.min.js',
         './js/p5.sound.min.js',
-        './js/matter.js',
         './js/socket.io.js'
     ]);
     target.pipe(inject(sources)).pipe(gulp.dest('lib'));
@@ -200,7 +199,7 @@ gulp.task('multiPlayerPong', ['serve', 'general', 'multiPlayerPongHelper'], () =
 });
 gulp.task('multiPlayerPongHelper', async () => {
     try {
-        const bundle = await rollupProcessJs('index.js', './src/PowerPong/');
+        const bundle = await rollupProcessJs('index.js', './src/MultiPlayerPong/');
         await rollupWriteBundle(bundle);
         browserSync.reload({
             stream: false

@@ -9,11 +9,11 @@ class GameManager {
         this.socket = socket;
         this.id = null;
 
-        this.paddles.push(new Paddle(7, height / 2, 87, 83, socket, 1));
-        this.paddles.push(new Paddle(width - 7, height / 2, 38, 40, socket, 2));
+        this.paddles.push(new Paddle(7, height / 2, 38, 40, socket));
+        this.paddles.push(new Paddle(width - 7, height / 2, 38, 40, socket));
         this.ball = new Ball(width / 2, height / 2, socket);
 
-        this.socket.emit('getPlayerId', null);
+        this.socket.emit('getPlayerId');
         this.socket.on(
             'recievePlayerId',
             this.handleRecievePlayerId.bind(this)
@@ -21,27 +21,36 @@ class GameManager {
         this.socket.on('startGame', this.handleStartGame.bind(this));
 
         this.startGame = false;
+        this.draw = this.draw.bind(this);
     }
 
     handleRecievePlayerId(id) {
+        console.log(`Recieved PLayer ID: ${id}`);
         this.id = id;
-        if (id % 2 == 0) this.paddles[0].reduceAlpha();
-        else this.paddles[1].reduceAlpha();
+
+        this.paddles[id].increaseAlpha();
+        this.paddles[id].gameManagerId = id;
     }
 
     handleStartGame(value) {
+        console.log('Game Started');
         this.startGame = value;
     }
 
     draw(keys) {
-        if (!this.startGame) return;
+        for (let i = 0; i < this.paddles.length; i++) {
+            this.paddles[i].draw();
+            if (!this.startGame) continue;
 
-        for (let paddle of this.paddles) {
-            paddle.draw();
-            paddle.update(keys, ball);
+            if (this.paddles[i].gameManagerId === this.id) {
+                this.paddles[i].update(keys, this.ball);
+            }
         }
 
         this.ball.draw();
+        if (!this.startGame) return;
         this.ball.update(keys);
     }
 }
+
+export default GameManager;
