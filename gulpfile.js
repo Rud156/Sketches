@@ -5,9 +5,11 @@ const sourceMaps = require('gulp-sourcemaps');
 const concat = require('gulp-concat');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
-const gutil = require('gulp-util');
 const lazypipe = require('lazypipe');
 const inject = require('gulp-inject');
+const chalk = require('chalk');
+const beeper = require('beeper');
+const log = require('fancy-log');
 
 let processJS = lazypipe()
     .pipe(plumber, {
@@ -16,9 +18,9 @@ let processJS = lazypipe()
                 title: 'Gulp error in ' + error.plugin,
                 message: error.message
             })(error);
-            gutil.beep();
-            gutil.log(gutil.colors.cyan(error.message));
-            gutil.log(error.codeFrame);
+            beeper();
+            log(chalk.default.cyan(error.message));
+            log(error.codeFrame);
         }
     })
     .pipe(sourceMaps.init)
@@ -41,8 +43,7 @@ gulp.task('serve', () => {
             index: './lib/index.html'
         },
         open: false,
-        logLevel: 'debug',
-        online: false
+        logLevel: 'debug'
     });
 });
 
@@ -139,8 +140,6 @@ const rollup = require('rollup');
 const babelRollup = require('rollup-plugin-babel');
 const commonJS = require('rollup-plugin-commonjs');
 const notifier = require('node-notifier');
-const chalk = require('chalk');
-const beeper = require('beeper');
 
 let rollupProcessJs = (inputFile, filePath) => {
     return rollup.rollup({

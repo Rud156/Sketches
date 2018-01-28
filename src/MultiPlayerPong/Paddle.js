@@ -1,5 +1,5 @@
 class Paddle {
-    constructor(x, y, upKey, downKey, socket, ball, width = 10, height = 100) {
+    constructor(x, y, upKey, downKey, socket, width = 10, height = 100) {
         this.position = createVector(x, y);
         this.velocity = createVector(0, 0);
         this.width = width;
@@ -15,17 +15,13 @@ class Paddle {
         this.gameManagerId = null;
         this.alpha = 100;
 
-        this.ball = ball;
-
         this.socket.on('paddlePosition', this.handlePaddlePosition.bind(this));
 
         this.movePaddle = this.movePaddle.bind(this);
         this.increaseAlpha = this.increaseAlpha.bind(this);
-        this.collideWithBall = this.collideWithBall.bind(this);
         this.draw = this.draw.bind(this);
         this.update = this.update.bind(this);
         this.emitPaddleEvents = this.emitPaddleEvents.bind(this);
-        this.emitBallEvents = this.emitBallEvents.bind(this);
     }
 
     handlePaddlePosition(data) {
@@ -51,31 +47,6 @@ class Paddle {
         this.alpha = 255;
     }
 
-    collideWithBall(ball) {
-        let { x: ballX, y: ballY } = ball.position;
-        let radius = ball.radius;
-
-        let { x, y } = this.position;
-        let halfWidth = this.width / 2;
-        let halfHeight = this.height / 2;
-
-        if (
-            ballY - radius > y - halfHeight &&
-            ballY + radius < y + halfHeight
-        ) {
-            if (
-                (x < width / 2 && ballX - radius <= x + halfWidth) ||
-                (x > width / 2 && ballX + radius >= x - halfWidth)
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
     draw() {
         fill(255, this.alpha);
 
@@ -94,29 +65,7 @@ class Paddle {
             this.movePaddle(1);
         }
 
-        if (this.collideWithBall(ball)) {
-            let { x } = ball.velocity;
-            ball.velocity.x = -1 * x;
-            ball.velocity.add(this.velocity);
-
-            this.emitBallEvents();
-        }
-
         this.emitPaddleEvents();
-    }
-
-    emitBallEvents() {
-        let { position, velocity } = this.ball;
-        this.socket.emit('ballPosition', {
-            position: {
-                x: position.x,
-                y: position.y
-            },
-            velocity: {
-                x: velocity.x,
-                y: velocity.y
-            }
-        });
     }
 
     emitPaddleEvents() {

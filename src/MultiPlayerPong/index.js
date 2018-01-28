@@ -25,7 +25,8 @@ function setup() {
 function draw() {
     background(0);
 
-    gameManager.draw(keys);
+    gameManager.draw();
+    gameManager.update(keys);
 }
 
 function keyPressed(fxn) {

@@ -18,6 +18,10 @@ io.on('connection', socket => {
         socket.broadcast.emit('ballPosition', ballPosition);
     });
 
+    socket.on('ballLaunch', ballPosition => {
+        io.emit('ballLaunch', ballPosition);
+    });
+
     socket.on('paddlePosition', paddlePosition => {
         socket.broadcast.emit('paddlePosition', paddlePosition);
     });

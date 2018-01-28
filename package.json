@@ -10,6 +10,7 @@
         "browser-sync": "^2.18.13",
         "chalk": "^2.3.0",
         "concurrently": "^3.5.1",
+        "fancy-log": "^1.3.2",
         "gulp": "^3.9.1",
         "gulp-babel": "^7.0.0",
         "gulp-concat": "^2.6.1",
@@ -17,7 +18,6 @@
         "gulp-notify": "^3.0.0",
         "gulp-plumber": "^1.1.0",
         "gulp-sourcemaps": "^2.6.1",
-        "gulp-util": "^3.0.8",
         "lazypipe": "^1.0.1",
         "node-notifier": "^5.2.1",
         "nodemon": "^1.14.11",
@@ -30,8 +30,7 @@
         "spaceInvaders": "gulp spaceInvaders",
         "pong": "gulp pong",
         "ballBlasters": "gulp ballBlasters",
-        "multiPPong":
-            "concurrently \"gulp multiPlayerPong\" \"nodemon ./src/MultiPlayerPong/server.js\""
+        "multiPPong": "concurrently \"gulp multiPlayerPong\" \"nodemon ./src/MultiPlayerPong/server.js\""
     },
     "license": "MIT",
     "dependencies": {
@@ -39,6 +38,9 @@
         "socket.io": "^2.0.4"
     },
     "nodemonConfig": {
-        "ignore": ["lib/*", "js/*"]
+        "ignore": [
+            "lib/*",
+            "js/*"
+        ]
     }
 }
