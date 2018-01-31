@@ -9,8 +9,8 @@ class GameManager {
         this.id = null;
 
         this.ball = new Ball(width / 2 - 10, height / 2, socket);
-        this.paddles.push(new Paddle(7, height / 2, 38, 40, socket));
-        this.paddles.push(new Paddle(width - 7, height / 2, 38, 40, socket));
+        this.paddles.push(new Paddle(7, height / 2, 38, 40, socket, 0));
+        this.paddles.push(new Paddle(width - 7, height / 2, 38, 40, socket, 1));
 
         this.startGame = false;
         this.ballLaunched = false;
@@ -48,7 +48,6 @@ class GameManager {
     }
 
     handleRecieveBallData(data) {
-        console.log('Recieving Ball Data', data);
         let { position, velocity } = data;
         this.ball.position = createVector(position.x, position.y);
         this.ball.velocity = createVector(velocity.x, velocity.y);

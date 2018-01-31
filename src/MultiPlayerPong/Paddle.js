@@ -1,5 +1,5 @@
 class Paddle {
-    constructor(x, y, upKey, downKey, socket, width = 10, height = 100) {
+    constructor(x, y, upKey, downKey, socket, index, width = 10, height = 100) {
         this.position = createVector(x, y);
         this.velocity = createVector(0, 0);
         this.width = width;
@@ -14,8 +14,12 @@ class Paddle {
         this.socket = socket;
         this.gameManagerId = null;
         this.alpha = 100;
+        this.index = index;
 
-        this.socket.on('paddlePosition', this.handlePaddlePosition.bind(this));
+        this.socket.on(
+            `paddlePosition_${this.index}`,
+            this.handlePaddlePosition.bind(this)
+        );
 
         this.movePaddle = this.movePaddle.bind(this);
         this.increaseAlpha = this.increaseAlpha.bind(this);
@@ -25,8 +29,6 @@ class Paddle {
     }
 
     handlePaddlePosition(data) {
-        if (this.gameManagerId !== null) return;
-
         let { position, velocity } = data;
         this.position = createVector(position.x, position.y);
         this.velocity = createVector(velocity.x, velocity.y);
@@ -69,7 +71,7 @@ class Paddle {
     }
 
     emitPaddleEvents() {
-        this.socket.emit('paddlePosition', {
+        this.socket.emit(`paddlePosition_${this.index}`, {
             position: {
                 x: this.position.x,
                 y: this.position.y

@@ -22,8 +22,12 @@ io.on('connection', socket => {
         io.emit('ballLaunch', ballPosition);
     });
 
-    socket.on('paddlePosition', paddlePosition => {
-        socket.broadcast.emit('paddlePosition', paddlePosition);
+    socket.on('paddlePosition_0', paddlePosition => {
+        socket.broadcast.emit('paddlePosition_0', paddlePosition);
+    });
+
+    socket.on('paddlePosition_1', paddlePosition => {
+        socket.broadcast.emit('paddlePosition_1', paddlePosition);
     });
 
     socket.on('getPlayerId', () => {
