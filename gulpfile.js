@@ -1,21 +1,21 @@
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const browserSync = require('browser-sync').create();
-const sourceMaps = require('gulp-sourcemaps');
-const concat = require('gulp-concat');
-const plumber = require('gulp-plumber');
-const notify = require('gulp-notify');
-const lazypipe = require('lazypipe');
-const inject = require('gulp-inject');
-const chalk = require('chalk');
-const beeper = require('beeper');
-const log = require('fancy-log');
+const gulp = require("gulp");
+const babel = require("gulp-babel");
+const browserSync = require("browser-sync").create();
+const sourceMaps = require("gulp-sourcemaps");
+const concat = require("gulp-concat");
+const plumber = require("gulp-plumber");
+const notify = require("gulp-notify");
+const lazypipe = require("lazypipe");
+const inject = require("gulp-inject");
+const chalk = require("chalk");
+const beeper = require("beeper");
+const log = require("fancy-log");
 
 let processJS = lazypipe()
     .pipe(plumber, {
         errorHandler: error => {
             notify.onError({
-                title: 'Gulp error in ' + error.plugin,
+                title: "Gulp error in " + error.plugin,
                 message: error.message
             })(error);
             beeper();
@@ -24,122 +24,122 @@ let processJS = lazypipe()
         }
     })
     .pipe(sourceMaps.init)
-    .pipe(concat, 'bundle.js')
+    .pipe(concat, "bundle.js")
     .pipe(babel, {
-        presets: ['env', 'stage-2'],
+        presets: ["env", "stage-2"],
         highlightCode: true,
         comments: false
     })
     .pipe(sourceMaps.write)
-    .pipe(gulp.dest, 'lib')
+    .pipe(gulp.dest, "lib")
     .pipe(browserSync.reload, {
         stream: true
     });
 
-gulp.task('serve', () => {
+gulp.task("serve", () => {
     browserSync.init({
         server: {
-            baseDir: './',
-            index: './lib/index.html'
+            baseDir: "./",
+            index: "./lib/index.html"
         },
         open: false,
-        logLevel: 'debug'
+        logLevel: "debug"
     });
 });
 
-gulp.task('general', () => {
-    gulp.watch(['index.html']).on('change', browserSync.reload);
-    gulp.watch(['css/*.css']).on('change', browserSync.reload);
+gulp.task("general", () => {
+    gulp.watch(["index.html"]).on("change", browserSync.reload);
+    gulp.watch(["css/*.css"]).on("change", browserSync.reload);
 });
 
-gulp.task('starfield', ['serve', 'general', 'starFieldHelper'], () => {
-    let target = gulp.src('./index.html');
-    let sources = gulp.src(['./js/p5.min.js']);
-    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
+gulp.task("starfield", ["serve", "general", "starFieldHelper"], () => {
+    let target = gulp.src("./index.html");
+    let sources = gulp.src(["./js/p5.min.js"]);
+    target.pipe(inject(sources)).pipe(gulp.dest("lib"));
 
-    gulp.watch(['src/Starfield/*.js'], ['starFieldHelper']);
+    gulp.watch(["src/Starfield/*.js"], ["starFieldHelper"]);
 });
-gulp.task('starFieldHelper', () => {
+gulp.task("starFieldHelper", () => {
     return gulp
-        .src(['src/Starfield/star.js', 'src/Starfield/index.js'])
+        .src(["src/Starfield/star.js", "src/Starfield/index.js"])
         .pipe(processJS());
 });
 
-gulp.task('spaceInvaders', ['serve', 'general', 'spaceInvadersHelper'], () => {
-    let target = gulp.src('./index.html');
+gulp.task("spaceInvaders", ["serve", "general", "spaceInvadersHelper"], () => {
+    let target = gulp.src("./index.html");
     let sources = gulp.src([
-        './js/p5.min.js',
-        './js/p5.dom.min.js',
-        './js/howler.min.js'
+        "./js/p5.min.js",
+        "./js/p5.dom.min.js",
+        "./js/howler.min.js"
     ]);
-    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
+    target.pipe(inject(sources)).pipe(gulp.dest("lib"));
 
-    gulp.watch(['src/SpaceInvaders/*.js'], ['spaceInvadersHelper']);
+    gulp.watch(["src/SpaceInvaders/*.js"], ["spaceInvadersHelper"]);
 });
-gulp.task('spaceInvadersHelper', () => {
+gulp.task("spaceInvadersHelper", () => {
     return gulp
         .src([
-            'src/SpaceInvaders/particle.js',
-            'src/SpaceInvaders/bullet.js',
-            'src/SpaceInvaders/explosion.js',
-            'src/SpaceInvaders/pickups.js',
-            'src/SpaceInvaders/space-ship.js',
-            'src/SpaceInvaders/enemy.js',
-            'src/SpaceInvaders/index.js'
+            "src/SpaceInvaders/particle.js",
+            "src/SpaceInvaders/bullet.js",
+            "src/SpaceInvaders/explosion.js",
+            "src/SpaceInvaders/pickups.js",
+            "src/SpaceInvaders/space-ship.js",
+            "src/SpaceInvaders/enemy.js",
+            "src/SpaceInvaders/index.js"
         ])
         .pipe(processJS());
 });
 
-gulp.task('pong', ['serve', 'general', 'pongHelper'], () => {
-    let target = gulp.src('./index.html');
-    let sources = gulp.src(['./js/babylon.min.js']);
-    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
+gulp.task("pong", ["serve", "general", "pongHelper"], () => {
+    let target = gulp.src("./index.html");
+    let sources = gulp.src(["./js/babylon.min.js"]);
+    target.pipe(inject(sources)).pipe(gulp.dest("lib"));
 
-    gulp.watch(['src/Pong/*.js'], ['pongHelper']);
+    gulp.watch(["src/Pong/*.js"], ["pongHelper"]);
 });
-gulp.task('pongHelper', () => {
+gulp.task("pongHelper", () => {
     return gulp
         .src([
-            'src/Pong/game-manager.js',
-            'src/Pong/ball.js',
-            'src/Pong/paddle.js',
-            'src/Pong/index.js'
+            "src/Pong/game-manager.js",
+            "src/Pong/ball.js",
+            "src/Pong/paddle.js",
+            "src/Pong/index.js"
         ])
         .pipe(processJS());
 });
 
-gulp.task('ballBlasters', ['serve', 'general', 'ballHelper'], () => {
-    let target = gulp.src('./index.html');
+gulp.task("ballBlasters", ["serve", "general", "ballHelper"], () => {
+    let target = gulp.src("./index.html");
     let sources = gulp.src([
-        './js/p5.min.js',
-        './js/p5.dom.min.js',
-        './js/p5.sound.min.js',
-        './js/matter.js'
+        "./js/p5.min.js",
+        "./js/p5.dom.min.js",
+        "./js/p5.sound.min.js",
+        "./js/matter.js"
     ]);
-    target.pipe(inject(sources)).pipe(gulp.dest('lib'));
+    target.pipe(inject(sources)).pipe(gulp.dest("lib"));
 
-    gulp.watch(['src/BallBlasters/*.js'], ['ballHelper']);
+    gulp.watch(["src/BallBlasters/*.js"], ["ballHelper"]);
 });
-gulp.task('ballHelper', () => {
+gulp.task("ballHelper", () => {
     return gulp
         .src([
-            'src/BallBlasters/object-collect.js',
-            'src/BallBlasters/particle.js',
-            'src/BallBlasters/explosion.js',
-            'src/BallBlasters/basic-fire.js',
-            'src/BallBlasters/platform.js',
-            'src/BallBlasters/ground.js',
-            'src/BallBlasters/player.js',
-            'src/BallBlasters/game-manager.js',
-            'src/BallBlasters/index.js'
+            "src/BallBlasters/object-collect.js",
+            "src/BallBlasters/particle.js",
+            "src/BallBlasters/explosion.js",
+            "src/BallBlasters/basic-fire.js",
+            "src/BallBlasters/platform.js",
+            "src/BallBlasters/ground.js",
+            "src/BallBlasters/player.js",
+            "src/BallBlasters/game-manager.js",
+            "src/BallBlasters/index.js"
         ])
         .pipe(processJS());
 });
 
-const rollup = require('rollup');
-const babelRollup = require('rollup-plugin-babel');
-const commonJS = require('rollup-plugin-commonjs');
-const notifier = require('node-notifier');
+const rollup = require("rollup");
+const babelRollup = require("rollup-plugin-babel");
+const commonJS = require("rollup-plugin-commonjs");
+const notifier = require("node-notifier");
 
 let rollupProcessJs = (inputFile, filePath) => {
     return rollup.rollup({
@@ -147,19 +147,19 @@ let rollupProcessJs = (inputFile, filePath) => {
         plugins: [
             commonJS(),
             babelRollup({
-                exclude: 'node_modules/**',
+                exclude: "node_modules/**",
                 babelrc: false,
                 highlightCode: true,
                 comments: false,
                 presets: [
                     [
-                        'env',
+                        "env",
                         {
                             modules: false
                         }
                     ]
                 ],
-                plugins: ['external-helpers']
+                plugins: ["external-helpers"]
             })
         ]
     });
@@ -167,10 +167,10 @@ let rollupProcessJs = (inputFile, filePath) => {
 
 let rollupWriteBundle = async bundle => {
     await bundle.write({
-        file: './lib/bundle.js',
-        format: 'umd',
+        file: "./lib/bundle.js",
+        format: "umd",
         sourcemap: true,
-        name: 'library'
+        name: "library"
     });
 };
 
@@ -187,26 +187,26 @@ let handleError = error => {
 };
 
 gulp.task(
-    'multiPlayerPong',
-    ['serve', 'general', 'multiPlayerPongHelper'],
+    "multiPlayerPong",
+    ["serve", "general", "multiPlayerPongHelper"],
     () => {
-        let target = gulp.src('./index.html');
+        let target = gulp.src("./index.html");
         let sources = gulp.src([
-            './js/p5.min.js',
-            './js/p5.dom.min.js',
-            './js/p5.sound.min.js',
-            './js/socket.io.js'
+            "./js/p5.min.js",
+            "./js/p5.dom.min.js",
+            "./js/p5.sound.min.js",
+            "./js/socket.io.js"
         ]);
-        target.pipe(inject(sources)).pipe(gulp.dest('lib'));
+        target.pipe(inject(sources)).pipe(gulp.dest("lib"));
 
-        gulp.watch(['src/MultiPlayerPong/*.js'], ['multiPlayerPongHelper']);
+        gulp.watch(["src/MultiPlayerPong/*.js"], ["multiPlayerPongHelper"]);
     }
 );
-gulp.task('multiPlayerPongHelper', async () => {
+gulp.task("multiPlayerPongHelper", async () => {
     try {
         const bundle = await rollupProcessJs(
-            'index.js',
-            './src/MultiPlayerPong/'
+            "index.js",
+            "./src/MultiPlayerPong/"
         );
         await rollupWriteBundle(bundle);
         browserSync.reload({
